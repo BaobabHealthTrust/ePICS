@@ -56,7 +56,7 @@ EPICS::Application.routes.draw do
 
   post "product_units/update"
 
-  post "product_units/void"
+  get "product_units/void"
 
   get "supplier_type/new"
 

@@ -2552,3 +2552,21 @@ ActionController::RoutingError (No route matches "/z"):
   
 
 Rendered /usr/lib/ruby/gems/1.8/gems/actionpack-3.0.9/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.0ms)
+
+
+Started GET "/" for 127.0.0.1 at Wed Jul 24 22:29:28 +0200 2013
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb (0.6ms)
+Completed 200 OK in 2ms (Views: 1.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at Wed Jul 24 22:29:52 +0200 2013
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb within layouts/application (2.6ms)
+Completed 200 OK in 6ms (Views: 5.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at Wed Jul 24 22:30:16 +0200 2013
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb (0.7ms)
+Completed 200 OK in 2ms (Views: 1.7ms | ActiveRecord: 0.0ms)

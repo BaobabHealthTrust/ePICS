@@ -1,4 +1,14 @@
 EPICS::Application.routes.draw do
+  get "product_units/index"
+
+  get "product_units/new"
+
+  post "product_units/create"
+
+  post "product_units/update"
+
+  post "product_units/void"
+
   #get "home/index"
 
   # The priority is based upon order of creation:

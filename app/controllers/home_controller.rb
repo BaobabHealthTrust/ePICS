@@ -10,7 +10,7 @@ class HomeController < ApplicationController
     @reports = []
     @activities = []
     @administration = [
-      ["Add Item Units","z","default.png"],
+      ["Add Item Units","/product_units/index","default.png"],
       ["Add Items Types","z","default.png"],
       ["Add Item","z","default.png"],
       ["Add Supplier Type","z","default.png"],

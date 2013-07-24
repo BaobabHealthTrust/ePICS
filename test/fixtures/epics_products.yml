@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  product_code: MyString
+  expire: false
+  min_stock: 9.99
+  max_stock: 9.99
+  epics_product_units_id: 1
+  epics_product_type_id: 1
+  creator: 1
+  voided: false
+  void_reason: MyString
+  date_voided: 2013-07-24 18:34:59
+
+two:
+  name: MyString
+  product_code: MyString
+  expire: false
+  min_stock: 9.99
+  max_stock: 9.99
+  epics_product_units_id: 1
+  epics_product_type_id: 1
+  creator: 1
+  voided: false
+  void_reason: MyString
+  date_voided: 2013-07-24 18:34:59

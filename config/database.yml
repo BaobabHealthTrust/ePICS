@@ -1,0 +1,38 @@
+---
+development:
+  adapter: mysql
+  encoding: utf8
+  reconnect: false
+  database: epics_development
+  pool: 5
+  username: root
+  password: p@ssword
+  socket: /var/run/mysqld/mysqld.sock
+test:
+  adapter: mysql
+  encoding: utf8
+  reconnect: false
+  database: epics_test
+  pool: 5
+  username: root
+  password: admin
+  socket: /var/run/mysqld/mysqld.sock
+production:
+  adapter: mysql
+  encoding: utf8
+  reconnect: false
+  database: epics_production
+  pool: 5
+  username: root
+  password: admin
+  socket: /var/run/mysqld/mysqld.sock
+usermanagement:
+  password: p@ssword
+  database: epics_development
+  username: root
+  adapter: mysql
+pharmacy:
+  password: p@ssword
+  database: epics_development
+  username: root
+  adapter: mysql

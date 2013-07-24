@@ -56,13 +56,21 @@
       
         function loadAdministrationMenu(){
           resetButtonsTable();
+          <%
+          count = 0
+          (@administration || []).each do |name,path,image|%>
+            b = document.getElementById('button'+(<%=count+=1%>));
+            b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
+            b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';
+            b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
+          <%end%>
         }
       
         function loadApplicationMenu(){
           resetButtonsTable();
           <%
           count = 0
-          (@application || []).each do |name,path,image,index|%>
+          (@application || []).each do |name,path,image|%>
             b = document.getElementById('button'+(<%=count+=1%>));
             b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
             b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';                          

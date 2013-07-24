@@ -1,0 +1,166 @@
+<html>
+  <head>
+    <title>Home</title>
+    <style type="text/css">
+      body {
+        background-color: #fff;
+        margin: 20px;
+        font-family: "Nimbus Sans L", "Arial Narrow", sans-serif;
+        overflow: hidden;
+        color: #000;
+        -moz-user-select: none;
+      }
+
+      .buttons-table td {
+        text-align: center;
+      }
+
+    </style>
+    
+    <script type="text/javascript">
+      <!--
+      
+        function __$(id){
+          return document.getElementById(id);
+        }
+        
+        function switchTab(tab){
+          var tabs = ["application", "reports", "my_activities", "administration"];
+          
+          for(var i = 0; i < tabs.length; i++){
+            __$(tabs[i]).style.borderBottom = "1px solid #5496ef";
+            __$(tabs[i]).style.paddingTop = "60px";
+          }
+          
+          __$(tab).style.borderBottom = "5px solid #5496ef";
+          __$(tab).style.paddingTop = "65px";
+          
+          switch(tab.toLowerCase()){
+            case "application":
+              loadApplicationMenu();
+              break;
+            case "reports":
+              loadReportsMenu();
+              break;
+            case "my_activities":
+              loadActivitiesMenu();
+              break;
+            case "administration":
+              loadAdministrationMenu();
+              break;
+          }
+        }
+      
+        function adjustView(){
+        }
+      
+        function loadAdministrationMenu(){
+          resetButtonsTable();
+        }
+      
+        function loadApplicationMenu(){
+          resetButtonsTable();
+          <%
+          count = 0
+          (@application || []).each do |name,path,image,index|%>
+            b = document.getElementById('button'+(<%=count+=1%>));
+            b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
+            b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';                          
+            b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
+          <%end%>
+        }
+      
+        function loadReportsMenu(){
+          resetButtonsTable();
+        }
+      
+        function loadActivitiesMenu(){
+          resetButtonsTable();
+        }
+     
+        function resetButtonsTable() {
+          var t = document.getElementsByClassName('buttons-table')[0];
+          var tds = t.getElementsByTagName("td");
+          for(var i=0;i<tds.length;i++) {
+            tds[i].innerHTML = null;
+          }
+        } 
+
+      //-->
+    </script>
+  </head>
+  <body onresize="adjustView()" onload="adjustView(); loadApplicationMenu();">
+    <table width="100%" cellspacing="0" cellpadding="10">
+      <tr>
+        <td id="application" style="border-bottom: 5px solid #5496ef; font-size: 18px; 
+            padding-top: 65px; width: 100px; cursor: pointer;" align="center"
+            onclick="switchTab(this.id)">
+          Application
+        </td>
+        <td id="reports" style="border-bottom: 1px solid #5496ef; font-size: 18px; 
+            padding-top: 60px; width: 80px; cursor: pointer;" align="center"
+            onclick="switchTab(this.id)">
+          Reports
+        </td>
+        <td id="my_activities" style="border-bottom: 1px solid #5496ef; font-size: 18px; 
+            padding-top: 60px; width: 110px; cursor: pointer;" align="center"
+            onclick="switchTab(this.id)">
+          My Activities
+        </td>
+        <td id="administration" style="border-bottom: 1px solid #5496ef; font-size: 18px; 
+            padding-top: 60px; width: 130px; cursor: pointer;" align="center"
+            onclick="switchTab(this.id)">
+          Administration
+        </td>
+        <td style="border-bottom: 1px solid #5496ef;">
+          &nbsp;
+        </td>
+        <td style="width: 100px; border-bottom: 1px solid #5496ef;">
+          <img src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ? 
+              "app.png" : "baobab.png") %>" height="80" style="float: right;" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" style="padding: 0px;">
+          <div id="container" style="width: 100%; height: 400px; overflow: auto;">
+          
+            <table style="width:100%" class="buttons-table">
+              <tr>
+                <td id='button1'></td>
+                <td id='button2'></td>
+                <td id='button3'></td>
+              </tr>
+              <tr>
+                <td id='button4'></td>
+                <td id='button5'></td>
+                <td id='button6'></td>
+              </tr>
+              <tr>
+                <td id='button7'></td>
+                <td id='button8'></td>
+                <td id='button9'></td>
+              </tr>
+              <tr>
+                <td id='button10'></td>
+                <td id='button11'></td>
+                <td id='button12'></td>
+              </tr>
+            </table> 
+            
+          <div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" style="border-top: 1px solid #5496ef;">
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    
+    <div id="nav" style="width: 100%; height: 90px; 
+        left: 0px; position: absolute; bottom: 0px;">
+      <img src="/images/close.png" height="65" style="margin-right: 20px; 
+          margin-top: 0px; cursor: pointer; float: right;" onclick="window.location='/logout'" />
+    </div>
+  </body>
+</html>

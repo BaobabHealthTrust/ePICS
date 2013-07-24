@@ -1,0 +1,11 @@
+---
+associations:
+  epics_products: dispense_items
+  epics_stock: receive_items
+  epics_stock_details: view_stock
+settings:
+  epics_product_types: view_item_types
+  epics_supplier: view_suppliers
+  epics_product_units: view_item_units
+  epics_supplier_type: view_supplier_types
+  

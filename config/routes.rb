@@ -1,8 +1,69 @@
 EPICS::Application.routes.draw do
+
+  get "order_type/index"
+
+  get "order_type/new"
+
+  get "order_type/create"
+
+  get "order_type/edit"
+
+  get "order_type/update"
+
+  get "order_type/void"
+
+  get "supplier/index"
+
+  get "supplier/new"
+
+  get "supplier/create"
+
+  get "supplier/edit"
+
+  get "supplier/update"
+
+  get "supplier/void"
+
+  get "product/index"
+
+  get "product/new"
+
+  get "product/create"
+
+  get "product/edit"
+
+  get "product/update"
+
+  get "product/void"
+
+  get "product_type/index"
+
+  get "product_type/new"
+
+  get "product_type/create"
+
+  get "product_type/edit"
+
+  get "product_type/update"
+
+  get "product_type/void"
+
+  get "product_units/index"
+
+  get "product_units/new"
+
+  post "product_units/create"
+
+  post "product_units/update"
+
+  post "product_units/void"
+
   get "supplier_type/new"
+
   post "supplier_type/create"
 
   get "supplier_type/index"
+
 
   #get "home/index"
 

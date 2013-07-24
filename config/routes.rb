@@ -1,4 +1,5 @@
 EPICS::Application.routes.draw do
+
   get "product_units/index"
 
   get "product_units/new"
@@ -8,6 +9,13 @@ EPICS::Application.routes.draw do
   post "product_units/update"
 
   post "product_units/void"
+
+  get "supplier_type/new"
+
+  post "supplier_type/create"
+
+  get "supplier_type/index"
+
 
   #get "home/index"
 

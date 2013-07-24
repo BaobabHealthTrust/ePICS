@@ -13,7 +13,7 @@ class HomeController < ApplicationController
       ["Add Item Units","/product_units/index","default.png"],
       ["Add Items Types","z","default.png"],
       ["Add Item","z","default.png"],
-      ["Add Supplier Type","z","default.png"],
+      ["Add Supplier Type","supplier_type/new","default.png"],
       ["Add Supplier","z","default.png"],
       ["Add Order Type","z","default.png"],
     ]

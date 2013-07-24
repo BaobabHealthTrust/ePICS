@@ -2,6 +2,7 @@ class ProductUnitsController < ApplicationController
   
   def index
     @product_units = EpicsProductUnits.where(:voided => 0)
+    render :layout => false
   end
 
   def new

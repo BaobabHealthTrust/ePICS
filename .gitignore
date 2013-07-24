@@ -2,10 +2,8 @@
 *.swp
 *.swo
 config/database.yml
-config/settings.yml
 config/application.yml
-config/*.log
-config/*.lock
+config/settings.yml
 notes
 doc
 development.sql
@@ -15,5 +13,4 @@ schema.rb
 mockups
 rerun.txt
 nbproject
-log/*
 Gemfile.lock

@@ -1,4 +1,9 @@
 EPICS::Application.routes.draw do
+  get "supplier_type/new"
+  post "supplier_type/create"
+
+  get "supplier_type/index"
+
   #get "home/index"
 
   # The priority is based upon order of creation:

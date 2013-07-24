@@ -1,2 +1,98 @@
-<h1>SupplierType#index</h1>
-<p>Find me in app/views/supplier_type/index.html.erb</p>
+<style>
+
+a {
+        width: 300px;
+        height: 80px;
+        vertical-align: middle !important;
+        -moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+        box-shadow:inset 0px 1px 0px 0px #97c4fe;
+
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0));
+        background:-moz-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+        background:-webkit-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+        background:-o-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+        background:-ms-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+        background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0',GradientType=0);
+
+        background-color:#3d94f6;
+
+        -moz-border-radius:6px;
+        -webkit-border-radius:6px;
+        border-radius:6px;
+
+        border:1px solid #337fed;
+
+        /*display:inline-block;*/
+        display: inherit;
+        color:#ffffff;
+        font-family:arial;
+        font-size: 1.3em;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-align: center;
+
+        text-shadow:0px 1px 0px #1570cd;
+
+    }
+    #stats a:hover {
+
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6));
+        background:-moz-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+        background:-webkit-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+        background:-o-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+        background:-ms-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+        background:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e62d0', endColorstr='#3d94f6',GradientType=0);
+
+        background-color:#1e62d0;
+    }
+    #stats a:active {
+        position:relative;
+        top:1px;
+    }
+
+
+</style>
+
+
+<table cellpadding=5 width='100%'>
+  <tr>
+    <td>
+      <table cellpadding=5 width='100%'>
+        <tr>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Name</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Description</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th>
+        </tr>
+        <% (@supplier_types || []).each do |product_unit| %>
+        <tr>
+          <td style='border: 1px solid #ccc;'>
+            <%= product_unit.name rescue '&nbsp;' %>
+          </td>
+          <td style='border: 1px solid #ccc;'>
+            <%= product_unit.description rescue '&nbsp;' %>
+          </td>
+          <td style='border: 1px solid #ccc;'>
+            <table cellpadding=5 width='100%'>
+              <tr>
+                <td>
+                  <img src='/images/pencil.png' onclick='openPopUp("/supplier_type/edit/" + <%= product_unit.epics_supplier_type_id %>)' style='padding-top: 3px; cursor: pointer;'/>
+                </td>
+                <td>
+                  <img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/supplier_type/void/" + <%= product_unit.epics_supplier_type_id %>)' style='padding-top: 3px; cursor: pointer;'/>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      <% end %>
+      </table>
+    <tr>
+    <td align='center' id="stats">
+      <a href="javascript:window.location='/supplier_type/new'">Add</a></td>
+    </tr>
+</table>
+

@@ -1,0 +1,16 @@
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+   <%= text_field_tag "supplier_type[name]", nil, 
+       {:id => 'given_name', :field_type => 'alpha', 
+        :helpText => 'Name'} %>
+
+   <%= text_field_tag "supplier_type[description]", nil, 
+       {:id => 'given_name', :field_type => 'alpha', 
+        :helpText => 'Description'} %>
+
+
+  <%= submit_tag "Create person" %>
+                      
+<%end%>
+

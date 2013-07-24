@@ -1,0 +1,2 @@
+module SupplierTypeHelper
+end

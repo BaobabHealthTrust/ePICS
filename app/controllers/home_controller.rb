@@ -11,11 +11,11 @@ class HomeController < ApplicationController
     @activities = []
     @administration = [
       ["Add Item Units","/product_units/index","default.png"],
-      ["Add Items Types","z","default.png"],
-      ["Add Item","z","default.png"],
-      ["Add Supplier Type","supplier_type/index","default.png"],
-      ["Add Supplier","z","default.png"],
-      ["Add Order Type","z","default.png"],
+      ["Add Items Types","/product_type/index","default.png"],
+      ["Add Item","/product/index","default.png"],
+      ["Add Supplier Type","/supplier_type/index","default.png"],
+      ["Add Supplier","/supplier/index","default.png"],
+      ["Add Order Type","/order_type/index","default.png"],
     ]
 
     render :layout => false

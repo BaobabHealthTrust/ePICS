@@ -21,7 +21,20 @@ class ProductUnitsController < ApplicationController
     
   end
 
+  def edit
+    @product_unit = EpicsProductUnits.find(params[:product_unit])
+  end
+
   def update
+    @product_unit = EpicsProductUnits.find(params[:product_unit_id])
+    @product_unit.name = params[:name]
+    @product_unit.description = params[:description]
+
+    if @product_unit.save!
+       redirect_to :action => :index
+    else
+       redirect_to :action => :edit, :product_unit_id => params[:product_unit_id]
+    end
   end
 
   def void

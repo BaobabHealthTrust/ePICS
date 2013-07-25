@@ -52,6 +52,8 @@ EPICS::Application.routes.draw do
 
   get "product_units/new"
 
+  get "product_units/edit"
+
   post "product_units/create"
 
   post "product_units/update"

@@ -1,7 +1,7 @@
 class ProductUnitsController < ApplicationController
   
   def index
-    @product_units = EpicsProductUnits.where(:voided => 0)
+    @product_units = EpicsProductUnits.all
     render :layout => false
   end
 

@@ -1,2 +1,40 @@
-<h1>Product#edit</h1>
-<p>Find me in app/views/product/edit.html.erb</p>
+
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/product/index'
+	tt_cancel_destination='/product/index'
+
+//-->
+</script>
+
+<form action="update" method='post'>
+
+  <label for="name">Item Name</label>
+  <%= text_field_tag(:name,@product.name) %>
+
+  <label for="product_code">Item Code</label>
+  <%= text_field_tag(:product_code,@product.product_code) %>
+
+  <label for="epics_product_units_id">Item Unit</label>
+  <%= select_tag(:epics_product_units_id, options_for_select(@product_unit_map),
+    :helpText => "Select Item Unit") %>
+
+  <label for="epics_product_type_id">Item Type</label>
+  <%= select_tag(:epics_product_type_id, options_for_select(@product_type_map),
+    :helpText => "Select Item Type") %>
+
+  <label for="expire">Item expires?</label>
+  <%= select_tag(:expire, options_for_select([["Yes","1"],["No", '0']]),
+    :helpText => "Does Item Expire?") %>
+
+  <label for="min_stock">Enter Item Minimum Stock Quantity</label>
+  <%= text_field_tag(:min_stock, @product.min_stock) %>
+
+  <label for="max_stock">Enter Item Maximum Stock Quantity</label>
+  <%= text_field_tag(:max_stock,@product.max_stock) %>
+
+  <%= hidden_field_tag(:product_id, @product.epics_products_id) %>
+
+  <%= submit_tag value ="Submit"%>
+
+</form>

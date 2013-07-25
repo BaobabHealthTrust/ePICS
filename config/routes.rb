@@ -28,11 +28,11 @@ EPICS::Application.routes.draw do
 
   get "product/new"
 
-  get "product/create"
+  post "product/create"
 
   get "product/edit"
 
-  get "product/update"
+  post "product/update"
 
   get "product/void"
 

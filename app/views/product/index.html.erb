@@ -1,2 +1,70 @@
-<h1>Product#index</h1>
-<p>Find me in app/views/product/index.html.erb</p>
+<script>
+function showMsg(msg){
+          alert(msg);
+        }
+ function ajaxRequest(control, url){
+           var httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function() {
+                handleAjaxRequest(control, httpRequest);
+            };
+            try {
+                httpRequest.open('GET', url, true);
+                httpRequest.send(null);
+            } catch(e){
+            }
+        }
+
+        function handleAjaxRequest(control, aXMLHttpRequest) {
+          if (!aXMLHttpRequest) return;
+
+          if (aXMLHttpRequest.readyState == 4 && aXMLHttpRequest.status == 200) {
+
+              var result = aXMLHttpRequest.responseText;
+
+              if (control != null){
+                control.innerHTML = result;
+              } else {
+                eval(result);
+
+                window.location.reload();
+              }
+          }
+
+        }
+</script>
+
+<table cellpadding=5 width='100%'>
+  <tr>
+    <td>
+      <table cellpadding=5 width='100%'>
+        <tr>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Code</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Name</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Type</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Expires?</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Unit</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Min Stock</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Max Stock</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th></tr>
+
+        <% @products.each do |product| %>
+          <tr>
+            <td style='border: 1px solid #ccc;'><%= product.product_code rescue '' %></td>
+            <td style='border: 1px solid #ccc;'><%= product.name rescue '' %></td>
+            <td style='border: 1px solid #ccc;'><%= product.epics_product_type.name rescue '' %></td>
+            <td style='border: 1px solid #ccc;'><%= product.expire == true ? 'Yes' : 'No' rescue '' %></td>
+            <td style='border: 1px solid #ccc;'><%= product.epics_product_units.name rescue '' %></td>
+            <td style='border: 1px solid #ccc;'><%= product.min_stock rescue '&nbsp;' %></td>
+            <td style='border: 1px solid #ccc;'><%= product.max_stock rescue '&nbsp;' %></td>
+            <td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='window.location="/product/edit?product=" + <%= product.epics_products_id %>' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product/void?product_id=" + <%= product.epics_products_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
+
+        <% end %>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td align='center'>
+      <button onclick='window.location="/product/new"'>Add</button></td>
+  </tr>
+</table>
+

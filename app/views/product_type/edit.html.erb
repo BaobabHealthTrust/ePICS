@@ -8,10 +8,10 @@
 
 <form action="update" method='post'>
 
-  <label for="name">Product Type Name</label>
+  <label for="name">Item Type Name</label>
   <%= text_field_tag(:name, @product_type.name) %>
 
-  <label for="description" >Product Type Description</label>
+  <label for="description" >Item Type Description</label>
   <%= text_area_tag(:description, @product_type.description) %>
   <%= hidden_field_tag(:product_type_id, @product_type.epics_product_type_id) %>
   <%= submit_tag value ="Submit"%>

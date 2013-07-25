@@ -33,20 +33,22 @@ function showMsg(msg){
         }
 </script>
 
-	<table cellpadding=5 width='100%'>
-		<tr>
-			<td>
-				<table cellpadding=5 width='100%'><tr><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Name</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Description</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th></tr>
-					<% @product_units.each do |product_unit| %>
-						<tr>
-			<td style='border: 1px solid #ccc;'><%= product_unit.name rescue '&nbsp;' %></td>
-			<td style='border: 1px solid #ccc;'><%= product_unit.description rescue '&nbsp;' %></td><td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='openPopUp("/product_units/edit?product_unit=" + <%= product_unit.epics_product_units_id %>)' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product_units/void?product_unit_id=" + <%= product_unit.epics_product_units_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
+<table cellpadding=5 width='100%'>
+  <tr>
+    <td>
+      <table cellpadding=5 width='100%'><tr><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Name</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Description</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th></tr>
+        <% @product_units.each do |product_unit| %>
+          <tr>
+            <td style='border: 1px solid #ccc;'><%= product_unit.name rescue '&nbsp;' %></td>
+            <td style='border: 1px solid #ccc;'><%= product_unit.description rescue '&nbsp;' %></td><td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='openPopUp("/product_units/edit?product_unit=" + <%= product_unit.epics_product_units_id %>)' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product_units/void?product_unit_id=" + <%= product_unit.epics_product_units_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
 
-					<% end %>
-				</table>
-			<tr>
-				<td align='center'>
-					<button onclick='window.location="/product_units/new"'>Add</button></td>
-	</tr>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td align='center'>
+      <button onclick='window.location="/product_units/new"'>Add</button></td>
+  </tr>
 </table>
 

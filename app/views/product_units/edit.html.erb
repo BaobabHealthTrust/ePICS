@@ -1,0 +1,22 @@
+<style type="text/css">
+  .long .options {
+    height: 22em !important;
+  }
+</style>
+
+<script type="javascript">
+
+</script>
+
+<form action="update" method='post'>
+
+  <label for="name">Unit Name</label>
+  <%= text_field_tag(:name,@product_unit.name) %>
+
+  <label for="description">Unit Description</label>
+  <%= text_area_tag(:description,@product_unit.description) %>
+  <%= hidden_field_tag(:product_unit_id,@product_unit.epics_product_units_id)%>
+
+  <%= submit_tag value ="Submit"%>
+
+</form>

@@ -52,11 +52,13 @@ EPICS::Application.routes.draw do
 
   get "product_units/new"
 
+  get "product_units/edit"
+
   post "product_units/create"
 
   post "product_units/update"
 
-  post "product_units/void"
+  get "product_units/void"
 
   get "supplier_type/new"
 

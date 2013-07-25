@@ -11,7 +11,22 @@
   <script language="javascript">                                              
     tstUserKeyboardPref = "<%=preferred_user_keyboard rescue 'qwerty'%>"                      
     tstUsername = "<%#= current_user.username unless current_user.nil? %>";    
-    tstCurrentDate = '<%= Time.now.strftime("%Y-%m-%d") %>';                  
+    tstCurrentDate = '<%= Time.now.strftime("%Y-%m-%d") %>';
+    function openPopUp(url){
+          if(window.opener){
+
+            closeOnExit = false;
+
+            window.location = url;
+
+          } else {
+
+            currentpopup = window.open(url,'winname',
+              'directories=no,titlebar=no,toolbar=no,location=no,' +
+              'status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=550');
+
+          }
+        }
   </script>
 
   <%= csrf_meta_tag %>

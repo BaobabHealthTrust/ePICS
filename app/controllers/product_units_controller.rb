@@ -38,7 +38,7 @@ class ProductUnitsController < ApplicationController
   end
 
   def void
-    @product_unit = EpicsProductUnits.find_by_epics_product_units_id(params[:product_unit_id])
+    @product_unit = EpicsProductUnits.find(params[:product_unit_id])
     @product_unit.voided = 1
     @product_unit.save!
 		render :text => 'showMsg("Record Deleted!")'

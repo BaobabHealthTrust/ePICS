@@ -40,11 +40,11 @@ EPICS::Application.routes.draw do
 
   get "product_type/new"
 
-  get "product_type/create"
+  post "product_type/create"
 
   get "product_type/edit"
 
-  get "product_type/update"
+  post "product_type/update"
 
   get "product_type/void"
 

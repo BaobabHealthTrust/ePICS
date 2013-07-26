@@ -6,14 +6,16 @@
 //-->
 </script>
 
-<form action="create" method='post'>
+<%= form_tag :action => 'create', :method => :post  do %>
 
-  <label for="name">Item Type Name</label>
-  <%= text_field_tag(:name) %>
+  <%= text_field_tag "product_type[name]", nil,
+       {:id => 'product_type_name', :field_type => 'alpha',
+        :helpText => 'Item Type Name'} %>
 
-  <label for="description">Item Type Description</label>
-  <%= text_area_tag(:description) %>
+  <%= text_area_tag "product_type[description]", nil,
+       {:id => 'product_type_description', :field_type => 'alpha',
+        :helpText => 'Item Type Description'} %>
 
-  <%= submit_tag value ="Submit"%>
+  <%= submit_tag "Create Product Type" %>
 
-</form>
+<%  end %>

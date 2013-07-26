@@ -11,8 +11,9 @@ class ProductUnitsController < ApplicationController
 
   def create
     @product_unit = EpicsProductUnits.new
-    @product_unit.name = params[:name]
-    @product_unit.description = params[:description]
+    @product_unit.name = params[:product_unit][:name]
+    @product_unit.description = params[:product_unit][:description]
+
     if @product_unit.save!
        redirect_to :action => :index
     else
@@ -26,14 +27,14 @@ class ProductUnitsController < ApplicationController
   end
 
   def update
-    @product_unit = EpicsProductUnits.find(params[:product_unit_id])
-    @product_unit.name = params[:name]
-    @product_unit.description = params[:description]
+    @product_unit = EpicsProductUnits.find(params[:product_unit][:product_unit_id])
+    @product_unit.name = params[:product_unit][:name]
+    @product_unit.description = params[:product_unit][:description]
 
     if @product_unit.save!
        redirect_to :action => :index
     else
-       redirect_to :action => :edit, :product_unit_id => params[:product_unit_id]
+       redirect_to :action => :edit, :product_unit_id => params[:product_unit][:product_unit_id]
     end
   end
 

@@ -7,34 +7,39 @@
 //-->
 </script>
 
-<form action="update" method='post'>
+<%= form_tag :action => 'update', :method => :post  do %>
 
-  <label for="name">Item Name</label>
-  <%= text_field_tag(:name,@product.name) %>
+  <%= text_field_tag "product[name]", @product.name,
+       {:id => 'product_name', :field_type => 'alpha',
+        :helpText => 'Item Name'} %>
 
-  <label for="product_code">Item Code</label>
-  <%= text_field_tag(:product_code,@product.product_code) %>
+  <%= text_field_tag "product[product_code]", @product.product_code,
+         {:id => 'product_code', :field_type => 'alpha',
+          :helpText => 'Item Code'} %>
 
-  <label for="epics_product_units_id">Item Unit</label>
-  <%= select_tag(:epics_product_units_id, options_for_select(@product_unit_map, @product.epics_product_units_id),
-    :helpText => "Select Item Unit") %>
+ <%= select_tag "product[product_unit_id]", options_for_select(@product_unit_map, @product.epics_product_units_id),
+    {:id => "product_unit_id",:field_type => 'alpha',
+    :helpText => "Select Item Unit"} %>
 
-  <label for="epics_product_type_id">Item Type</label>
-  <%= select_tag(:epics_product_type_id, options_for_select(@product_type_map, @product.epics_product_type_id),
-    :helpText => "Select Item Type") %>
+  <%= select_tag "product[product_type_id]", options_for_select(@product_type_map, @product.epics_product_type_id),
+      {:id => "product_type_id",:field_type => 'alpha',
+      :helpText => "Select Item Type"} %>
 
-  <label for="expire">Item expires?</label>
-  <%= select_tag(:expire, options_for_select([["Yes","1"],["No", '0']], @product.expire == true ? '1' : '0' ),
-    :helpText => "Does Item Expire?") %>
+  <%= select_tag "product[expire]", options_for_select([["Yes","1"],["No", '0']], @product.expire == true ? '1' : '0' ),
+    {:id => "product_expire",:field_type => 'alpha',
+    :helpText => "Does Item Expire?"} %>
 
-  <label for="min_stock">Enter Item Minimum Stock Quantity</label>
-  <%= text_field_tag(:min_stock, @product.min_stock) %>
+  <%= text_field_tag "product[min_stock]", @product.min_stock,
+       {:id => 'product_min_stock', :field_type => 'alpha',
+        :helpText => 'Enter Item Minimum Stock Quantity'} %>
 
-  <label for="max_stock">Enter Item Maximum Stock Quantity</label>
-  <%= text_field_tag(:max_stock,@product.max_stock) %>
+  <%= text_field_tag "product[max_stock]", @product.max_stock,
+       {:id => 'product_max_stock', :field_type => 'alpha',
+        :helpText => 'Enter Item Maximum Stock Quantity'} %>
 
-  <%= hidden_field_tag(:product_id, @product.epics_products_id) %>
+  <%= hidden_field_tag("product[product_id]", @product.epics_products_id) %>
 
-  <%= submit_tag value ="Submit"%>
+  <%= submit_tag "Update Product" %>
 
-</form>
+
+<% end %>

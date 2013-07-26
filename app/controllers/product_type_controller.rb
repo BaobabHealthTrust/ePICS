@@ -10,8 +10,8 @@ class ProductTypeController < ApplicationController
 
   def create
     @product_type = EpicsProductType.new
-    @product_type.name = params[:name]
-    @product_type.description = params[:description]
+    @product_type.name = params[:product_type][:name]
+    @product_type.description = params[:product_type][:description]
     if @product_type.save!
        redirect_to :action => :index
     else
@@ -25,14 +25,14 @@ class ProductTypeController < ApplicationController
   end
 
   def update
-    @product_type = EpicsProductType.find(params[:product_type_id])
-    @product_type.name = params[:name]
-    @product_type.description = params[:description]
+    @product_type = EpicsProductType.find(params[:product_type][:product_type_id])
+    @product_type.name = params[:product_type][:name]
+    @product_type.description = params[:product_type][:description]
 
     if @product_type.save!
        redirect_to :action => :index
     else
-       redirect_to :action => :edit, :product_type_id => params[:product_type_id]
+       redirect_to :action => :edit, :product_type_id => params[:product_type][:product_type_id]
     end
   end
 

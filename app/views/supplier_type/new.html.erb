@@ -2,15 +2,15 @@
 <%= form_tag :action => 'create', :method => :post  do %>
 
    <%= text_field_tag "supplier_type[name]", nil, 
-       {:id => 'given_name', :field_type => 'alpha', 
-        :helpText => 'Name'} %>
+       {:id => 'supplier_type_name', :field_type => 'alpha',
+        :helpText => 'Supplier Type Name'} %>
 
    <%= text_field_tag "supplier_type[description]", nil, 
-       {:id => 'given_name', :field_type => 'alpha', 
-        :helpText => 'Description'} %>
+       {:id => 'given_description', :field_type => 'alpha',
+        :helpText => 'Supplier Type Description'} %>
 
 
-  <%= submit_tag "Create person" %>
+  <%= submit_tag "Create Supplier Type" %>
                       
 <%end%>
 

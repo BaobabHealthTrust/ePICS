@@ -66,6 +66,12 @@ EPICS::Application.routes.draw do
 
   get "supplier_type/index"
 
+  get "supplier_type/edit"
+
+  get "supplier_type/void"
+
+  post "supplier_type/update"
+
 
   #get "home/index"
 

@@ -1,16 +1,16 @@
 class ProductUnitsController < ApplicationController
   
   def index
-    @product_units = EpicsProductUnits.all
+    @product_units = EpicsProductUnits.order(:name)
     render :layout => false
   end
 
   def new
-    @product_units = EpicsProductUnits.new
+    @product_units = EpicsProductUnits.new()
   end
 
   def create
-    @product_unit = EpicsProductUnits.new
+    @product_unit = EpicsProductUnits.new()
     @product_unit.name = params[:product_unit][:name]
     @product_unit.description = params[:product_unit][:description]
 

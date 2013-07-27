@@ -1,4 +1,4 @@
-<style>
+<style type="text/css">
 
 a {
         width: 300px;
@@ -57,6 +57,40 @@ a {
 
 </style>
 
+<script type="text/javascript">
+function showMsg(msg){
+          alert(msg);
+        }
+ function ajaxRequest(control, url){
+           var httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function() {
+                handleAjaxRequest(control, httpRequest);
+            };
+            try {
+                httpRequest.open('GET', url, true);
+                httpRequest.send(null);
+            } catch(e){
+            }
+        }
+
+        function handleAjaxRequest(control, aXMLHttpRequest) {
+          if (!aXMLHttpRequest) return;
+
+          if (aXMLHttpRequest.readyState == 4 && aXMLHttpRequest.status == 200) {
+
+              var result = aXMLHttpRequest.responseText;
+
+              if (control != null){
+                control.innerHTML = result;
+              } else {
+                eval(result);
+
+                window.location.reload();
+              }
+          }
+
+        }
+</script>
 
 <table cellpadding=5 width='100%'>
   <tr>
@@ -67,22 +101,22 @@ a {
           <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Description</th>
           <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th>
         </tr>
-        <% (@supplier_types || []).each do |product_unit| %>
+        <% (@supplier_types || []).each do |supplier_type| %>
         <tr>
           <td style='border: 1px solid #ccc;'>
-            <%= product_unit.name rescue '&nbsp;' %>
+            <%= supplier_type.name rescue '&nbsp;' %>
           </td>
           <td style='border: 1px solid #ccc;'>
-            <%= product_unit.description rescue '&nbsp;' %>
+            <%= supplier_type.description rescue '&nbsp;' %>
           </td>
           <td style='border: 1px solid #ccc;'>
             <table cellpadding=5 width='100%'>
               <tr>
                 <td>
-                  <img src='/images/pencil.png' onclick='openPopUp("/supplier_type/edit/" + <%= product_unit.epics_supplier_type_id %>)' style='padding-top: 3px; cursor: pointer;'/>
+                  <img src='/images/pencil.png' onclick='window.location = "/supplier_type/edit?supplier_type=" + <%= supplier_type.epics_supplier_type_id %>' style='padding-top: 3px; cursor: pointer;'/>
                 </td>
                 <td>
-                  <img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/supplier_type/void/" + <%= product_unit.epics_supplier_type_id %>)' style='padding-top: 3px; cursor: pointer;'/>
+                  <img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/supplier_type/void?supplier_type_id=" + <%= supplier_type.epics_supplier_type_id %>)' style='padding-top: 3px; cursor: pointer;'/>
                 </td>
               </tr>
             </table>
@@ -90,9 +124,18 @@ a {
         </tr>
       <% end %>
       </table>
+      </td>
+  </tr>
     <tr>
+    <!--
     <td align='center' id="stats">
-      <a href="javascript:window.location='/supplier_type/new'">Add</a></td>
+      <a href="javascript:window.location='/supplier_type/new'">Add</a>
+    </td>
+    -->
+
+    <td align='center'>
+      <button onclick='window.location="/supplier_type/new"'>Add</button>
+    </td>
     </tr>
 </table>
 

@@ -1,2 +1,54 @@
-<h1>ProductCategory#index</h1>
-<p>Find me in app/views/product_category/index.html.erb</p>
+<script>
+function showMsg(msg){
+          alert(msg);
+        }
+ function ajaxRequest(control, url){
+           var httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function() {
+                handleAjaxRequest(control, httpRequest);
+            };
+            try {
+                httpRequest.open('GET', url, true);
+                httpRequest.send(null);
+            } catch(e){
+            }
+        }
+
+        function handleAjaxRequest(control, aXMLHttpRequest) {
+          if (!aXMLHttpRequest) return;
+
+          if (aXMLHttpRequest.readyState == 4 && aXMLHttpRequest.status == 200) {
+
+              var result = aXMLHttpRequest.responseText;
+
+              if (control != null){
+                control.innerHTML = result;
+              } else {
+                eval(result);
+
+                window.location.reload();
+              }
+          }
+
+        }
+</script>
+
+<table cellpadding=5 width='100%'>
+  <tr>
+    <td>
+      <table cellpadding=5 width='100%'><tr><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Category</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Description</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th></tr>
+        <% @product_categories.each do |product_category| %>
+          <tr>
+            <td style='border: 1px solid #ccc;'><%= product_category.name rescue '&nbsp' %></td>
+            <td style='border: 1px solid #ccc;'><%= product_category.description rescue '&nbsp;' %></td><td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='window.location="/product_category/edit?product_category=" + <%= product_category.epics_product_category_id %>' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product_category/void?product_category_id=" + <%= product_category.epics_product_category_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
+
+        <% end %>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td align='center'>
+      <button onclick='window.location="/product_category/new"'>Add</button></td>
+  </tr>
+</table>
+

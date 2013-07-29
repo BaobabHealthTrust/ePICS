@@ -4,11 +4,11 @@ EPICS::Application.routes.draw do
 
   get "product_category/new"
 
-  get "product_category/create"
+  post "product_category/create"
 
   get "product_category/edit"
 
-  get "product_category/update"
+  post "product_category/update"
 
   get "product_category/void"
 

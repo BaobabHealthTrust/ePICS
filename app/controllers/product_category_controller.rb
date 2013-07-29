@@ -1,7 +1,7 @@
 class ProductCategoryController < ApplicationController
 
   def index
-    @product_category = EpicsProductCategory.all
+    @product_categories = EpicsProductCategory.all
     render :layout => false
   end
 
@@ -10,16 +10,15 @@ class ProductCategoryController < ApplicationController
   end
 
   def create
-    @product_category = EpicsProductType.new
-    @product_category.class = params[:product_category][:class]
+    @product_category = EpicsProductCategory.new
+    raise params @product_category.to_yaml
     @product_category.name = params[:product_category][:name]
     @product_category.description = params[:product_category][:description]
-    if @product_category.save!
+    if @product_category.save
        redirect_to :action => :index
     else
        redirect_to :action => :new
     end
-
   end
 
   def edit
@@ -28,7 +27,6 @@ class ProductCategoryController < ApplicationController
 
   def update
     @product_category = EpicsProductCategory.find(params[:product_category][:product_category_id])
-    @product_category.class = params[:product_category][:class]
     @product_category.name = params[:product_category][:name]
     @product_category.description = params[:product_category][:description]
 

@@ -4,11 +4,11 @@ EPICS::Application.routes.draw do
 
   get "order_type/new"
 
-  get "order_type/create"
+  post "order_type/create"
 
   get "order_type/edit"
 
-  get "order_type/update"
+  post "order_type/update"
 
   get "order_type/void"
 

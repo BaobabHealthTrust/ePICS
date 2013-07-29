@@ -16,11 +16,11 @@ EPICS::Application.routes.draw do
 
   get "supplier/new"
 
-  get "supplier/create"
+  post "supplier/create"
 
   get "supplier/edit"
 
-  get "supplier/update"
+  post "supplier/update"
 
   get "supplier/void"
 

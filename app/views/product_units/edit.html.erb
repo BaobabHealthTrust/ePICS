@@ -6,15 +6,18 @@
 //-->
 </script>
 
-<form action="update" method='post'>
+<%= form_tag :action => 'update', :method => :post  do %>
   
-  <label for="name">Unit Name</label>
-  <%= text_field_tag(:name,@product_unit.name) %>
+  <%= text_field_tag "product_unit[name]", @product_unit.name,
+       {:id => 'product_unit_name', :field_type => 'alpha',
+        :helpText => 'Item Unit Name'} %>
 
-  <label for="description">Unit Description</label>
-  <%= text_area_tag(:description,@product_unit.description) %>
-  <%= hidden_field_tag(:product_unit_id,@product_unit.epics_product_units_id)%>
+  <%= text_area_tag "product_unit[description]", @product_unit.description,
+       {:id => 'product_unit_description', :field_type => 'alpha',
+        :helpText => 'Item Unit Description'} %>
 
-  <%= submit_tag value ="Submit"%>
+  <%= hidden_field_tag("product_unit[product_unit_id]", @product_unit.epics_product_units_id) %>
 
-</form>
+  <%= submit_tag "Update Item Unit" %>
+
+<%  end %>

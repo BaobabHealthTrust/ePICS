@@ -1,2 +1,45 @@
-<h1>Product#edit</h1>
-<p>Find me in app/views/product/edit.html.erb</p>
+
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/product/index'
+	tt_cancel_destination='/product/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'update', :method => :post  do %>
+
+  <%= text_field_tag "product[name]", @product.name,
+       {:id => 'product_name', :field_type => 'alpha',
+        :helpText => 'Item Name'} %>
+
+  <%= text_field_tag "product[product_code]", @product.product_code,
+         {:id => 'product_code', :field_type => 'alpha',
+          :helpText => 'Item Code'} %>
+
+ <%= select_tag "product[product_unit_id]", options_for_select(@product_unit_map, @product.epics_product_units_id),
+    {:id => "product_unit_id",:field_type => 'alpha',
+    :helpText => "Select Item Unit"} %>
+
+  <%= select_tag "product[product_type_id]", options_for_select(@product_type_map, @product.epics_product_type_id),
+      {:id => "product_type_id",:field_type => 'alpha',
+      :helpText => "Select Item Type"} %>
+
+  <%= select_tag "product[expire]", options_for_select([["Yes","1"],["No", '0']], @product.expire == true ? '1' : '0' ),
+    {:id => "product_expire",:field_type => 'alpha',
+    :helpText => "Does Item Expire?"} %>
+
+  <%= text_field_tag "product[min_stock]", @product.min_stock,
+       {:id => 'product_min_stock', :field_type => 'alpha',
+        :helpText => 'Enter Item Minimum Stock Quantity'} %>
+
+  <%= text_field_tag "product[max_stock]", @product.max_stock,
+       {:id => 'product_max_stock', :field_type => 'alpha',
+        :helpText => 'Enter Item Maximum Stock Quantity'} %>
+
+  <%= hidden_field_tag("product[product_id]", @product.epics_products_id) %>
+
+  <%= submit_tag "Update Product" %>
+
+
+<% end %>

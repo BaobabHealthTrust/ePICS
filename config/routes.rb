@@ -28,11 +28,11 @@ EPICS::Application.routes.draw do
 
   get "product/new"
 
-  get "product/create"
+  post "product/create"
 
   get "product/edit"
 
-  get "product/update"
+  post "product/update"
 
   get "product/void"
 
@@ -40,11 +40,11 @@ EPICS::Application.routes.draw do
 
   get "product_type/new"
 
-  get "product_type/create"
+  post "product_type/create"
 
   get "product_type/edit"
 
-  get "product_type/update"
+  post "product_type/update"
 
   get "product_type/void"
 
@@ -65,6 +65,12 @@ EPICS::Application.routes.draw do
   post "supplier_type/create"
 
   get "supplier_type/index"
+
+  get "supplier_type/edit"
+
+  get "supplier_type/void"
+
+  post "supplier_type/update"
 
 
   #get "home/index"

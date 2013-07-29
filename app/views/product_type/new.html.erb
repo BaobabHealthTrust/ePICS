@@ -1,2 +1,21 @@
-<h1>ProductType#new</h1>
-<p>Find me in app/views/product_type/new.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/product_type/index'
+	tt_cancel_destination='/product_type/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+  <%= text_field_tag "product_type[name]", nil,
+       {:id => 'product_type_name', :field_type => 'alpha',
+        :helpText => 'Item Type Name'} %>
+
+  <%= text_area_tag "product_type[description]", nil,
+       {:id => 'product_type_description', :field_type => 'alpha',
+        :helpText => 'Item Type Description'} %>
+
+  <%= submit_tag "Create Product Type" %>
+
+<%  end %>

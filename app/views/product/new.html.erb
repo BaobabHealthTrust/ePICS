@@ -1,2 +1,42 @@
-<h1>Product#new</h1>
-<p>Find me in app/views/product/new.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/product/index'
+	tt_cancel_destination='/product/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+  <%= text_field_tag "product[name]",nil,
+       {:id => 'product_name', :field_type => 'alpha',
+        :helpText => 'Enter Item Name'} %>
+
+  <%= text_field_tag "product[product_code]", nil,
+         {:id => 'product_code', :field_type => 'alpha',
+          :helpText => 'Enter Item Code'} %>
+
+ <%= select_tag "product[product_unit_id]", options_for_select(@product_unit_map),
+    {:id => "product_unit_id",:field_type => 'alpha',
+    :helpText => "Select Item Unit"} %>
+
+  <%= select_tag "product[product_type_id]", options_for_select(@product_type_map),
+      {:id => "product_type_id",:field_type => 'alpha',
+      :helpText => "Select Item Type"} %>
+
+  <%= select_tag "product[expire]", options_for_select([["Yes","1"],["No", '0']]),
+    {:id => "product_expire",:field_type => 'alpha',
+    :helpText => "Does Item Expire?"} %>
+
+  <%= text_field_tag "product[min_stock]", nil,
+       {:id => 'product_min_stock', :field_type => 'number',
+        :helpText => 'Enter Item Minimum Stock Quantity'} %>
+
+  <%= text_field_tag "product[max_stock]", nil,
+       {:id => 'product_max_stock', :field_type => 'number',
+        :helpText => 'Enter Item Maximum Stock Quantity'} %>
+
+  <%= submit_tag "Create Product" %>
+
+
+<% end %>

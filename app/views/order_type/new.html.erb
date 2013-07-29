@@ -1,2 +1,23 @@
-<h1>OrderType#new</h1>
-<p>Find me in app/views/order_type/new.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/order_type/index'
+	tt_cancel_destination='/order_type/index'
+
+//-->
+</script>
+
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+   <%= text_field_tag "order_type[name]", nil,
+       {:id => 'order_type_name', :field_type => 'alpha',
+        :helpText => 'Order Type Name'} %>
+
+   <%= text_area_tag "order_type[description]", nil,
+       {:id => 'order_type_description', :field_type => 'alpha',
+        :helpText => 'Order Type Description'} %>
+
+   <%= submit_tag "Create Order Type" %>
+
+<%end%>
+

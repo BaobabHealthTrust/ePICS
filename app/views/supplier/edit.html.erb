@@ -1,2 +1,40 @@
-<h1>Supplier#edit</h1>
-<p>Find me in app/views/supplier/edit.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/supplier/index'
+	tt_cancel_destination='/supplier/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'update', :method => :post  do %>
+
+  <%= text_field_tag "supplier[name]",@supplier.name,
+       {:id => 'supplier_name', :field_type => 'alpha',
+        :helpText => 'Enter Supplier Name'} %>
+
+  <%= text_area_tag "supplier[address]", @supplier.address,
+         {:id => 'supplier_address', :field_type => 'alpha',
+          :helpText => 'Enter Supplier Address'} %>
+
+ <%= text_field_tag "supplier[phone_number]", @supplier.phone_number,
+    {:id => "supplier_phone_number",:field_type => 'alpha',
+    :helpText => "Enter Supplier Phone Number"} %>
+
+  <%= select_tag "supplier[local]", options_for_select([["Yes","1"],["No", '0']], @supplier.local == true ? '1' : '0' ),
+    {:id => "supplier_local",:field_type => 'alpha',
+    :helpText => "Is Supplier Local?"} %>
+
+ <%= select_tag "supplier[supplier_type_id]", options_for_select(@supplier_type_map,@supplier.epics_supplier_type_id),
+    {:id => "supplier_type_id",:field_type => 'alpha',
+    :helpText => "Select Supplier Type"} %>
+
+  <%= text_area_tag "supplier[description]", @supplier.description,
+       {:id => 'supplier_description', :field_type => 'alpha',
+        :helpText => 'Enter Supplier Description'} %>
+
+  <%= hidden_field_tag("supplier[supplier_id]", @supplier.epics_supplier_id) %>
+
+  <%= submit_tag "Update Supplier" %>
+
+
+<% end %>

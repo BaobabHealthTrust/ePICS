@@ -1,2 +1,25 @@
-<h1>OrderType#edit</h1>
-<p>Find me in app/views/order_type/edit.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/order_type/index'
+	tt_cancel_destination='/order_type/index'
+
+//-->
+</script>
+
+
+<%= form_tag :action => 'update', :method => :post  do %>
+
+   <%= text_field_tag "order_type[name]", @order_type.name,
+       {:id => 'order_type_name', :field_type => 'alpha',
+        :helpText => 'Order Type Name'} %>
+
+   <%= text_area_tag "order_type[description]", @order_type.description,
+       {:id => 'order_type_description', :field_type => 'alpha',
+        :helpText => 'Order Type Description'} %>
+
+   <%= hidden_field_tag("order_type[order_type_id]", @order_type.epics_order_type_id) %>
+
+   <%= submit_tag "Update Order Type" %>
+
+<%end%>
+

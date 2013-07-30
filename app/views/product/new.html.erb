@@ -24,6 +24,10 @@
       {:id => "product_type_id",:field_type => 'alpha',
       :helpText => "Select Item Type"} %>
 
+ <%= select_tag "product[product_category_id]", options_for_select(@product_category_map),
+      {:id => "product_category_id",:field_type => 'alpha',
+      :helpText => "Select Item Category"} %>
+
   <%= select_tag "product[expire]", options_for_select([["Yes","1"],["No", '0']]),
     {:id => "product_expire",:field_type => 'alpha',
     :helpText => "Does Item Expire?"} %>
@@ -35,6 +39,10 @@
   <%= text_field_tag "product[max_stock]", nil,
        {:id => 'product_max_stock', :field_type => 'number',
         :helpText => 'Enter Item Maximum Stock Quantity'} %>
+
+<%= select_tag "product[movement]", options_for_select([["Yes","1"],["No", '0']]),
+    {:id => "product_movement",:field_type => 'alpha',
+    :helpText => "Is Item Fast Moving?"} %>
 
   <%= submit_tag "Create Product" %>
 

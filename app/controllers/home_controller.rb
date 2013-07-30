@@ -16,6 +16,8 @@ class HomeController < ApplicationController
       ["Add Supplier Type","/supplier_type/index","default.png"],
       ["Add Supplier","/supplier/index","default.png"],
       ["Add Order Type","/order_type/index","default.png"],
+      ["Add Location Type","/location_type/index","default.png"],
+      ["Add Location","/location/index","default.png"],
     ]
 
     render :layout => false

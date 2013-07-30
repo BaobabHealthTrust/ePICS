@@ -1,2 +1,23 @@
-<h1>ProductCategory#edit</h1>
-<p>Find me in app/views/product_category/edit.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/product_category/index'
+	tt_cancel_destination='/product_category/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'update', :method => :post  do %>
+
+  <%= text_field_tag "product_category[name]", @product_category.name,
+       {:id => 'product_category_name', :field_type => 'alpha',
+        :helpText => 'Item Category Name'} %>
+
+  <%= text_field_tag "product_category[description]", @product_category.description,
+       {:id => 'product_category_description', :field_type => 'alpha',
+        :helpText => 'Item Category Description'} %>
+
+<%= hidden_field_tag("product_category[product_category_id]", @product_category.epics_product_category_id) %>
+
+  <%= submit_tag "Create Product Category" %>
+
+<%  end %>

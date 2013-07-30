@@ -9,15 +9,15 @@ class HomeController < ApplicationController
     @reports = []
     @activities = []
     @administration = [
-      ["Add Item Units","/product_units/index","default.png"],
-      ["Add Item Types","/product_type/index","default.png"],
-      ["Add Item Category","/product_category/index","default.png"],
-      ["Add Item","/product/index","default.png"],
-      ["Add Supplier Type","/supplier_type/index","default.png"],
-      ["Add Supplier","/supplier/index","default.png"],
-      ["Add Order Type","/order_type/index","default.png"],
-      ["Add Location Type","/location_type/index","default.png"],
-      ["Add Location","/location/index","default.png"],
+      ["Set Item Units","/product_units/index","default.png"],
+      ["Set Item Types","/product_type/index","default.png"],
+      ["Set Item Categories","/product_category/index","default.png"],
+      ["Set Items","/product/index","default.png"],
+      ["Set Supplier Types","/supplier_type/index","default.png"],
+      ["Set Suppliers","/supplier/index","default.png"],
+      ["Set Order Types","/order_type/index","default.png"],
+      ["Set Location Types","/location_type/index","default.png"],
+      ["Set Locations","/location/index","default.png"],
     ]
 
     render :layout => false

@@ -1,5 +1,17 @@
 EPICS::Application.routes.draw do
 
+  get "stock/index"
+
+  get "stock/new"
+
+  post "stock/create"
+
+  get "stock/edit"
+
+  post "stock/update"
+
+  get "stock/void"
+
   get "location_type/index"
 
   get "location_type/new"

@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
   def index
     @application = [
-      ["Items","z","default.png"],
+      ["Add Items","stock/new","default.png"],
+      ["Update Items","z","default.png"],
       ["Dispense","z","default.png"],
       ["View alerts","z","default.png"]
     ]

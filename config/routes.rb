@@ -1,5 +1,29 @@
 EPICS::Application.routes.draw do
 
+  get "location_type/index"
+
+  get "location_type/new"
+
+  get "location_type/create"
+
+  get "location_type/edit"
+
+  get "location_type/update"
+
+  get "location_type/void"
+
+  get "location/index"
+
+  get "location/new"
+
+  get "location/create"
+
+  get "location/edit"
+
+  get "location/update"
+
+  get "location/void"
+
   get "product_category/index"
 
   get "product_category/new"

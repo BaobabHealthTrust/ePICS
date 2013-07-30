@@ -1,8 +1,7 @@
 class HomeController < ApplicationController
   def index
     @application = [
-      ["Receive items","z","default.png"],
-      ["Dispense","z","default.png"],
+      ["Items","z","default.png"],
       ["Dispense","z","default.png"],
       ["View alerts","z","default.png"]
     ]
@@ -11,7 +10,8 @@ class HomeController < ApplicationController
     @activities = []
     @administration = [
       ["Add Item Units","/product_units/index","default.png"],
-      ["Add Items Types","/product_type/index","default.png"],
+      ["Add Item Types","/product_type/index","default.png"],
+      ["Add Item Category","/product_category/index","default.png"],
       ["Add Item","/product/index","default.png"],
       ["Add Supplier Type","/supplier_type/index","default.png"],
       ["Add Supplier","/supplier/index","default.png"],
@@ -19,6 +19,7 @@ class HomeController < ApplicationController
     ]
 
     render :layout => false
+    
   end
 
 end

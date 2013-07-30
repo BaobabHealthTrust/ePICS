@@ -1,0 +1,21 @@
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/product_category/index'
+	tt_cancel_destination='/product_category/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+  <%= text_field_tag "product_category[name]", nil,
+       {:id => 'product_category_name', :field_type => 'alpha',
+        :helpText => 'Item Category Name'} %>
+
+  <%= text_field_tag "product_category[description]", nil,
+       {:id => 'product_category_description', :field_type => 'alpha',
+        :helpText => 'Item Category Description'} %>
+
+  <%= submit_tag "Create Product Category" %>
+
+<%  end %>

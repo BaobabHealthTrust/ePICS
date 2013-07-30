@@ -1,5 +1,17 @@
 EPICS::Application.routes.draw do
 
+  get "product_category/index"
+
+  get "product_category/new"
+
+  post "product_category/create"
+
+  get "product_category/edit"
+
+  post "product_category/update"
+
+  get "product_category/void"
+
   get "order_type/index"
 
   get "order_type/new"

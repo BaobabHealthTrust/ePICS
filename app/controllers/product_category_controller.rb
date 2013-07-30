@@ -11,7 +11,6 @@ class ProductCategoryController < ApplicationController
 
   def create
     @product_category = EpicsProductCategory.new
-    raise params @product_category.to_yaml
     @product_category.name = params[:product_category][:name]
     @product_category.description = params[:product_category][:description]
     if @product_category.save

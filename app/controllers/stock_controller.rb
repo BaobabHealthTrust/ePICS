@@ -8,7 +8,7 @@ class StockController < ApplicationController
 
   def create
     session[:stock] = nil
-    stock_hash = Hash.new
+    stock_hash = Hash.new()
     stock_hash[:supplier_id] = params[:stock][:supplier_id]
     stock_hash[:grn_number] = params[:stock][:grn_number]
     stock_hash[:grn_date] = params[:stock][:grn_date]

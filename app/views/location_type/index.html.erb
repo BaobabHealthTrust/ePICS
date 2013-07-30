@@ -1,2 +1,54 @@
-<h1>LocationType#index</h1>
-<p>Find me in app/views/location_type/index.html.erb</p>
+<script>
+function showMsg(msg){
+          alert(msg);
+        }
+ function ajaxRequest(control, url){
+           var httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function() {
+                handleAjaxRequest(control, httpRequest);
+            };
+            try {
+                httpRequest.open('GET', url, true);
+                httpRequest.send(null);
+            } catch(e){
+            }
+        }
+
+        function handleAjaxRequest(control, aXMLHttpRequest) {
+          if (!aXMLHttpRequest) return;
+
+          if (aXMLHttpRequest.readyState == 4 && aXMLHttpRequest.status == 200) {
+
+              var result = aXMLHttpRequest.responseText;
+
+              if (control != null){
+                control.innerHTML = result;
+              } else {
+                eval(result);
+
+                window.location.reload();
+              }
+          }
+
+        }
+</script>
+
+<table cellpadding=5 width='100%'>
+  <tr>
+    <td>
+      <table cellpadding=5 width='100%'><tr><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Name</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Description</th><th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th></tr>
+        <% @location_types.each do |location_type| %>
+          <tr>
+            <td style='border: 1px solid #ccc;'><%= location_type.name rescue '&nbsp;' %></td>
+            <td style='border: 1px solid #ccc;'><%= location_type.description rescue '&nbsp;' %></td><td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='window.location="/location_type/edit?location_type=" + <%= location_type.epics_location_type_id %>' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/location_type/void?location_type_id=" + <%= location_type.epics_location_type_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
+
+        <% end %>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td align='center'>
+      <button onclick='window.location="/location_type/new"'>Add</button></td>
+  </tr>
+</table>
+

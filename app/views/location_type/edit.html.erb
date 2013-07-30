@@ -1,2 +1,24 @@
-<h1>LocationType#edit</h1>
-<p>Find me in app/views/location_type/edit.html.erb</p>
+
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/location_type/index'
+	tt_cancel_destination='/location_type/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'update', :method => :post  do %>
+
+  <%= text_field_tag "location_type[name]", @location_type.name,
+       {:id => 'location_type_name', :field_type => 'alpha',
+        :helpText => 'Enter Location Type Name'} %>
+
+  <%= text_area_tag "location_type[description]", @location_type.description,
+       {:id => 'location_type_description', :field_type => 'alpha',
+        :helpText => 'Enter Location Description'} %>
+
+  <%= hidden_field_tag("location_type[location_type_id]", @location_type.epics_location_type_id) %>
+
+  <%= submit_tag "Update Location Type" %>
+
+<%  end %>

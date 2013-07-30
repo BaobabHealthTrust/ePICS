@@ -1,4 +1,4 @@
-class CreateEpicsProductCategories < ActiveRecord::Migration
+class CreateEpicsProductCategory < ActiveRecord::Migration
   def self.up
     create_table :epics_product_category, :primary_key => :epics_product_category_id do |t|
       t.string :class

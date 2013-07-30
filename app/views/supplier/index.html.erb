@@ -51,7 +51,7 @@ function showMsg(msg){
             <td style='border: 1px solid #ccc;'><%= supplier.address rescue '' %></td>
             <td style='border: 1px solid #ccc;'><%= supplier.phone_number rescue '' %></td>
             <td style='border: 1px solid #ccc;'><%= supplier.local == true ? "Yes" : "No" rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><%= EpicsSupplierType.find(supplier.epics_supplier_type_id).name %></td>
+            <td style='border: 1px solid #ccc;'><%= supplier.epics_supplier_type.name %></td>
             <td style='border: 1px solid #ccc;'><%= supplier.description rescue '' %></td>
             <td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td>
             <img src='/images/pencil.png' onclick='window.location="/supplier/edit?supplier=" + <%= supplier.epics_supplier_id %>' style='padding-top: 3px; cursor: pointer;'/></td>

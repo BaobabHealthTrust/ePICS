@@ -1,2 +1,25 @@
-<h1>Location#new</h1>
-<p>Find me in app/views/location/new.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/location/index'
+	tt_cancel_destination='/location/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+  <%= text_field_tag "location[name]", nil,
+       {:id => 'location_name', :field_type => 'alpha',
+        :helpText => 'Location Name'} %>
+
+  <%= select_tag "location[location_type_id]", options_for_select(@location_type_map),
+       {:id => 'location_type_id', :field_type => 'alpha',
+        :helpText => 'Location Type Name'} %>
+
+  <%= text_area_tag "location[description]", nil,
+       {:id => 'location_description', :field_type => 'alpha',
+        :helpText => 'Location Description'} %>
+
+  <%= submit_tag "Create Location" %>
+
+<%  end %>

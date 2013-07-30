@@ -4,11 +4,11 @@ EPICS::Application.routes.draw do
 
   get "location_type/new"
 
-  get "location_type/create"
+  post "location_type/create"
 
   get "location_type/edit"
 
-  get "location_type/update"
+  post "location_type/update"
 
   get "location_type/void"
 
@@ -16,11 +16,11 @@ EPICS::Application.routes.draw do
 
   get "location/new"
 
-  get "location/create"
+  post "location/create"
 
   get "location/edit"
 
-  get "location/update"
+  post "location/update"
 
   get "location/void"
 

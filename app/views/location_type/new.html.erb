@@ -1,2 +1,21 @@
-<h1>LocationType#new</h1>
-<p>Find me in app/views/location_type/new.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/location_type/index'
+	tt_cancel_destination='/location_type/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+  <%= text_field_tag "location_type[name]", nil,
+       {:id => 'location_type_name', :field_type => 'alpha',
+        :helpText => 'Enter Location Type Name'} %>
+
+  <%= text_area_tag "location_type[description]", nil,
+       {:id => 'location_type_description', :field_type => 'alpha',
+        :helpText => 'Enter Location Description'} %>
+
+  <%= submit_tag "Create Location Type" %>
+
+<%  end %>

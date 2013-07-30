@@ -44,7 +44,7 @@ function showMsg(msg){
         <% @locations.each do |location| %>
           <tr>
             <td style='border: 1px solid #ccc;'><%= location.name rescue '&nbsp;' %></td>
-            <td style='border: 1px solid #ccc;'><%= location.EpicsLocationType.name rescue '&nbsp;' %></td>
+            <td style='border: 1px solid #ccc;'><%= location.epics_location_type.name rescue '&nbsp;' %></td>
             <td style='border: 1px solid #ccc;'><%= location.description rescue '&nbsp;' %></td><td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='window.location="/location/edit?location=" + <%= location.epics_location_id %>' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/location/void?location_id=" + <%= location.epics_location_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
 
         <% end %>

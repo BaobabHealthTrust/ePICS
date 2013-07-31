@@ -1,2 +1,35 @@
-<h1>StockDetails#new</h1>
-<p><%= session[:stock].inspect %></p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/stock/new'
+	tt_cancel_destination='/stock/new'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+ <%= select_tag "stock_details[location_id]", options_for_select(@locations_map),
+    {:id => "stock_details_location_id",:field_type => 'alpha',
+    :helpText => "Select Item Location"} %>
+
+<%= select_tag "stock_details[product_category_id]", options_for_select(@product_category_map),
+      {:id => "product_category_id",:field_type => 'alpha',
+      :helpText => "Select Item Category"} %>
+
+  <%= select_tag "stock_details[product_id]", options_for_select(@product_map),
+      {:id => "product_id",:field_type => 'alpha',
+      :helpText => "Select Item"} %>
+
+
+  <%= text_field_tag "stock_details[expire]", nil,
+    {:id => "product_expire",:field_type => 'date',
+    :helpText => "Product Expiry Date"} %>
+
+  <%= text_field_tag "stock_details[quantity]", nil,
+       {:id => 'product_quantity', :field_type => 'number',
+        :helpText => 'Enter Product Quantity'} %>
+
+  <%= submit_tag "Create Stock Details" %>
+
+
+<% end %>

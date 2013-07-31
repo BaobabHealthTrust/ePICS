@@ -4,11 +4,11 @@ EPICS::Application.routes.draw do
 
   get "stock_details/new"
 
-  get "stock_details/create"
+  post "stock_details/create"
 
   get "stock_details/edit"
 
-  get "stock_details/update"
+  post "stock_details/update"
 
   get "stock_details/void"
 

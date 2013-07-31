@@ -138,24 +138,17 @@
           <div id="container" style="width: 100%; height: 540px; overflow: auto;">
           
             <table style="width:100%" class="buttons-table">
+            <%
+            count = 0
+            1.upto(3).each do |number|%>
               <tr>
-                <td id='button1'></td>
-                <td id='button2'></td>
-                <td id='button3'></td>
-                <td id='button4'></td>
+                <td id='button<%=count+=1%>'></td>
+                <td id='button<%=count+=1%>'></td>
+                <td id='button<%=count+=1%>'></td>
+                <td id='button<%=count+=1%>'></td>
+                <td id='button<%=count+=1%>'></td>
               </tr>
-              <tr>
-                <td id='button5'></td>
-                <td id='button6'></td>
-                <td id='button7'></td>
-                <td id='button8'></td>
-              </tr>
-              <tr>
-                <td id='button9'></td>
-                <td id='button10'></td>
-                <td id='button11'></td>
-                <td id='button12'></td>
-              </tr>
+            <%end%>
             </table> 
             
           <div>

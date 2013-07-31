@@ -63,4 +63,13 @@ class ProductController < ApplicationController
 		render :text => 'showMsg("Record Deleted!")'
   end
 
+  def get_products
+    @products = EpicsProduct.where(:epics_product_category_id => params[:product_category_id]).map{|product|[[product.name]]}
+    render :text => "<li></li><li>" + @products.join("</li><li>") + "</li>"
+  end
+
+  def expire
+    render :text => 'this'
+  end
+
 end

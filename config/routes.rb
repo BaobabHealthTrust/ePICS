@@ -96,6 +96,10 @@ EPICS::Application.routes.draw do
 
   get "product/void"
 
+  get "product/get_products"
+
+  get "product/expire"
+
   get "product_type/index"
 
   get "product_type/new"

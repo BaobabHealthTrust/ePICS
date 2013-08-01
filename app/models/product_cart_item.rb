@@ -2,12 +2,13 @@
 # and open the template in the editor.
 
 class ProductCartItem
-  attr_reader :product, :quantity, :location
+  attr_reader :product, :quantity, :location, :expiry_date
 
-  def initialize(product, quantity, location)
+  def initialize(product, quantity, location, expiry_date)
     @product = product
     @quantity = quantity
     @location = location
+    @expiry_date = expiry_date
   end
 
   def increment_quantity
@@ -28,6 +29,10 @@ class ProductCartItem
 
   def location
     @location
+  end
+
+  def expiry_date
+    @expiry_date
   end
   
 end

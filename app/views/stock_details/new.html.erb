@@ -64,15 +64,15 @@
       :helpText => "Select Item"} %>
 
 
-  <%= text_field_tag "stock_details[expire]", nil,
+  <%= text_field_tag "stock_details[expiry_date]", nil,
     {:id => "product_expire",
      :field_type => 'date',
      :condition => 'showExpiryDate();',
-     :helpText => "Product Expiry Date"} %>
+     :helpText => "Select Item Expiry Date"} %>
 
   <%= text_field_tag "stock_details[quantity]", nil,
        {:id => 'product_quantity', :field_type => 'number',
-        :helpText => 'Enter Product Quantity'} %>
+        :helpText => 'Select Item Quantity'} %>
 
   <%= submit_tag "Create Stock Details" %>
 

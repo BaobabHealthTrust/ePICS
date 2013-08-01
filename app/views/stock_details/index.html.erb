@@ -1,2 +1,54 @@
 <h1>StockDetails#index</h1>
-<p>Find me in app/views/stock_details/index.html.erb</p>
+
+<table>
+  <tr>
+    <th colspan="3" >Supplier Details</th>
+  </tr>
+  <tr>
+    <td>Supplier Name:</td><td>&nbsp;</td><td><%= EpicsSupplier.find(session[:stock][:supplier_id]).name rescue "Supplier Not Known"   %></td>
+  </tr>
+  <tr>
+    <td>Batch Number:</td><td>&nbsp;</td><td><%= session[:stock][:grn_number]   %></td>
+  </tr>
+  <tr>
+    <td>Delivered Date:</td><td>&nbsp;</td><td><%= session[:stock][:grn_date].to_date.strftime("%d, %B %Y")   %></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <th colspan ="4">
+      Stock Details
+    </th>
+  </tr>
+  <tr>
+    <th>
+     Item Name
+    </th>
+    <th>
+     Item Code
+    </th>
+    <th>
+      Item Quantity
+    </th>
+    <th>
+      Expiry Date
+    </th>
+  </tr>
+  <% for item in @cart.items %>
+  <tr>
+    <td><%=  item.name %></td>
+    <td><%=  EpicsProduct.find(item.product_id).product_code rescue "Code not found"  %></td>
+    <td><%=  item.quantity %></td>
+    <td><%=  item.expiry_date.to_strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+  </tr>
+  <% end %>
+  <td align="center" colspan="4" >
+    <button class="blue" style="margin: 8px; width: 250px; float: right;"
+              onclick="window.location='/stock_details/new'">
+      <span>
+        Add Item
+      </span>
+    </button>
+  </td>
+</table>

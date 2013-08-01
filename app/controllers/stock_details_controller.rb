@@ -1,5 +1,8 @@
 class StockDetailsController < ApplicationController
+
+
   def index
+    @cart = find_product_cart
   end
 
   def new
@@ -12,8 +15,14 @@ class StockDetailsController < ApplicationController
   end
 
   def create
-    raise session[:stock].inspect
-    raise params.to_yaml
+    @cart = find_product_cart
+    product = EpicsProduct.find_by_name(params[:stock_details][:product_name])
+    quantity = params[:stock_details][:quantity]
+    location = params[:stock_details][:location_id]
+    expiry_date = params[:stock_details][:expiry_date]
+    @cart.add_product(product,quantity,location,expiry_date)
+
+    redirect_to :action => :index
   end
 
   def edit
@@ -23,6 +32,12 @@ class StockDetailsController < ApplicationController
   end
 
   def void
+  end
+
+  protected
+  
+  def find_product_cart
+    session[:cart] ||= ProductCart.new
   end
 
 end

@@ -2,6 +2,7 @@
 
 	tt_cancel_show='/stock/new'
 	tt_cancel_destination='/stock/new'
+        showDate = false
 
         function set_ajaxURL_for_suggestions(value) {
           url = "/product/get_products?product_category_id=" + value ;
@@ -9,40 +10,10 @@
           listSuggestions(tstCurrentPage);
        }
 
-       function ajaxRequest(control, url){
-           var httpRequest = new XMLHttpRequest();
-            httpRequest.onreadystatechange = function() {
-                handleAjaxRequest(control, httpRequest);
-            };
-            try {
-                httpRequest.open('GET', url, true);
-                httpRequest.send(null);
-            } catch(e){
-            }
-        }
-
-        function handleAjaxRequest(control, aXMLHttpRequest) {
-          if (!aXMLHttpRequest) return;
-
-          if (aXMLHttpRequest.readyState == 4 && aXMLHttpRequest.status == 200) {
-
-              var result = aXMLHttpRequest.responseText;
-              
-              if (control != null){
-                control.innerHTML = result;
-              } else {
-                eval(result);
-
-                window.location.reload();
-              }
-          }
-
-        }
-
-        var showDate = false;
+         
 
         function showExpiryDateOrNot() {
-          category_id =  $("product_category_id").value;
+          product_name =  $("product_name").value;
 
           if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari  
             xmlhttp=new XMLHttpRequest();                                             
@@ -51,17 +22,18 @@
           }                                                                           
           xmlhttp.onreadystatechange=function() {                                     
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
-              var results = xmlhttp.responseText;                                     
-              if(results == 'this') {         
+              var results = xmlhttp.responseText;
+ 
+              if(results == 'true') {
                 showDate = true;
-                return;                                                               
-              }else{                                                                  
+                return;
+              }else{
                 showDate = false;
-                return;                                                               
+                return;
               }                                                                       
             }                                                                         
           }                                                                           
-          xmlhttp.open("GET","/product/expire?category_id="+category_id,true);           
+          xmlhttp.open("GET","/product/expire?product_name="+product_name,true);
           xmlhttp.send();
 
         }
@@ -82,20 +54,20 @@
 <%= select_tag "stock_details[product_category_id]", options_for_select(@product_category_map),
       { :id => "product_category_id",
         :field_type => 'alpha',
-        :tt_onUnLoad => 'showExpiryDateOrNot()',
         :helpText => "Select Item Category"} %>
 
   <%= select_tag "stock_details[product_name]", nil,
       {:id => "product_name",
       :field_type => 'alpha',
       :tt_onLoad => 'set_ajaxURL_for_suggestions($("product_category_id").value);',
+      :tt_onUnLoad => 'showExpiryDateOrNot();',
       :helpText => "Select Item"} %>
 
 
   <%= text_field_tag "stock_details[expire]", nil,
     {:id => "product_expire",
      :field_type => 'date',
-     :condition => "showExpiryDate();",
+     :condition => 'showExpiryDate();',
      :helpText => "Product Expiry Date"} %>
 
   <%= text_field_tag "stock_details[quantity]", nil,

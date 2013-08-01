@@ -12,6 +12,7 @@ class StockDetailsController < ApplicationController
   end
 
   def create
+    raise session[:stock].inspect
     raise params.to_yaml
   end
 

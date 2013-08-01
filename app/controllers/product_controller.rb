@@ -69,7 +69,8 @@ class ProductController < ApplicationController
   end
 
   def expire
-    render :text => 'this'
+    @expires = EpicsProduct.where(:name => params[:product_name]).first.expire
+    render :text => @expires.to_s
   end
 
 end

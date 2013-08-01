@@ -71,7 +71,9 @@
      :helpText => "Select Item Expiry Date"} %>
 
   <%= text_field_tag "stock_details[quantity]", nil,
-       {:id => 'product_quantity', :field_type => 'number',
+       {:id => 'product_quantity', 
+        :field_type => 'number',
+        :min => 1,
         :helpText => 'Select Item Quantity'} %>
 
   <%= submit_tag "Create Stock Details" %>

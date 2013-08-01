@@ -9,7 +9,7 @@ class ProductCart
 def add_product(product, quantity, location, expiry_date)
   current_item = @items.find {|item| item.product == product}
   if current_item
-    current_item.increment_quantity
+    current_item.increment_quantity(quantity)
   else
     @items << ProductCartItem.new(product, quantity, location, expiry_date)
   end

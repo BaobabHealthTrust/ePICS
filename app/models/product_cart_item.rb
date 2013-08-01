@@ -11,8 +11,8 @@ class ProductCartItem
     @expiry_date = expiry_date
   end
 
-  def increment_quantity
-    @quantity += 1
+  def increment_quantity(quantity)
+    @quantity += quantity
   end
 
   def name

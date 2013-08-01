@@ -36,6 +36,43 @@ class StockDetailsController < ApplicationController
   def void
   end
 
+  def checkout
+    stock = session[:stock]
+    stock_details = find_product_cart
+
+    unless stock.nil?
+      unless stock_details.nil?
+        EpicsSupplierType.transaction do
+          @stock = EpicsStock.new()
+          @stock.grn_date = stock[:grn_date]
+          @stock.grn_number = stock[:grn_number]
+          @stock.epics_supplier_id = stock[:supplier_id]
+
+          @stock.save
+
+          for item in stock_details.items
+            @stock_detail = EpicsStockDetails.new()
+            @stock_detail.epics_stock_id = @stock.epics_stock_id
+            @stock_detail.epics_products_id = item.product_id
+            @stock_detail.epics_location_id = item.location
+            @stock_detail.quantity = item.quantity
+            @stock_detail.epics_product_units_id = item.product.epics_product_units_id
+
+           @stock_detail.save
+
+            unless item.expiry_date.blank?
+
+              EpicsStockExpiryDates.create({:epics_stock_details_id => @stock_detail.epics_stock_details_id,
+                                            :expiry_date => item.expiry_date })
+            end
+           end
+           session[:cart] = session[:stock] = nil
+        end
+      end
+    end
+    
+  end
+
   protected
   
   def find_product_cart

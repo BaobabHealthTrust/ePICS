@@ -78,11 +78,19 @@
     <td><%=  item.expiry_date.to_strftime("%d - %b - %Y") rescue "Does not expire" %></td>
   </tr>
   <% end %>
-  <td align="center" colspan="4" >
+  <td align="center" colspan="2" >
     <button class="blue" style="margin: 8px; width: 250px; float: right;"
               onclick="window.location='/stock_details/new'">
       <span>
         Add Item
+      </span>
+    </button>
+  </td>
+  <td align="center" colspan="2" >
+    <button class="blue" style="margin: 8px; width: 250px; float: right;"
+              onclick="window.location='/stock_details/checkout'">
+      <span>
+        Save <%= pluralize(@cart.items.count, 'Item') %>
       </span>
     </button>
   </td>

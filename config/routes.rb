@@ -6,6 +6,8 @@ EPICS::Application.routes.draw do
 
   post "stock_details/create"
 
+  get "stock_details/checkout"
+
   get "stock_details/edit"
 
   post "stock_details/update"

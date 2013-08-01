@@ -1,7 +1,7 @@
 class ProductController < ApplicationController
   def index
     @products = EpicsProduct.all
-    render :layout => false
+    render :layout => "custom"
   end
 
   def new

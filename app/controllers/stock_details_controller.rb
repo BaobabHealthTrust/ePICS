@@ -3,6 +3,7 @@ class StockDetailsController < ApplicationController
 
   def index
     @cart = find_product_cart
+    render :layout => "custom"
   end
 
   def new

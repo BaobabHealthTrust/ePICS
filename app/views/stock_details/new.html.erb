@@ -26,10 +26,8 @@
  
               if(results == 'true') {
                 showDate = true;
-                return;
               }else{
                 showDate = false;
-                return;
               }                                                                       
             }                                                                         
           }                                                                           
@@ -40,6 +38,13 @@
 
         function showExpiryDate() {
           return showDate;
+        }
+
+        function addFunctionToClick() {
+          l = document.getElementsByTagName('li');                                    
+          for (i = 0 ; i < l.length ; i++) {                                          
+            l[i].setAttribute("onmousedown","null; updateTouchscreenInputForSelect(this); showExpiryDateOrNot();")
+          }   
         }
 
 //-->
@@ -59,8 +64,7 @@
   <%= select_tag "stock_details[product_name]", nil,
       {:id => "product_name",
       :field_type => 'alpha',
-      :tt_onLoad => 'set_ajaxURL_for_suggestions($("product_category_id").value);',
-      :tt_onUnLoad => 'showExpiryDateOrNot();',
+      :tt_onLoad => 'set_ajaxURL_for_suggestions($("product_category_id").value);setTimeout("addFunctionToClick();",500);',
       :helpText => "Select Item"} %>
 
 

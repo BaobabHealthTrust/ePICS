@@ -2,7 +2,7 @@ class SupplierController < ApplicationController
 
   def index
     @suppliers = EpicsSupplier.order(:name)
-    render :layout => false
+    render :layout => "custom"
   end
 
   def new

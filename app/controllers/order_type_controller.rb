@@ -2,7 +2,7 @@ class OrderTypeController < ApplicationController
 
   def index
     @order_types = EpicsOrderTypes.order(:name)
-    render :layout => false
+    render :layout => "custom"
   end
 
   def new

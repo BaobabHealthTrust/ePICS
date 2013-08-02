@@ -1,7 +1,7 @@
 class LocationTypeController < ApplicationController
   def index
     @location_types = EpicsLocationType.all
-    render :layout => false
+    render :layout => "custom"
   end
 
   def new

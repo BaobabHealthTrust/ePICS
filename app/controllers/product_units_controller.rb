@@ -2,7 +2,7 @@ class ProductUnitsController < ApplicationController
   
   def index
     @product_units = EpicsProductUnits.order(:name)
-    render :layout => false
+    render :layout => "custom"
   end
 
   def new

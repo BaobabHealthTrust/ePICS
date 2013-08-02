@@ -67,11 +67,17 @@ class StockDetailsController < ApplicationController
             end
            end
            session[:cart] = session[:stock] = nil
-           render :layout => "custom"
+           redirect_to :action => :summary, :stock_id => @stock.epics_stock_id
         end
       end
     end
     
+  end
+
+  def summary
+    @stock = EpicsStock.find(params[:stock_id])
+    @stock_details = EpicsStockDetails.find_all_by_epics_stock_id(params[:stock_id])
+    render :layout => "custom"
   end
 
   protected

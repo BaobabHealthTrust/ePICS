@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Home</title>
+    <style type="text/css">
+      body {
+        background-color: #fff;
+        margin: 20px;
+        font-family: "Nimbus Sans L", "Arial Narrow", sans-serif;
+        overflow: hidden;
+        color: #000;
+        -moz-user-select: none;
+      }
+
+      .buttons-table td {
+        text-align: center;
+      }
+
+      .buttons-table img {
+        width: 128px;
+        height: 128px;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <table width="100%" cellspacing="0" cellpadding="10">
+      <tr>
+        <td style="width: 100px; border-bottom: 1px solid #5496ef;">
+          <img alt="EPICS" src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ?
+                   "app.png" : "baobab.png") %>" height="80" style="float: right;" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" style="padding: 0px;">
+          <div id="container" style="width: 100%; height: 540px; overflow: auto;">
+
+
+            <table>
+              <tr>
+                <th colspan="3" >Supplier Details</th>
+              </tr>
+              <tr>
+                <td>Supplier Name:</td><td>&nbsp;</td><td><%= @stock.epics_supplier.name %></td>
+              </tr>
+              <tr>
+                <td>Batch Number:</td><td>&nbsp;</td><td><%= @stock.grn_number   %></td>
+              </tr>
+              <tr>
+                <td>Delivered Date:</td><td>&nbsp;</td><td><%= @stock.grn_date.to_date.strftime("%d, %B %Y")   %></td>
+              </tr>
+            </table>
+
+            <table>
+              <tr>
+                <th colspan ="4">
+                  Stock Details
+                </th>
+              </tr>
+              <tr>
+                <th>
+                  Item Name
+                </th>
+                <th>
+                  Item Code
+                </th>
+                <th>
+                  Item Quantity
+                </th>
+                <th>
+                  Expiry Date
+                </th>
+              </tr>
+              <% @stock_details.each do |stock_detail|   %>
+                <tr>
+                  <td><%=  stock_detail.epics_product.name %></td>
+                  <td><%=  stock_detail.epics_product.product_code rescue "Code not found"  %></td>
+                  <td><%=  pluralize(stock_detail.quantity.to_s,stock_detail.epics_product.epics_product_units.name) %></td>
+                  <td><%=  stock_detail.epics_stock_expiry_dates.expiry_date.strftime("%d - %b - %Y")  %></td>
+                </tr>
+              <% end %>
+                
+            </table>
+
+          </div>
+        </td>
+      </tr>
+
+    </table>
+  </body>
+</html>
+

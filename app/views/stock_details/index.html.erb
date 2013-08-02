@@ -73,7 +73,7 @@
   <% for item in @cart.items %>
   <tr>
     <td><%=  item.name %></td>
-    <td><%=  EpicsProduct.find(item.product_id).product_code rescue "Code not found"  %></td>
+    <td><%=  item.product.product_code rescue "Code not found"  %></td>
     <td><%=  item.quantity %></td>
     <td><%=  item.expiry_date.to_strftime("%d - %b - %Y") rescue "Does not expire" %></td>
   </tr>

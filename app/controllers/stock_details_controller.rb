@@ -67,6 +67,7 @@ class StockDetailsController < ApplicationController
             end
            end
            session[:cart] = session[:stock] = nil
+           render :layout => "custom"
         end
       end
     end

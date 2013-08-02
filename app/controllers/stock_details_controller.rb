@@ -11,7 +11,9 @@ class StockDetailsController < ApplicationController
       @stock_detail = EpicsStockDetails.new()
       @locations_map = EpicsLocation.all.map{|location| [location.name,location.epics_location_id]}
       @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
-      @product_map = EpicsProduct.all.map{|product| [product.name, product.epics_products_id]}
+      @product_expire_details = {}
+      epics_products = EpicsProduct.all
+      epics_products.map{|product| @product_expire_details[product.name] = product.expire }
     end
   end
 

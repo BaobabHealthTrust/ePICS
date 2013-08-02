@@ -45,25 +45,25 @@ class StockDetailsController < ApplicationController
       unless stock_details.nil?
         EpicsStock.transaction do
           @stock = EpicsStock.new()
-          @stock.grn_date = stock[:grn_date]
-          @stock.grn_number = stock[:grn_number]
-          @stock.epics_supplier_id = stock[:supplier_id]
-          @stock.save!
+          stock.grn_date = stock[:grn_date]
+          stock.grn_number = stock[:grn_number]
+          stock.epics_supplier_id = stock[:supplier_id]
+          stock.save!
 
           for item in stock_details.items
-            @stock_detail = EpicsStockDetails.new()
-            @stock_detail.epics_stock_id = @stock.epics_stock_id
-            @stock_detail.epics_products_id = item.product_id
-            @stock_detail.epics_location_id = item.location
-            @stock_detail.quantity = item.quantity
-            @stock_detail.epics_product_units_id = item.product.epics_product_units_id
-            @stock_detail.save!
+            stock_detail = EpicsStockDetails.new()
+            stock_detail.epics_stock_id = stock.epics_stock_id
+            stock_detail.epics_products_id = item.product_id
+            stock_detail.epics_location_id = item.location
+            stock_detail.quantity = item.quantity
+            stock_detail.epics_product_units_id = item.product.epics_product_units_id
+            stock_detail.save!
 
             unless item.expiry_date.blank?
-              @stock_expiry_dates = EpicsStockExpiryDates.new()
-              @stock_expiry_dates.epics_stock_details_id = @stock_detail.epics_stock_details_id
-              @stock_expiry_dates.expiry_date = item.expiry_date
-              @stock_expiry_dates.save!
+              stock_expiry_dates = EpicsStockExpiryDates.new()
+              stock_expiry_dates.epics_stock_details_id = stock_detail.epics_stock_details_id
+              stock_expiry_dates.expiry_date = item.expiry_date
+              stock_expiry_dates.save!
             end
            end
            session[:cart] = session[:stock] = nil

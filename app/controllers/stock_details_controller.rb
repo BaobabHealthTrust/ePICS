@@ -40,11 +40,10 @@ class StockDetailsController < ApplicationController
   def checkout
     stock = session[:stock]
     stock_details = find_product_cart
-
     unless stock.nil?
       unless stock_details.nil?
         EpicsStock.transaction do
-          raise stock[:witness_names].to_yaml
+          
           @stock = EpicsStock.new()
           @stock.grn_date = stock[:grn_date]
           @stock.grn_number = stock[:grn_number]
@@ -52,9 +51,9 @@ class StockDetailsController < ApplicationController
           @stock.save!
 
           @witness = EpicsWitnessNames.new
+          @witness.epics_stock_id = @stock.epics_stock_id
           @witness.name = stock[:witness_names]
           @witness.save!
-
 
           for item in stock_details.items
             @stock_detail = EpicsStockDetails.new()

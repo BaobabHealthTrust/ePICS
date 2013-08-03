@@ -85,7 +85,7 @@
   <tr>
     <td style="text-align: left; width: 20%;">Delivered Date:</td>
     <td>&nbsp;</td>
-    <td><%= session[:stock][:grn_date].to_date.strftime("%d, %B %Y")   %></td>
+    <td><%= session[:stock][:grn_date].to_date.strftime("%d %B %Y")   %></td>
   </tr>
 </table>
 
@@ -117,7 +117,7 @@
     <td><%=  item.name %></td>
     <td><%=  item.product.product_code rescue "Code not found"  %></td>
     <td><%=  item.quantity %></td>
-    <td><%=  item.expiry_date.to_strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+    <td><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
   </tr>
   <% end %>
  </table>

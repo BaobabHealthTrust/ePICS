@@ -20,6 +20,11 @@
        {:id => 'grn_date', :field_type => 'date',
         :helpText => 'Enter Date of Delivery'} %>
 
+  <%= text_field_tag "stock[witness_names]", nil,
+       {:id => 'witness_names', :field_type => 'alpha',
+        :helpText => 'Enter Witness Names'} %>
+
+
   <%= submit_tag "Create Stock" %>
 
 

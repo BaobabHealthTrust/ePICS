@@ -76,7 +76,7 @@
                 <td style="width: 10%;">Batch Number:</td><td>&nbsp;</td><td><%= @stock.grn_number   %></td>
               </tr>
               <tr>
-                <td style="width: 10%;">Delivered Date:</td><td>&nbsp;</td><td><%= @stock.grn_date.to_date.strftime("%d, %B %Y")   %></td>
+                <td style="width: 10%;">Delivered Date:</td><td>&nbsp;</td><td><%= @stock.grn_date.to_date.strftime("%d %B %Y")   %></td>
               </tr>
             </table>
     
@@ -94,13 +94,8 @@
               </thead> 
               <tbody> 
               <% 
-              tr_class = 'white'
               @stock_details.each do |stock_detail|   
-                if tr_class == 'white'
-                  tr_class = 'blue'
-                else
-                  tr_class = 'white'
-                end 
+              tr_class = cycle("blue", "white")
               %>
                 <tr class="tr_<%=tr_class%>">
                   <td><%=  stock_detail.epics_product.name %></td>

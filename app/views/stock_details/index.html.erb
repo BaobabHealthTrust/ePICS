@@ -61,6 +61,12 @@
       border-width: 1px 0px 0px 0px;                                          
       border-style: solid;                                                    
     }
+    .tr_blue td {
+      background-color: rgb(196, 255, 196)
+    }
+
+    .tr_white td {
+    }
 </style>
 
 <div class="main-content">
@@ -112,8 +118,12 @@
     <th style="text-align: left; width: 10%;">Item Quantity</th>
     <th style="text-align: left; width: 10%;">Expiry Date</th>
   </tr>
-  <% for item in @cart.items %>
-  <tr>
+  <%
+   for item in @cart.items
+   tr_class = cycle("blue", "white")
+  %>
+   
+  <tr class ="tr_<%= tr_class %>">
     <td><%=  item.name %></td>
     <td><%=  item.product.product_code rescue "Code not found"  %></td>
     <td><%=  item.quantity %></td>

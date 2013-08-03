@@ -34,7 +34,7 @@ class StockController < ApplicationController
 
   def get_witness_names
     @names = EpicsWitnessNames.where("name LIKE (?)",
-                "%#{params[:search_string]}%").map{|winess|[[witness.name]]}
+                "%#{params[:search_string]}%").map{|witness|[[witness.name]]}
 
     render :text => "<li></li><li>" + @names.join("</li><li>") + "</li>"
   end

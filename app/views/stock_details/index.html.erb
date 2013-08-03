@@ -71,6 +71,9 @@
     <th colspan="3" style="text-align: left;">Supplier Details</th>
   </tr>
   <tr>
+    <th colspan="3" style="text-align: left;">&nbsp;</th>
+  </tr>
+  <tr>
     <td style="text-align: left; width: 20%;">Supplier Name:</td><td>&nbsp;</td>
     <td><%= EpicsSupplier.find(session[:stock][:supplier_id]).name rescue "Supplier Not Known"   %></td>
   </tr>

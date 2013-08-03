@@ -21,7 +21,10 @@
         :helpText => 'Enter Date of Delivery'} %>
 
   <%= text_field_tag "stock[witness_names]", nil,
-       {:id => 'witness_names', :field_type => 'alpha',
+       {:id => 'witness_names', 
+        :field_type => 'alpha',
+        :ajaxURL => '/stock/get_witness_names?search_string=',
+        :allowFreeText => true,
         :helpText => 'Enter Witness Names'} %>
 
 

@@ -44,11 +44,17 @@ class StockDetailsController < ApplicationController
     unless stock.nil?
       unless stock_details.nil?
         EpicsStock.transaction do
+          raise stock[:witness_names].to_yaml
           @stock = EpicsStock.new()
           @stock.grn_date = stock[:grn_date]
           @stock.grn_number = stock[:grn_number]
           @stock.epics_supplier_id = stock[:supplier_id]
           @stock.save!
+
+          @witness = EpicsWitnessNames.new
+          @witness.name = stock[:witness_names]
+          @witness.save!
+
 
           for item in stock_details.items
             @stock_detail = EpicsStockDetails.new()

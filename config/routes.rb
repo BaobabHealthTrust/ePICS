@@ -20,6 +20,8 @@ EPICS::Application.routes.draw do
 
   get "stock/new"
 
+  get "stock/get_witness_names"
+
   post "stock/create"
 
   get "stock/edit"

@@ -3,6 +3,7 @@ class OrdersController < ApplicationController
   end
 
   def new
+    @order = EpicsOrderTypes.all.map{|order| [order.name,order.epics_order_type_id]}
   end
 
   def create

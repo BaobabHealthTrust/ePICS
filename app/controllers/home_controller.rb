@@ -3,7 +3,7 @@ class HomeController < ApplicationController
     @application = [
       ["Add Items","stock/new","default.png"],
       ["Update Items","z","default.png"],
-      ["Dispense","z","default.png"],
+      ["Dispense","orders/new","default.png"],
       ["View alerts","z","default.png"]
     ]
 

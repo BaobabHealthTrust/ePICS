@@ -3,11 +3,18 @@ class HomeController < ApplicationController
     @application = [
       ["Add Items","stock/new","default.png"],
       ["Update Items","z","default.png"],
-      ["Dispense","orders/new","default.png"],
-      ["View alerts","z","default.png"]
+      ["Dispense","orders/new","default.png"]
     ]
 
-    @reports = []
+    @reports = [
+      ["Drug Availability","/report/drug_availability","default.png"],
+      ["Daily Dispensation","/report/audit_report","default.png"],
+      ["Central Hospital Monthly LMIS Report","/report/monthly_report","default.png"],
+      ["Audit Report","/report/audit_report","default.png"],
+      ["View Received/Issued","/report/received_items","default.png"],
+      ["View Store Room","/report/store_room","default.png"],
+      ["View alerts","/report/view_alerts","default.png"]
+    ]
     @activities = []
     @administration = [
       ["Set Item Units","/product_units/index","default.png"],

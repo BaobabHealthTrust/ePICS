@@ -16,4 +16,4 @@ nbproject
 Gemfile.lock
 log/*
 tmp/*
-
+.idea/*

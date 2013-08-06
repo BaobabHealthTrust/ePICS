@@ -1,5 +1,15 @@
 EPICS::Application.routes.draw do
 
+  get "user/login"
+
+  post "user/authenticate"
+
+  get "user/enter_workstation"
+
+  post "user/locations"
+
+  get "home/dispensary"
+
   get "orders/index"
 
   get "orders/new"

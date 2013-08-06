@@ -1,5 +1,9 @@
 EPICS::Application.routes.draw do
 
+  get "user/login"
+
+  post "user/authenticate"
+
   get "orders/index"
 
   get "orders/new"

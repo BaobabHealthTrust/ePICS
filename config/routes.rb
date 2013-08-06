@@ -154,6 +154,19 @@ EPICS::Application.routes.draw do
 
   post "supplier_type/update"
 
+  get"report/drug_availability"
+
+  get"report/audit_report"
+
+  get"report/daily_dispenstation"
+
+  get"report/store_room"
+
+  get"report/received_items"
+
+  get"report/monthly_report"
+
+  get"report/view_alerts"
 
   #get "home/index"
 

@@ -8,6 +8,8 @@ EPICS::Application.routes.draw do
 
   post "user/locations"
 
+  get "home/dispensary"
+
   get "orders/index"
 
   get "orders/new"

@@ -1,22 +1,17 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  #before_filter :check_login, :except => ['login','enter_workstation', 'locations','authenticate']
+  before_filter :perform_basic_auth, :except => ['login','logout','authenticate']                         
 
-
-
-  def check_login
-
-    raise session.to_yaml
-    if session[:user_id].blank?
-
-      redirect_to '/user/login'
-
-    else
-
-    end
-
-
-
-  end
+  protected                                                                     
+                                                                                
+  def perform_basic_auth                                                        
+    if session[:user_id].blank?                                                 
+      respond_to do |format|                                                    
+        format.html { redirect_to :controller => 'user',:action => 'logout' }   
+      end                                                                       
+    elsif not session[:user_id].blank?                                          
+      User.current_user = User.find(session[:user_id])
+    end                                                                         
+  end 
 
 end

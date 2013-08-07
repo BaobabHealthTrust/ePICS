@@ -1,80 +1,68 @@
 EPICS::Application.routes.draw do
 
-  get "user/login"
 
+  ######## user ########
+  match '/login' => "user#login"
+  match '/logout' => "user#logout"
   post "user/authenticate"
-
   get "user/enter_workstation"
-
   post "user/locations"
+  ######## user end ########
 
   get "home/dispensary"
 
+  ######### orders start ########
   get "orders/index"
-
+  post "orders/create"
   get "orders/new"
-
   get "orders/create"
-
   get "orders/edit"
-
   get "orders/update"
-
   get "orders/void"
+  post "orders/select"
+  get "orders/select"
+  ######### orders end ########
 
+  ######### stock_details start ########
   get "stock_details/index"
-
   get "stock_details/new"
-
   post "stock_details/create"
-
   get "stock_details/checkout"
-
   get "stock_details/summary"
-
   get "stock_details/edit"
-
   post "stock_details/update"
-
   get "stock_details/void"
+  ######### stock_details end ########
 
+  ######### stock start ########
   get "stock/index"
-
   get "stock/new"
-
   get "stock/get_witness_names"
-
   post "stock/create"
-
   get "stock/edit"
-
   post "stock/update"
-
   get "stock/void"
+  ######### stock end ########
 
+  ######### location_type start ########
   get "location_type/index"
-
   get "location_type/new"
-
   post "location_type/create"
-
   get "location_type/edit"
-
   post "location_type/update"
-
   get "location_type/void"
+  ######### location_type end ########
 
+  ######## location start ###########
   get "location/index"
-
   get "location/new"
-
   post "location/create"
-
   get "location/edit"
-
   post "location/update"
-
   get "location/void"
+  get "location/search"
+  ######## location end #######
+
 
   get "product_category/index"
 
@@ -112,19 +100,17 @@ EPICS::Application.routes.draw do
 
   get "supplier/void"
 
+  ####### product start #######
   get "product/index"
-
   get "product/new"
-
   post "product/create"
-
   get "product/edit"
-
   post "product/update"
-
   get "product/void"
-
   get "product/get_products"
+  match 'get_batch' => 'product#get_batch_details'
+  ####### product ends #######
+
 
   get "product/expire"
 

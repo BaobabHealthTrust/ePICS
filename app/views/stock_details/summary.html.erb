@@ -100,7 +100,7 @@
                 <tr class="tr_<%=tr_class%>">
                   <td><%=  stock_detail.epics_product.name %></td>
                   <td><%=  stock_detail.epics_product.product_code rescue "Code not found"  %></td>
-                  <td><%=  pluralize(stock_detail.quantity.to_s,stock_detail.epics_product.epics_product_units.name) %></td>
+                  <td><%=  pluralize(stock_detail.received_quantity.to_s,stock_detail.epics_product.epics_product_units.name) %></td>
                   <td><%=  stock_detail.epics_stock_expiry_dates.expiry_date.strftime("%d - %b - %Y") rescue "does not expire" %></td>
                 </tr>
               <% end %>

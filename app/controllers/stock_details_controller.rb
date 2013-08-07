@@ -60,7 +60,8 @@ class StockDetailsController < ApplicationController
             @stock_detail.epics_stock_id = @stock.epics_stock_id
             @stock_detail.epics_products_id = item.product_id
             @stock_detail.epics_location_id = item.location
-            @stock_detail.quantity = item.quantity
+            @stock_detail.received_quantity = item.quantity
+            @stock_detail.current_quantity = item.quantity
             @stock_detail.epics_product_units_id = item.product.epics_product_units_id
             @stock_detail.save!
 

@@ -1,0 +1,25 @@
+
+<script type='text/javascript'><!--
+
+tt_cancel_show='/'
+tt_cancel_destination='/'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+    <%= text_field_tag :location, nil,
+                       {:field_type => 'alpha',
+                        :helpText => 'Facility to exchange with',
+                        :ajaxURL => '/location/search?search_string=' }%>
+
+
+    <%= text_field_tag :exchange_date, nil,
+                       {:id => 'exchange_date', :field_type => 'date',
+                        :helpText => 'Enter Date of Exchange'} %>
+
+    <%= submit_tag "Create exchange" %>
+
+
+<% end %>

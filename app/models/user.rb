@@ -3,11 +3,7 @@ require 'digest/sha2'
 
 class User < ActiveRecord::Base
 	set_primary_key :user_id
-  cattr_accessor :current_user                                                  
-
-  require "yaml"
-  establish_connection(YAML.load_file("config/database.yml")['openmrs'] )
-
+  cattr_accessor :current                                          
 
   def self.check_authenticity(password, username)
     user = User.find_by_username(username)

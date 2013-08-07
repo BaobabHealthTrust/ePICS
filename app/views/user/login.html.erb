@@ -2,7 +2,7 @@
     var tt_cancel_destination = "/user/login.html"
 </script>
 
-<form id='login' action="authenticate" method='post'>
+<form id='login' action="/user/authenticate" method='post'>
 
   <label for="login">Username</label>
   <%= text_field_tag(:login, nil, :helpText => "Enter user name",

@@ -5,30 +5,24 @@ class UserController < ApplicationController
   end
 
   def logout
-
+    reset_session
+    redirect_to '/login'
   end
 
   def authenticate
-
-
     user = User.check_authenticity(params[:password], params[:login]) rescue nil
-
     if user.blank?
       flash[:error] = "Invalid user name or password"
       redirect_to '/user/login'
     else
       session[:user_id] = user.id
-
-      redirect_to '/user/enter_workstation'
+      #redirect_to '/user/enter_workstation'
+      redirect_to '/' and return
     end
-
   end
 
   def locations
-
-
     location = EpicsLocation.find_by_epics_location_id(params[:location]) rescue nil
-
     if location.blank?
       flash[:error] = "Invalid workstation location"
       redirect_to '/user/enter_workstation'
@@ -41,7 +35,6 @@ class UserController < ApplicationController
         redirect_to "/home/dispensary"
       end
     end
-
   end
 
 end

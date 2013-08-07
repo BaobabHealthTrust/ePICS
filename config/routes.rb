@@ -1,12 +1,13 @@
 EPICS::Application.routes.draw do
 
-  get "user/login"
 
+  ######## user ########
+  match '/login' => "user#login"
+  match '/logout' => "user#logout"
   post "user/authenticate"
-
   get "user/enter_workstation"
-
   post "user/locations"
+  ######## user end ########
 
   get "home/dispensary"
 
@@ -99,19 +100,17 @@ EPICS::Application.routes.draw do
 
   get "supplier/void"
 
+  ####### product start #######
   get "product/index"
-
   get "product/new"
-
   post "product/create"
-
   get "product/edit"
-
   post "product/update"
-
   get "product/void"
-
   get "product/get_products"
+  match 'get_batch' => 'product#get_batch_details'
+  ####### product ends #######
+
 
   get "product/expire"
 

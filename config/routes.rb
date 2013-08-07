@@ -1,5 +1,11 @@
 EPICS::Application.routes.draw do
 
+  ######## exchange #########
+  get "epics_exchange/index"
+  post "epics_exchange/create"
+  get "epics_exchange/new"
+
+  ######## exchange ########
 
   ######## user ########
   match '/login' => "user#login"

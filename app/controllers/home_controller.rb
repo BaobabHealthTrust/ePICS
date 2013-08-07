@@ -3,7 +3,7 @@ class HomeController < ApplicationController
     @application = [
       ["Issue Items","orders/new","default.png"],
       ["Receive Items","stock/new","default.png"],
-      ["Exchange Items","#","default.png"],
+      ["Exchange Items","epics_exchange/index","default.png"],
       ["Lend Items","#","default.png"],
       ["Update Items","#","default.png"],
       ["Search","#","default.png"]

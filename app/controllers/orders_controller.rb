@@ -61,7 +61,7 @@ class OrdersController < ApplicationController
     (items || {}).each do |name , values|
       EpicsOrders.transaction do
         order = EpicsOrders.new()
-        order.epics_order_type_id = order_type.id
+        order.epics_order_type_id = order_type.id rescue 1
         if order.save
           get_stock_detail(name , values).each do |stock_id , quantity|
             item_order = EpicsProductOrders.new()
@@ -69,6 +69,7 @@ class OrdersController < ApplicationController
             item_order.epics_stock_details_id = stock_id
             item_order.quantity = quantity
             item_order.save
+            update_stock_details(stock_id, quantity)
           end
         end
       end
@@ -92,19 +93,27 @@ class OrdersController < ApplicationController
     stock_details = []
 
     (details || []).each do |e|
-      next if e.quantity < 1
-      stock_details << [e.id, e.quantity]
-      if e.quantity >= max_quantity
-        return [e.id , max_quantity]
+      next if e.current_quantity < 1
+      break if max_quantity == 0
+      if e.current_quantity <= max_quantity
+        stock_details << [e.id, e.current_quantity]
+        max_quantity -= e.quantity
+      else
+        stock_details << [e.id, max_quantity]
+        max_quantity = 0
+        break
       end
-      dispensed_quantity = 0
-      stock_details.map{|i , q| dispensed_quantity+=q}
-      break if dispensed_quantity >= max_quantity
     end
 
     return stock_details
   end
 
+ def update_stock_details(stock_id, quantity)
 
+  old_stock = EpicsStockDetails.find(stock_id)
+
+  old_stock.current_quantity = (old_stock.current_quantity - quantity)
+  old_stock.save
+ end
 
 end

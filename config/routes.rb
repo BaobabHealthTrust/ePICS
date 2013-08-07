@@ -168,7 +168,7 @@ EPICS::Application.routes.draw do
 
   get"report/audit_report"
 
-  get"report/daily_dispenstation"
+  get"report/daily_dispensation"
 
   get"report/store_room"
 

@@ -35,6 +35,9 @@ class OrdersController < ApplicationController
         [product_category.name,product_category.epics_product_category_id]
       end
       @location = EpicsLocation.find(params[:item]['location_id'])
+      @product_expire_details = {}                                              
+      epics_products = EpicsProduct.all                                         
+      epics_products.map{|product| @product_expire_details[product.name] = product.expire }
     end
 
   end

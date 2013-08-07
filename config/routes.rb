@@ -98,19 +98,17 @@ EPICS::Application.routes.draw do
 
   get "supplier/void"
 
+  ####### product start #######
   get "product/index"
-
   get "product/new"
-
   post "product/create"
-
   get "product/edit"
-
   post "product/update"
-
   get "product/void"
-
   get "product/get_products"
+  match 'get_batch' => 'product#get_batch_details'
+  ####### product ends #######
+
 
   get "product/expire"
 

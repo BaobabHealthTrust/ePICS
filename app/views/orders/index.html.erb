@@ -137,7 +137,7 @@ function addItem(){
     <td><%=  item.quantity %></td>
     <td><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
   </tr>
-  <% end %>
+  <% end rescue []%>
  </table>
 
 </div>

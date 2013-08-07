@@ -77,4 +77,14 @@ class ProductController < ApplicationController
     render :text => @expires.to_s
   end
 
+  def get_batch_details
+    item = EpicsProduct.where("name=?",params[:name])[0]
+    @products = []
+    (item.epics_stock_details ||[]).each do |detail|
+      next if detail.epics_stock_expiry_date.blank?
+      @products << detail.epics_stock_expiry_date.expiry_date.to_date
+    end
+    render :text => "<li></li><li>" + @products.uniq.join("</li><li>") + "</li>"
+  end
+
 end

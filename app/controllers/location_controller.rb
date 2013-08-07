@@ -47,4 +47,11 @@ class LocationController < ApplicationController
 		render :text => 'showMsg("Record Deleted!")'
   end
 
+  def search
+    @names = EpicsLocation.where("name LIKE (?)","%#{params[:search_string]}%").collect do |location| 
+      location.name
+    end
+    render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
+  end
+
 end

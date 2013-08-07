@@ -1,7 +1,8 @@
 class EpicsStockDetails < ActiveRecord::Base
 	set_table_name :epics_stock_details
  	set_primary_key :epics_stock_details_id
-  default_scope where('voided = 0')
+  #default_scope where('voided = 0')
+  default_scope where("#{table_name}.voided = 0")
   belongs_to :epics_stock
   belongs_to :epics_product, :foreign_key => :epics_products_id, :conditions => {:voided => 0}
   belongs_to :epics_location, :foreign_key => :epics_location_id, :conditions => {:voided => 0}

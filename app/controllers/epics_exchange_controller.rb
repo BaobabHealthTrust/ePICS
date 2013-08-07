@@ -18,7 +18,9 @@ class EpicsExchangeController < ApplicationController
   end
 
   def new
-
+    @issue_cart = find_product_issue_cart
+    @receive_cart = find_product_receive_cart
+    
     render :layout => 'custom'
   end
 
@@ -54,7 +56,9 @@ class EpicsExchangeController < ApplicationController
   def find_product_issue_cart
    session[:issue] ||= ProductCart.new
   end
+
   def find_product_receive_cart
    session[:receive] ||= ProductCart.new
   end
+
 end

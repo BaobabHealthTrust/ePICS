@@ -12,11 +12,39 @@ function addItem(){
   newElement = document.createElement("input")                                
   newElement.setAttribute("name",'item[location_id]')                      
   newElement.setAttribute("type","hidden");                                   
-  //newElement.value = "<%#=@location.id%>";
+  newElement.value = "<%=@location.id%>";
   submitForm.appendChild(newElement);                                         
                                                             
   submitForm.action= "/orders/select";                        
   submitForm.submit();                                                        
+}
+
+function issueItems() {
+
+  submitForm = document.createElement("FORM");                                
+  submitForm.setAttribute("type","hidden");                                   
+  document.body.appendChild(submitForm);                                      
+  submitForm.method = "POST";
+                           
+  <%(@cart.items || []).each do |cart| %>                                                           
+    newElement = document.createElement("input")                                
+    newElement.setAttribute("name",'item_quantity["<%=cart.name%>"]')                      
+    newElement.setAttribute("type","hidden");                                   
+    newElement.value = "<%=cart.quantity%>";
+    submitForm.appendChild(newElement);    
+    
+    <%if cart.expiry_date%>
+      newElement = document.createElement("input")                                
+      newElement.setAttribute("name",'item_expiry_date["<%=cart.name%>"]')                      
+      newElement.setAttribute("type","hidden");                                   
+      newElement.value = "<%=cart.expiry_date%>";
+      submitForm.appendChild(newElement);    
+    <%end%>                                    
+  <%end%>                                    
+                                                            
+  submitForm.action= "/orders/dispense";                        
+  submitForm.submit();                                                        
+
 }
 
 </script>
@@ -96,7 +124,7 @@ function addItem(){
 <div class="left-content">
 <table style="width:100%;">
   <tr>
-    <th colspan="3" style="text-align: left;"><h2>Issuing to:<br /><%#=@location.name%></h2></th>
+    <th colspan="3" style="text-align: left;"><h2>Issuing to:<br /><%=@location.name%></h2></th>
   </tr>
   <tr>
     <th colspan="3" style="text-align: left;">&nbsp;</th>
@@ -157,7 +185,7 @@ function addItem(){
     </tr>
 
     <tr style="line-height: 50px;">
-      <td><%= link_to "Issue", '#', :class => 'buttons' %></td>
+      <td><%= link_to "Issue", "javascript:issueItems();", :class => 'buttons' %></td>
     </tr>
 
   </table>

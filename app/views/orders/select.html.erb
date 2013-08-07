@@ -9,7 +9,7 @@
 </script>
 
 
-<form action="/orders/select" method='post'>
+<%= form_tag :action => 'create', :method => :post  do %>
 
   <%= select_tag "item[category]", options_for_select(@product_category_map),
     { :id => "category_id",                                           
@@ -30,8 +30,9 @@
     :helpText => 'Select Item Quantity'} %>
 
 
-  <%= hidden_field_tag "item[location_id]", @location.id %>
+  <%#= hidden_field_tag "item[location_id]", @location.id %>
 
   <%= submit_tag "Finish" %>    
 
-</form>
+<% end %>
+  

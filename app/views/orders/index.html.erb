@@ -7,12 +7,12 @@ function addItem(){
   submitForm = document.createElement("FORM");                                
   submitForm.setAttribute("type","hidden");                                   
   document.body.appendChild(submitForm);                                      
-  submitForm.method = "GET";                                                 
+  submitForm.method = "GET";
                                                               
   newElement = document.createElement("input")                                
   newElement.setAttribute("name",'item[location_id]')                      
   newElement.setAttribute("type","hidden");                                   
-  newElement.value = "<%=@location.id%>";                                       
+  //newElement.value = "<%#=@location.id%>";
   submitForm.appendChild(newElement);                                         
                                                             
   submitForm.action= "/orders/select";                        
@@ -96,7 +96,7 @@ function addItem(){
 <div class="left-content">
 <table style="width:100%;">
   <tr>
-    <th colspan="3" style="text-align: left;"><h2>Issuing to:<br /><%=@location.name%></h2></th>
+    <th colspan="3" style="text-align: left;"><h2>Issuing to:<br /><%#=@location.name%></h2></th>
   </tr>
   <tr>
     <th colspan="3" style="text-align: left;">&nbsp;</th>

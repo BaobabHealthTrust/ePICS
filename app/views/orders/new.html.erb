@@ -1,7 +1,20 @@
 
-<% form_tag "/orders/index", :method => :get do %>
-  <%= text_field_tag :location, nil, 
-    {:field_type => 'alpha', 
-     :helpText => 'Location/Department', 
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/'
+	tt_cancel_destination='/'
+
+//-->
+</script>
+
+<%= form_tag :action => 'select', :method => :post  do %>
+
+ <%= text_field_tag :location, nil,
+    {:field_type => 'alpha',
+     :helpText => 'Location/Department',
      :ajaxURL => '/location/search?search_string=' }%>
-<%end%>
+
+  <%= submit_tag "Create Order" %>
+
+
+<% end %>

@@ -12,13 +12,14 @@ EPICS::Application.routes.draw do
 
   ######### orders start ########
   get "orders/index"
+  post "orders/create"
   get "orders/new"
   get "orders/create"
   get "orders/edit"
   get "orders/update"
   get "orders/void"
-  get "orders/select"
   post "orders/select"
+  get "orders/select"
   ######### orders end ########
 
   ######### stock_details start ########

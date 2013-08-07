@@ -1,14 +1,17 @@
 class HomeController < ApplicationController
   def index
     @application = [
-      ["Add Items","stock/new","default.png"],
-      ["Update Items","z","default.png"],
-      ["Dispense","orders/new","default.png"],
-      ["View alerts","z","default.png"]
+      ["Receive Items","stock/new","default.png"],
+      ["Issue Items","#","default.png"],
+      ["Lend Items","#","default.png"],
+      ["Exchange Items","#","default.png"],
+      ["Search Items","#","default.png"]
     ]
 
-    @reports = []
+    @reports = [["View Alerts","#","default.png"]]
+
     @activities = []
+
     @administration = [
       ["Set Item Units","/product_units/index","default.png"],
       ["Set Item Types","/product_type/index","default.png"],

@@ -57,20 +57,19 @@ class OrdersController < ApplicationController
     end
 
     order_type = EpicsOrderTypes.find_by_name('Dispense')
+    EpicsOrders.transaction do
+      order = EpicsOrders.new() 
+      order.epics_order_type_id = order_type.id 
+      order.save
 
-    (items || {}).each do |name , values|
-      EpicsOrders.transaction do
-        order = EpicsOrders.new()
-        order.epics_order_type_id = order_type.id rescue 1
-        if order.save
-          get_stock_detail(name , values).each do |stock_id , quantity|
-            item_order = EpicsProductOrders.new()
-            item_order.epics_order_id = order.id
-            item_order.epics_stock_details_id = stock_id
-            item_order.quantity = quantity
-            item_order.save
-            update_stock_details(stock_id, quantity)
-          end
+      (items || {}).each do |name , values|
+        get_stock_detail(name , values).each do |stock_id , quantity|
+          item_order = EpicsProductOrders.new()
+          item_order.epics_order_id = order.id
+          item_order.epics_stock_details_id = stock_id
+          item_order.quantity = quantity
+          item_order.save
+          update_stock_details(stock_id, quantity)
         end
       end
     end

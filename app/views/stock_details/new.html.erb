@@ -52,6 +52,7 @@
     {:id => "product_expire",
      :field_type => 'date',
      :condition => 'showExpiryDate();',
+     :maxDate => (Date.today + 20.year).to_date,
      :helpText => "Select Item Expiry Date"} %>
 
   <%= text_field_tag "stock_details[quantity]", nil,

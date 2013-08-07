@@ -6,7 +6,7 @@ class ReportController < ApplicationController
   def audit_report
     
   end
-  def daily_dispenstation
+  def daily_dispensation
     
   end
   def store_room

@@ -43,7 +43,39 @@ class OrdersController < ApplicationController
   end
  
   def dispense
-    raise params.to_yaml
+    items = {}
+
+    (params[:item_quantity] || {}).each do |name , quantity|
+      name = ActiveSupport::JSON.decode name
+      items[name] = {:quantity => 0 , :expiry_date => nil} if items[name].blank?
+      items[name][:quantity] = quantity
+    end
+
+    (params[:item_expiry_date] || {}).each do |name , expiry_date|
+      name = ActiveSupport::JSON.decode name
+      items[name][:expiry_date] = expiry_date
+    end
+
+    order_type = EpicsOrderTypes.find_by_name('Dispense')
+
+    (items || {}).each do |name , values|
+      EpicsOrders.transaction do
+        order = EpicsOrders.new()
+        order.epics_order_type_id = order_type.id
+        if order.save
+          get_stock_detail(name , values).each do |stock_id , quantity|
+            item_order = EpicsProductOrders.new()
+            item_order.epics_order_id = order.id
+            item_order.epics_stock_details_id = stock_id
+            item_order.quantity = quantity
+            item_order.save
+          end
+        end
+      end
+    end
+
+    session[:orders] = nil
+    redirect_to "/"
   end
    
  protected                                                                     
@@ -51,5 +83,28 @@ class OrdersController < ApplicationController
  def find_product_cart                                                         
    session[:orders] ||= ProductCart.new 
  end
+
+  def get_stock_detail(name, values)
+    details = EpicsStockDetails.joins("INNER JOIN epics_products e 
+      ON e.epics_products_id = epics_stock_details.epics_products_id").where("e.name" => name)
+
+    max_quantity = values[:quantity].to_f
+    stock_details = []
+
+    (details || []).each do |e|
+      next if e.quantity < 1
+      stock_details << [e.id, e.quantity]
+      if e.quantity >= max_quantity
+        return [e.id , max_quantity]
+      end
+      dispensed_quantity = 0
+      stock_details.map{|i , q| dispensed_quantity+=q}
+      break if dispensed_quantity >= max_quantity
+    end
+
+    return stock_details
+  end
+
+
 
 end

@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  #protect_from_forgery
   before_filter :perform_basic_auth, :except => ['login','logout','authenticate']                         
 
   protected                                                                     
@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
         format.html { redirect_to :controller => 'user',:action => 'logout' }   
       end                                                                       
     elsif not session[:user_id].blank?                                          
-      User.current_user = User.find(session[:user_id])
+      User.current = User.find(session[:user_id])
     end                                                                         
   end 
 

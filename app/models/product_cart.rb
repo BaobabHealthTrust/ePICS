@@ -6,7 +6,7 @@ class ProductCart
       @items = []
   end
 
-def add_product(product, quantity, location, expiry_date)
+def add_product(product, quantity, location = nil, expiry_date = nil)
   current_item = @items.find {|item| item.product == product}
   unless current_item.blank?
     current_item.increment_quantity(quantity)

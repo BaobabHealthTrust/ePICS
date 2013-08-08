@@ -1,0 +1,33 @@
+
+<script type='text/javascript'><!--
+
+tt_cancel_show='/'
+tt_cancel_destination='/'
+
+//-->
+</script>
+
+<%= form_tag :action => 'lend_index', :method => :post  do %>
+
+    <%= text_field_tag :facility, nil,
+                       {:field_type => 'alpha',
+                        :helpText => 'Requesting Facility',
+                        :ajaxURL => '/location/search?search_string=' }%>
+
+    <%= text_field_tag ":authorizer", nil,
+                       {:id => 'authorizer',
+                        :field_type => 'alpha',
+                        :ajaxURL => '/orders/get_authoriser?search_string=',
+                        :allowFreeText => true,
+                        :helpText => 'Who Authorised'} %>
+
+
+
+    <%= text_field_tag :return_date, nil,
+                       {:id => 'return_date', :field_type => 'date',
+                        :helpText => 'Enter date to be returned'} %>
+
+    <%= submit_tag "Create exchange" %>
+
+
+<% end %>

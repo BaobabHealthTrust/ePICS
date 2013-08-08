@@ -35,7 +35,10 @@ EPICS::Application.routes.draw do
   get "orders/select"
   post "orders/dispense"
   get "orders/lend"
-
+  get "orders/get_authoriser"
+  get "orders/lend_create"
+  get "orders/lend_index"
+  post "orders/lend_index"
   ######### orders end ########
 
   ######### stock_details start ########

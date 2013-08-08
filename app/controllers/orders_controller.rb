@@ -78,14 +78,26 @@ class OrdersController < ApplicationController
     redirect_to "/"
   end
 
+  def get_authoriser
+
+
+
+    render :text => EpicsPerson.get_authorisers(params[:search_string])
+  end
+
  def lend
 
 
  end
 
+ def lend_index
 
+   render :layout => 'custom'
+ end
 
+ def lend_create
 
+ end
 
 
    

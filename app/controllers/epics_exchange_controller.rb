@@ -6,6 +6,7 @@ class EpicsExchangeController < ApplicationController
     exchange_hash = Hash.new()
     exchange_hash[:exchange_facility] = params[:location]
     exchange_hash[:exchange_date] = params[:exchange_date]
+    exchange_hash[:exchange_batch_id] = params[:batch_number]
     session[:exchange] = exchange_hash
 
     unless session[:exchange].nil?
@@ -47,6 +48,27 @@ class EpicsExchangeController < ApplicationController
      # session[:issuing_location_id] = @location.id
       redirect_to :action => "new"
     end
+  end
+
+  def receive_item
+
+    @product_expire_details = {}
+    epics_products = EpicsProduct.all
+    epics_products.map{|product| @product_expire_details[product.name] = product.expire }
+    @locations_map = EpicsLocation.all.map{|location| [location.name,location.epics_location_id]}
+    @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
+
+    if request.post?
+      @receive_cart = find_product_receive_cart
+      product = EpicsProduct.find_by_name(params[:stock_details][:product_name])
+      quantity = params[:stock_details][:quantity].to_f
+      location = params[:stock_details][:location_id]
+      expiry_date = params[:stock_details][:expiry_date]
+      @receive_cart.add_product(product,quantity,location,expiry_date)
+      @issue_cart = find_product_issue_cart
+      redirect_to :action => "new"
+    end
+
   end
 
   def add_items_to_cart(items)

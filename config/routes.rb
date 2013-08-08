@@ -6,6 +6,8 @@ EPICS::Application.routes.draw do
   get "epics_exchange/new"
   get "epics_exchange/give_item"
   post "epics_exchange/give_item"
+  get "epics_exchange/receive_item"
+  post "epics_exchange/receive_item"
 
   ######## exchange ########
 

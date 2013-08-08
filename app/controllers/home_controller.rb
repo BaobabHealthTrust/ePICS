@@ -29,6 +29,7 @@ class HomeController < ApplicationController
       ["Set Order Types","/order_type/index","default.png"],
       ["Set Location Types","/location_type/index","default.png"],
       ["Set Locations","/location/index","default.png"],
+      ["Add person","person/add_person","default.png"],
     ]
 
     @buttons_count = @application.length

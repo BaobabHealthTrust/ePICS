@@ -2,7 +2,7 @@ class OrdersController < ApplicationController
 
   def index
     @location = EpicsLocation.where("name = ?", params[:location])[0]
-    @cart = find_product_cart
+    @cart = find_product_cart('issue')
     render :layout => 'custom'
   end
 
@@ -11,7 +11,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @cart = find_product_cart
+    @cart = find_product_cart('issue')
     product = EpicsProduct.where("name = ?",params[:item]['name'])[0]
     quantity = params[:item]['quantity'].to_f
     expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
@@ -56,10 +56,11 @@ class OrdersController < ApplicationController
       items[name][:expiry_date] = expiry_date
     end
 
-    order_type = EpicsOrderTypes.find_by_name('Dispense')
+    ord_type = ActiveSupport::JSON.decode params[:type]
+    order_type = EpicsOrderTypes.find_by_name(ord_type)
     EpicsOrders.transaction do
       order = EpicsOrders.new() 
-      order.epics_order_type_id = order_type.id 
+      order.epics_order_type_id = order_type.id rescue 1
       order.save
 
       (items || {}).each do |name , values|
@@ -69,18 +70,32 @@ class OrdersController < ApplicationController
           item_order.epics_stock_details_id = stock_id
           item_order.quantity = quantity
           item_order.save
+
+
+          if ord_type.eql?('lend')
+
+            lend = EpicsLendsOrBorrows.new
+            lend.date_issued = session[:lend_details]['issue_date']
+            lend.epics_stock_details_id = stock_id
+            lend.epics_orders_id = order.id
+            lend.save
+          end
           update_stock_details(stock_id, quantity)
         end
       end
     end
 
-    session[:orders] = nil
+    if ord_type == 'lend'
+      session[:lent_items] = nil
+      session[:lend_details] = nil
+    else
+      session[:orders] = nil
+    end
+
     redirect_to "/"
   end
 
   def get_authoriser
-
-
 
     render :text => EpicsPerson.get_authorisers(params[:search_string])
   end
@@ -91,11 +106,36 @@ class OrdersController < ApplicationController
  end
 
  def lend_index
+   @cart = find_product_cart('lend')
+   if session[:lend_details].blank?
+     @location = EpicsLocation.find_by_name(params[:facility])
 
+     session[:lend_details] = {}
+     session[:lend_details]['lend_to_location'] = @location
+     session[:lend_details]['issue_date'] = params[:issue_date]
+     session[:lend_details]['authorizer'] = params[:authorizer]
+   end
    render :layout => 'custom'
  end
 
  def lend_create
+
+   @product_category_map = EpicsProductCategory.all.map do |product_category|
+     [product_category.name,product_category.epics_product_category_id]
+   end
+
+   @product_expire_details = {}
+   epics_products = EpicsProduct.all
+   epics_products.map{|product| @product_expire_details[product.name] = product.expire }
+
+   if request.post?
+     @cart = find_product_cart('lend')
+     product = EpicsProduct.where("name = ?",params[:item]['name'])[0]
+     quantity = params[:item]['quantity'].to_f
+     expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
+     @cart.add_product(product,quantity,nil,expiry_date)
+    redirect_to :action => :lend_index, :location => EpicsLocation.find(session[:issuing_location_id]).name
+   end
 
  end
 
@@ -103,8 +143,14 @@ class OrdersController < ApplicationController
    
  protected                                                                     
                                                                                 
- def find_product_cart                                                         
-   session[:orders] ||= ProductCart.new 
+ def find_product_cart(type)
+   case (type)
+     when 'lend'
+      session[:lent_items] ||= ProductCart.new
+     when 'issue'
+      session[:orders] ||= ProductCart.new
+   end
+
  end
 
   def get_stock_detail(name, values)

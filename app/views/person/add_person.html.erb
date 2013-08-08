@@ -1,0 +1,37 @@
+
+<script type='text/javascript'><!--
+
+tt_cancel_show='/'
+tt_cancel_destination='/'
+
+//-->
+</script>
+
+<%= form_tag :action => 'new_person', :method => :post  do %>
+
+
+    <%= text_field_tag :fname, nil,
+                       {:id => 'first_name',
+                        :field_type => 'alpha',
+                        :ajaxURL => '/person/get_name?search_string=',
+                        :allowFreeText => true,
+                        :helpText => 'Enter first name'} %>
+
+
+    <%= text_field_tag :lname, nil,
+                       {:id => 'last_name',
+                        :field_type => 'alpha',
+                        :ajaxURL => '/person/get_name?search_string=',
+                        :allowFreeText => true,
+                        :helpText => 'Enter last name'} %>
+
+    <%= select_tag :authority, options_for_select([['Yes', 'Yes'],['No','No']]),
+                   { :id => "authority",
+                     :field_type => 'alpha',
+                     :helpText => "Can authorise item transfers?"} %>
+
+
+    <%= submit_tag "Create person" %>
+
+
+<% end %>

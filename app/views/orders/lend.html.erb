@@ -14,7 +14,7 @@ tt_cancel_destination='/'
                         :helpText => 'Requesting Facility',
                         :ajaxURL => '/location/search?search_string=' }%>
 
-    <%= text_field_tag ":authorizer", nil,
+    <%= text_field_tag :authorizer, nil,
                        {:id => 'authorizer',
                         :field_type => 'alpha',
                         :ajaxURL => '/orders/get_authoriser?search_string=',
@@ -23,11 +23,11 @@ tt_cancel_destination='/'
 
 
 
-    <%= text_field_tag :return_date, nil,
-                       {:id => 'return_date', :field_type => 'date',
-                        :helpText => 'Enter date to be returned'} %>
+    <%= text_field_tag :issue_date, nil,
+                       {:id => 'issue_date', :field_type => 'date',
+                        :helpText => 'Date issued'} %>
 
-    <%= submit_tag "Create exchange" %>
+    <%= submit_tag "Create lend order" %>
 
 
 <% end %>

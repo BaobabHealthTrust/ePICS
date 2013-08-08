@@ -72,10 +72,95 @@ class EpicsExchangeController < ApplicationController
   end
 
   def exchange
-    raise params.inspect
+    @received_items = find_product_receive_cart
+    @issued_items = find_product_issue_cart
+    @exchange_details = session[:exchange]
+
+    order_type = EpicsOrderTypes.find_by_name('Dispense')
+    EpicsExchange.transaction do
+
+
+      @stock = EpicsStock.new()
+      @stock.grn_date = exchange_details[:exchange_date]
+      @stock.grn_number = exchange_details[:exchange_batch_id]
+      @stock.epics_supplier_id = exchange_details[:exchange_facility]
+      @stock.save!
+
+      for item in @received_items.items
+        @stock_detail = EpicsStockDetails.new()
+        @stock_detail.epics_stock_id = @stock.epics_stock_id
+        @stock_detail.epics_products_id = item.product_id
+        @stock_detail.epics_location_id = item.location
+        @stock_detail.received_quantity = item.quantity
+        @stock_detail.current_quantity = item.quantity
+        @stock_detail.epics_product_units_id = item.product.epics_product_units_id
+        @stock_detail.save!
+
+        unless item.expiry_date.blank?
+          @stock_expiry_dates = EpicsStockExpiryDates.new()
+          @stock_expiry_dates.epics_stock_details_id = @stock_detail.epics_stock_details_id
+          @stock_expiry_dates.expiry_date = item.expiry_date
+          @stock_expiry_dates.save!
+        end
+      end
+
+
+      @order = EpicsOrders.new()
+      @order.epics_order_type_id = order_type.id rescue 1
+      @order.save
+
+      (@issued_items.items || {}).each do |item, values|
+        get_stock_detail(item.name , item.quantity).each do |stock_id , quantity|
+          item_order = EpicsProductOrders.new()
+          item_order.epics_order_id = @order.id
+          item_order.epics_stock_details_id = stock_id
+          item_order.quantity = quantity
+          item_order.save
+          update_stock_details(stock_id, quantity)
+        end
+      end
+
+
+
+      session[:receive] = nil
+      session[:issue ] = nil
+      session[:exchange] = nil
+
+      redirect_to :action => :summary
+
+    end
+
   end
-  def add_items_to_cart(items)
-    
+
+  def get_stock_detail(name, value)
+    details = EpicsStockDetails.joins("INNER JOIN epics_products e
+      ON e.epics_products_id = epics_stock_details.epics_products_id").where("e.name" => name)
+
+    max_quantity = value
+    stock_details = []
+
+    (details || []).each do |e|
+      next if e.current_quantity < 1
+      break if max_quantity == 0
+      if e.current_quantity <= max_quantity
+        stock_details << [e.id, e.current_quantity]
+        max_quantity -= e.quantity
+      else
+        stock_details << [e.id, max_quantity]
+        max_quantity = 0
+        break
+      end
+    end
+
+    return stock_details
+  end
+
+  def update_stock_details(stock_id, quantity)
+
+    old_stock = EpicsStockDetails.find(stock_id)
+
+    old_stock.current_quantity = (old_stock.current_quantity - quantity)
+    old_stock.save
   end
 
   def find_product_issue_cart

@@ -1,0 +1,158 @@
+<html>
+  <head>
+    <title>Home</title>
+    <style type="text/css">
+      body {
+        background-color: #fff;
+        margin: 20px;
+        font-family: "Nimbus Sans L", "Arial Narrow", sans-serif;
+        overflow: hidden;
+        color: #000;
+        -moz-user-select: none;
+      }
+
+      .buttons-table td {
+        text-align: center;
+      }
+
+      .buttons-table img {
+        width: 128px;
+        height: 128px;
+      }
+
+      .table-products {
+        text-align: left;
+      }
+
+      .div-products {
+        width: 98%;
+        overflow: auto;
+        border-width: 1px 0px 0px 0px;
+        border-style: solid;
+      }
+
+      #records_length, #records_info, #records_filter {
+        display: none;
+      }
+
+      .tr_blue td {
+        background-color: rgb(196, 255, 196)
+      }
+
+      .tr_white td {
+      }
+
+      .div-products {
+        width: 98%;
+        overflow: auto;
+        border-width: 1px 0px 0px 0px;
+        border-style: solid;
+    }
+    .tr_blue td {
+        background-color: rgb(196, 255, 196)
+    }
+
+    .tr_white td {
+    }
+
+    .div-receiving {
+      float: left;
+      width: 42%;
+      text-align: left;
+    }
+
+    .div-issuing {
+      float: right;
+      width: 42%;
+      text-align: left;
+    }
+
+    </style>
+
+    <script>
+
+    function dTable() {
+    }
+
+
+    </script>
+  </head>
+  <body onUnload="alert('m')">
+    <table width="100%" cellspacing="0" cellpadding="10">
+      <tr>
+        <td style="width: 100px; border-bottom: 1px solid #5496ef;">
+          <img alt="EPICS" src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ?
+                   "app.png" : "baobab.png") %>" height="80" style="float: right;" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" style="padding: 0px;">
+          <div id="container" style="width: 100%; height: 540px; overflow: auto;">
+
+
+            <table class="table-header" style="width: 98% !important;">
+              <tr>
+                <th colspan="3" style="text-align: left; "><h3>Exchange Details</h3></th>
+              </tr>
+              <tr>
+                <td style="width: 10%;">Facility Name:</td><td>&nbsp;</td><td><%= @exchange_details[:exchange_facility] %></td>
+              </tr>
+              <tr>
+                <td style="width: 10%;">Batch Number:</td><td>&nbsp;</td><td><%= @exchange_details[:exchange_batch_id]   %></td>
+              </tr>
+              <tr>
+                <td style="width: 10%;">Delivered Date:</td><td>&nbsp;</td><td><%= @exchange_details[:exchange_date].to_date.strftime("%d %B %Y")   %></td>
+              </tr>
+            </table>
+    
+            <br />
+            <div class="left-content">
+
+    <br />
+    <br />
+    <br />
+
+    <div class="div-products">
+
+      <div class="div-receiving">
+        <table style="width:100%;" class="receiving">
+          <tr>
+            <th>Item code</th>
+            <th>Quantity</th>
+          </tr>
+          <%(@issued_cart.items || []).each do |item|%>
+            <tr>
+              <td><%=item.product.product_code%></td>
+              <td><%=item.quantity%></td>
+            </tr>
+          <%end%>
+        </table>
+      </div>
+
+      <div class="div-issuing">
+        <table style="width:100%;" class="issuing">
+          <tr>
+            <th>Item code</th>
+            <th>Quantity</th>
+          </tr>
+          <%(@received_cart.items || []).each do |item|%>
+              <tr>
+                <td><%=item.product.product_code%></td>
+                <td><%=item.quantity%></td>
+              </tr>
+          <%end%>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+              
+          </div>
+        </td>
+      </tr>
+
+    </table>
+  </body>
+</html>
+

@@ -82,7 +82,7 @@
     </tr>
     <%(@product.epics_stock_details || []).each do |stock|%>
       <tr>
-        <td><%=stock.epics_stock_expiry_date.strftime('%B %Y') rescue 'N/A'%></td>
+        <td><%=stock.epics_stock_expiry_date.expiry_date.strftime('%B %Y') rescue 'N/A'%></td>
         <td style="text-align: right;padding-right: 10px;"><%=stock.received_quantity%></td>
         <td style="text-align: right;padding-right: 10px;"><%=stock.current_quantity%></td>
         <td style="padding-left: 10px;"><%=stock.epics_location.name%></td>

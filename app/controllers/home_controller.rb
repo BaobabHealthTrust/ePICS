@@ -31,6 +31,11 @@ class HomeController < ApplicationController
       ["Set Locations","/location/index","default.png"],
     ]
 
+    @buttons_count = @application.length
+    @buttons_count = @reports.length if @reports.length > @buttons_count
+    @buttons_count = @activities.length if @activities.length > @buttons_count
+    @buttons_count = @administration.length if @administration.length > @buttons_count
+
     render :layout => false
     
   end

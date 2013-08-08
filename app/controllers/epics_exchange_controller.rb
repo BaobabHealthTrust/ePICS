@@ -79,11 +79,10 @@ class EpicsExchangeController < ApplicationController
     order_type = EpicsOrderTypes.find_by_name('Dispense')
     EpicsExchange.transaction do
 
-
       @stock = EpicsStock.new()
       @stock.grn_date = @exchange_details[:exchange_date]
       @stock.grn_number = @exchange_details[:exchange_batch_id]
-      @stock.epics_supplier_id = @exchange_details[:exchange_facility]
+      @stock.epics_supplier_id = @exchange_details[:exchange_facility] #need to change this
       @stock.save!
 
       for item in @received_items.items
@@ -120,7 +119,13 @@ class EpicsExchangeController < ApplicationController
         end
       end
 
-
+      exchanging = EpicsExchange.new()
+      exchanging.epics_stock_id = @stock.epics_stock_id
+      exchanging.epics_order_id = @order.id
+      exchanging.epics_location_id = EpicsLocation.find_all_by_name(@exchange_details[:exchange_facility]).id
+      exchanging.epics_exchange_date = @exchange_details[:exchange_date]
+      exchanging.creator = User.current
+      exchanging.save!
 
       session[:receive] = nil
       session[:issue ] = nil

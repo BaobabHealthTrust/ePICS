@@ -34,6 +34,8 @@ EPICS::Application.routes.draw do
   post "orders/select"
   get "orders/select"
   post "orders/dispense"
+  get "orders/lend"
+
   ######### orders end ########
 
   ######### stock_details start ########

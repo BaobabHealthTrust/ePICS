@@ -77,6 +77,17 @@ class OrdersController < ApplicationController
     session[:orders] = nil
     redirect_to "/"
   end
+
+ def lend
+
+
+ end
+
+
+
+
+
+
    
  protected                                                                     
                                                                                 

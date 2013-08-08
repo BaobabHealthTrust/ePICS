@@ -6,7 +6,7 @@ class HomeController < ApplicationController
       ["Exchange Items","epics_exchange/index","default.png"],
       ["Lend Items","orders/lend","default.png"],
       ["Update Items","#","default.png"],
-      ["Search","#","default.png"]
+      ["Search","/product/search","default.png"]
     ]
 
     @reports = [

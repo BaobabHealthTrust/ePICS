@@ -6,6 +6,7 @@ EPICS::Application.initialize!
 
 ActiveSupport::Inflector.inflections { |i| 
   i.irregular 'epics_stock_details', 'epics_stock_details' 
+  i.irregular 'epics_locations', 'epics_locations' 
 }
 
 bart = (YAML.load_file("config/database.yml")['openmrs'] )

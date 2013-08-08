@@ -72,7 +72,6 @@ class EpicsExchangeController < ApplicationController
   end
 
   def exchange
-
     @received_items = find_product_receive_cart
     @issued_items = find_product_issue_cart
     @exchange_details = session[:exchange]

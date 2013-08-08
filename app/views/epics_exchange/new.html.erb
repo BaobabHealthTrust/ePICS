@@ -1,5 +1,54 @@
 <%= render  :partial =>  "/layouts/top" %>
+<script>
+  function exchangeItems() {
 
+  submitForm = document.createElement("FORM");
+  submitForm.setAttribute("type","hidden");
+  document.body.appendChild(submitForm);
+  submitForm.method = "POST";
+
+  <%(@issue_cart.items || []).each do |cart| %>
+    newElement = document.createElement("input")
+    newElement.setAttribute("name",'issue[issue_quantity]["<%=cart.name%>"]')
+    newElement.setAttribute("type","hidden");
+    newElement.value = "<%=cart.quantity%>";
+    submitForm.appendChild(newElement);
+
+    <%if cart.expiry_date%>
+      newElement = document.createElement("input")
+      newElement.setAttribute("name",'issue[issue_expiry_date]["<%=cart.name%>"]')
+      newElement.setAttribute("type","hidden");
+      newElement.value = "<%=cart.expiry_date%>";
+      submitForm.appendChild(newElement);
+    <%end%>
+  <%end%>
+
+<%(@receive_cart.items || []).each do |cart| %>
+    newElement = document.createElement("input")
+    newElement.setAttribute("name",'receive[receive_quantity]["<%=cart.name%>"]')
+    newElement.setAttribute("type","hidden");
+    newElement.value = "<%=cart.quantity%>";
+    submitForm.appendChild(newElement);
+
+    <%if cart.expiry_date%>
+      newElement = document.createElement("input")
+      newElement.setAttribute("name",'receive[receive_expirly_date]["<%=cart.name%>"]')
+      newElement.setAttribute("type","hidden");
+      newElement.value = "<%=cart.expiry_date%>";
+      submitForm.appendChild(newElement);
+    <%end%>
+  <%end%>
+  submitForm.action= "exchange";
+  submitForm.submit();
+
+}
+
+function sendData(){
+  confirm = document.getElementById('confirm')
+  confirm.setAttribute("onclick","exchangeItems();")
+}
+window.setTimeout("sendData();",300);
+</script>
 <style>
     .left-content {
         float: left;
@@ -38,7 +87,7 @@
         padding: 10px;
         text-align: center;
         text-decoration: none;
-
+        letter-spacing: 1pt;
 
         background-color: rgb(0, 116, 204);
         background-image: -moz-linear-gradient(center top , rgb(0, 136, 204), rgb(0, 85, 204));
@@ -131,6 +180,12 @@
             <th>Item code</th>
             <th>Quantity</th>
           </tr>
+          <%(@receive_cart.items || []).each do |item|%>
+              <tr>
+                <td><%=item.product.product_code%></td>
+                <td><%=item.quantity%></td>
+              </tr>
+          <%end%>
         </table>
       </div>
 
@@ -153,7 +208,8 @@
         <td>&nbsp;</td>
       </tr>
       <tr style="line-height: 50px;">
-        <td><%= link_to "Exchange", '/epics_exchange/exchange', :class => 'buttons' %></td>
+        <!--<td><%= link_to "Confirm Exchange", '/epics_exchange/exchange', :class => 'buttons', :id => "confirm" %></td>-->
+        <td><a id="confirm" class="buttons">Confirm Exchange</a></td>
       </tr>
 
     </table>

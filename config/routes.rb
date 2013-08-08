@@ -6,7 +6,11 @@ EPICS::Application.routes.draw do
   get "epics_exchange/new"
   get "epics_exchange/give_item"
   post "epics_exchange/give_item"
-
+  get "epics_exchange/receive_item"
+  post "epics_exchange/receive_item"
+  post "epics_exchange/exchange"
+  get "epics_exchange/exchange"
+  get "epics_exchange/summary"
   ######## exchange ########
 
   ######## user ########
@@ -30,6 +34,11 @@ EPICS::Application.routes.draw do
   post "orders/select"
   get "orders/select"
   post "orders/dispense"
+  get "orders/lend"
+  get "orders/get_authoriser"
+  get "orders/lend_create"
+  get "orders/lend_index"
+  post "orders/lend_index"
   ######### orders end ########
 
   ######### stock_details start ########

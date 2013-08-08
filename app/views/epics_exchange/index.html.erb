@@ -14,6 +14,10 @@ tt_cancel_destination='/'
                         :helpText => 'Facility to exchange with',
                         :ajaxURL => '/location/search?search_string=' }%>
 
+    <%= text_field_tag :batch_number, nil,
+                       {:id => 'grn_number', :field_type => 'alpha',
+                        :helpText => 'Enter GRN/Batch Number'} %>
+
 
     <%= text_field_tag :exchange_date, nil,
                        {:id => 'exchange_date', :field_type => 'date',

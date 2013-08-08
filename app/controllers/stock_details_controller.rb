@@ -50,9 +50,13 @@ class StockDetailsController < ApplicationController
           @stock.epics_supplier_id = stock[:supplier_id]
           @stock.save!
 
-          @witness = EpicsWitnessNames.new
+          fname = stock[:witness_names].split(" ")[0].squish!
+          lname = stock[:witness_names].split(" ")[1].squish!
+          person = EpicsPerson.where("fname = ? AND lname = ?",fname,lname ).first.id
+
+          @witness = EpicsStockWitness.new
           @witness.epics_stock_id = @stock.epics_stock_id
-          @witness.name = stock[:witness_names]
+          @witness.epics_person_id = person
           @witness.save!
 
           for item in stock_details.items

@@ -4,6 +4,8 @@ class StockController < ApplicationController
 
   def new
     @supplier_map = EpicsSupplier.all.map{|supplier| [supplier.name, supplier.epics_supplier_id]}
+    @people = EpicsPerson.all.map{|person| [[person.fname+" "+ person.lname]]}
+
   end
 
   def create
@@ -33,10 +35,9 @@ class StockController < ApplicationController
   end
 
   def get_witness_names
-    @names = EpicsWitnessNames.where("name LIKE (?)",
-                "%#{params[:search_string]}%").map{|witness|[[witness.name]]}
+    names = EpicsPerson.get_names(params[:search_string])
 
-    render :text => "<li></li><li>" + @names.join("</li><li>") + "</li>"
+    render :text => "<li></li><li>" + names.uniq.join("</li><li>") + "</li>"
   end
 
 end

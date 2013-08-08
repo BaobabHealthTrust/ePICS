@@ -4,18 +4,66 @@
 
 </script>
 
-<style>
+<style type="text/css">
 .product-table {
   width: 100%;
-  border-style: solid;
-  border-width: 1px 0px 0px 0px;
   text-align: left;
 }
 
 .product-table td {
   border-style: solid;
-  border-width: 1px;
+  border-width: 1px 0px 0px 0px;
 }
+
+.left-side {
+  float: left;
+  width: 75%;
+}
+
+.right-side {
+  float: right;
+  width: 20%;
+}
+
+
+.menu-buttons {                                                               
+    padding: 10px;                                                              
+    float: right;                                                               
+    width: 30%;                                                                 
+    margin-right: 10px;                                                         
+    border-style: solid;                                                        
+    border-width: 0px 0px 0px 1px;                                              
+  }                                                                             
+                                                                                
+  .menu-buttons a {                                                             
+    width: 95%;                                                                 
+  }                                                                             
+                                                                                
+  .buttons {                                                                    
+    background-color: grey;                                                     
+    border-bottom: 1px outset #EEEEEE;                                          
+    border-style: outset;                                                       
+    border-top: 1px outset #EEEEEE;                                             
+    color: white;                                                               
+    display: block;                                                             
+    padding: 10px;                                                              
+    text-align: center;                                                         
+    text-decoration: none;
+    background-color: rgb(0, 116, 204);                                         
+    background-image: -moz-linear-gradient(center top , rgb(0, 136, 204), rgb(0, 85, 204));
+    background-repeat: repeat-x;                                                
+    border-bottom-color: rgba(0, 0, 0, 0.25);                                   
+    border-left-color-ltr-source: physical;                                     
+    border-left-color-rtl-source: physical;                                     
+    border-left-color-value: rgba(0, 0, 0, 0.1);                                
+    border-right-color-ltr-source: physical;                                    
+    border-right-color-rtl-source: physical;                                    
+    border-right-color-value: rgba(0, 0, 0, 0.1);                               
+    border-top-color: rgba(0, 0, 0, 0.1);                                       
+    font-size: 1.3em;                                                           
+  }       
+
+
 </style>
 
 
@@ -23,21 +71,51 @@
 <p><%=@product.epics_product_type.name%></p>
 <div class="product-container">
 <h4>Stock details:&nbsp;<%=@product.epics_product_units.name%></h4>
-<table class="product-table">
-  <tr>
-    <th style="width: 15%;">Expiry date</th>
-    <th style="width: 20%; text-align: right;padding-right: 10px;">Received quantity</th>
-    <th style="width: 20%; text-align: right;padding-right: 10px;">Current quantity</th>
-    <th style="width: 25%;">Location</th>
-  </tr>
-  <%(@product.epics_stock_details || []).each do |stock|%>
+
+<div class="left-side">
+  <table class="product-table">
     <tr>
-      <td><%=stock.epics_stock_expiry_date.strftime('%B %Y') rescue 'N/A'%></td>
-      <td style="text-align: right;padding-right: 10px;"><%=stock.received_quantity%></td>
-      <td style="text-align: right;padding-right: 10px;"><%=stock.current_quantity%></td>
-      <td><%=stock.epics_location.name%></td>
+      <th style="width: 15%;">Expiry date</th>
+      <th style="width: 20%; text-align: right;padding-right: 10px;">Received quantity</th>
+      <th style="width: 20%; text-align: right;padding-right: 10px;">Current quantity</th>
+      <th style="width: 25%;padding-left: 10px;">Location</th>
     </tr>
-  <%end%>
-</table>
+    <%(@product.epics_stock_details || []).each do |stock|%>
+      <tr>
+        <td><%=stock.epics_stock_expiry_date.strftime('%B %Y') rescue 'N/A'%></td>
+        <td style="text-align: right;padding-right: 10px;"><%=stock.received_quantity%></td>
+        <td style="text-align: right;padding-right: 10px;"><%=stock.current_quantity%></td>
+        <td style="padding-left: 10px;"><%=stock.epics_location.name%></td>
+      </tr>
+    <%end%>
+  </table>
+</div>
+
+<div class="right-side">
+  <table class="button-table" style="width: 99%;">
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><%= link_to "Stock card", "#", :class => 'buttons' %></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><%= link_to "Edit", "#", :class => 'buttons' %></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><%= link_to "Remove", "#", :class => 'buttons' %></td>
+    </tr>
+  </table>
+</div>
+
+
+
+
 
 </div>

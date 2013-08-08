@@ -6,7 +6,7 @@ class HomeController < ApplicationController
       ["Exchange Items","epics_exchange/index","default.png"],
       ["Lend Items","orders/lend","default.png"],
       ["Update Items","#","default.png"],
-      ["Search","#","default.png"]
+      ["Search","/product/search","default.png"]
     ]
 
     @reports = [
@@ -29,7 +29,13 @@ class HomeController < ApplicationController
       ["Set Order Types","/order_type/index","default.png"],
       ["Set Location Types","/location_type/index","default.png"],
       ["Set Locations","/location/index","default.png"],
+      ["Add person","person/add_person","default.png"],
     ]
+
+    @buttons_count = @application.length
+    @buttons_count = @reports.length if @reports.length > @buttons_count
+    @buttons_count = @activities.length if @activities.length > @buttons_count
+    @buttons_count = @administration.length if @administration.length > @buttons_count
 
     render :layout => false
     

@@ -1,5 +1,13 @@
 EPICS::Application.routes.draw do
 
+  ######## person #########
+
+  get "person/add_person"
+  post "person/new_person"
+  get "person/get_name"
+
+  ######## person #########
+
   ######## exchange #########
   get "epics_exchange/index"
   post "epics_exchange/create"
@@ -37,6 +45,7 @@ EPICS::Application.routes.draw do
   get "orders/lend"
   get "orders/get_authoriser"
   get "orders/lend_create"
+  post "orders/lend_create"
   get "orders/lend_index"
   post "orders/lend_index"
   ######### orders end ########
@@ -127,6 +136,10 @@ EPICS::Application.routes.draw do
   get "product/void"
   get "product/get_products"
   match 'get_batch' => 'product#get_batch_details'
+  get "product/find_by_name_or_code"
+  get "product/search"
+  get "product/view"
+  post "product/view"
   ####### product ends #######
 
 

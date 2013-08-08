@@ -148,10 +148,8 @@
             <table style="width:100%" class="buttons-table">
             <%
             count = 0
-            1.upto(3).each do |number|%>
+            1.upto(@buttons_count).each do |number|%>
               <tr>
-                <td id='button<%=count+=1%>'></td>
-                <td id='button<%=count+=1%>'></td>
                 <td id='button<%=count+=1%>'></td>
                 <td id='button<%=count+=1%>'></td>
                 <td id='button<%=count+=1%>'></td>

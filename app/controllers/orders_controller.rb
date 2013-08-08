@@ -96,7 +96,7 @@ class OrdersController < ApplicationController
       break if max_quantity == 0
       if e.current_quantity <= max_quantity
         stock_details << [e.id, e.current_quantity]
-        max_quantity -= e.quantity
+        max_quantity -= e.current_quantity
       else
         stock_details << [e.id, max_quantity]
         max_quantity = 0

@@ -82,9 +82,9 @@ class EpicsExchangeController < ApplicationController
 
 
       @stock = EpicsStock.new()
-      @stock.grn_date = exchange_details[:exchange_date]
-      @stock.grn_number = exchange_details[:exchange_batch_id]
-      @stock.epics_supplier_id = exchange_details[:exchange_facility]
+      @stock.grn_date = @exchange_details[:exchange_date]
+      @stock.grn_number = @exchange_details[:exchange_batch_id]
+      @stock.epics_supplier_id = @exchange_details[:exchange_facility]
       @stock.save!
 
       for item in @received_items.items
@@ -127,7 +127,7 @@ class EpicsExchangeController < ApplicationController
       session[:issue ] = nil
       session[:exchange] = nil
 
-      redirect_to :action => :summary
+      render :action => :summary, :layout => 'custom'
 
     end
 

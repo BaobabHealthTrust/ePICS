@@ -120,14 +120,13 @@ class EpicsExchangeController < ApplicationController
         end
       end
 
-
-
+      session[:receive_copy] = session[:receive]
+      session[:issue_copy] = session[:issue]
       session[:receive] = nil
       session[:issue ] = nil
       session[:exchange] = nil
-
-      render :action => :summary, :layout => 'custom'
-
+      redirect_to :action => :summary,:exchange_details => @exchange_details
+       #redirect_to summary({:received_items => @received_items.items,:issued_items => @issued_items.items,:exchange_details => @exchange_details})
     end
 
   end
@@ -155,6 +154,14 @@ class EpicsExchangeController < ApplicationController
     return stock_details
   end
 
+  def summary
+    #raise session[:receive_copy].to_yaml
+    @received_cart = session[:receive_copy]
+    @issued_cart = session[:issue_copy]
+    @exchange_details = params[:exchange_details]
+    render :layout => 'custom'
+  end
+  
   def update_stock_details(stock_id, quantity)
 
     old_stock = EpicsStockDetails.find(stock_id)

@@ -71,6 +71,9 @@ class EpicsExchangeController < ApplicationController
 
   end
 
+  def exchange
+    raise params.inspect
+  end
   def add_items_to_cart(items)
     
   end

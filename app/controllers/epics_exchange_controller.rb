@@ -73,9 +73,9 @@ class EpicsExchangeController < ApplicationController
 
   def exchange
 
-    received_items = find_product_receive_cart
-    issued_items = find_product_issue_cart
-    exchange_details = session[:exchange]
+    @received_items = find_product_receive_cart
+    @issued_items = find_product_issue_cart
+    @exchange_details = session[:exchange]
 
     order_type = EpicsOrderTypes.find_by_name('Dispense')
     EpicsExchange.transaction do
@@ -87,7 +87,7 @@ class EpicsExchangeController < ApplicationController
       @stock.epics_supplier_id = exchange_details[:exchange_facility]
       @stock.save!
 
-      for item in received_items.items
+      for item in @received_items.items
         @stock_detail = EpicsStockDetails.new()
         @stock_detail.epics_stock_id = @stock.epics_stock_id
         @stock_detail.epics_products_id = item.product_id
@@ -106,14 +106,14 @@ class EpicsExchangeController < ApplicationController
       end
 
 
-      order = EpicsOrders.new()
-      order.epics_order_type_id = order_type.id
-      order.save
+      @order = EpicsOrders.new()
+      @order.epics_order_type_id = order_type.id rescue 1
+      @order.save
 
-      (issued_items.items || {}).each do |item|
-        get_stock_detail(name , values).each do |stock_id , quantity|
+      (@issued_items.items || {}).each do |item, values|
+        get_stock_detail(item.name , item.quantity).each do |stock_id , quantity|
           item_order = EpicsProductOrders.new()
-          item_order.epics_order_id = order.id
+          item_order.epics_order_id = @order.id
           item_order.epics_stock_details_id = stock_id
           item_order.quantity = quantity
           item_order.save
@@ -127,17 +127,17 @@ class EpicsExchangeController < ApplicationController
       session[:issue ] = nil
       session[:exchange] = nil
 
-
+      redirect_to :action => :summary
 
     end
 
   end
 
-  def get_stock_detail(name, values)
+  def get_stock_detail(name, value)
     details = EpicsStockDetails.joins("INNER JOIN epics_products e
       ON e.epics_products_id = epics_stock_details.epics_products_id").where("e.name" => name)
 
-    max_quantity = values[:quantity].to_f
+    max_quantity = value
     stock_details = []
 
     (details || []).each do |e|
@@ -163,8 +163,6 @@ class EpicsExchangeController < ApplicationController
     old_stock.current_quantity = (old_stock.current_quantity - quantity)
     old_stock.save
   end
-
-
 
   def find_product_issue_cart
    session[:issue] ||= ProductCart.new

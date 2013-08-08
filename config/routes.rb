@@ -9,6 +9,7 @@ EPICS::Application.routes.draw do
   get "epics_exchange/receive_item"
   post "epics_exchange/receive_item"
   get "epics_exchange/exchange"
+  get "epics_exchange/summary"
   ######## exchange ########
 
   ######## user ########

@@ -1,5 +1,13 @@
 EPICS::Application.routes.draw do
 
+  ######## person #########
+
+  get "person/add_person"
+  post "person/new_person"
+  get "person/get_name"
+
+  ######## person #########
+
   ######## exchange #########
   get "epics_exchange/index"
   post "epics_exchange/create"
@@ -37,6 +45,7 @@ EPICS::Application.routes.draw do
   get "orders/lend"
   get "orders/get_authoriser"
   get "orders/lend_create"
+  post "orders/lend_create"
   get "orders/lend_index"
   post "orders/lend_index"
   ######### orders end ########

@@ -19,4 +19,14 @@ class EpicsPerson < ActiveRecord::Base
 
   end
 
+  def self.get_name(search_string)
+    fname = EpicsPerson.where(" fname LIKE (?)","%#{search_string}%").map{|person| person.fname}
+
+    lname = EpicsPerson.where(" lname LIKE (?)","%#{search_string}%").map{|person| person.lname}
+
+
+    return "<li></li><li>" + (fname +lname).uniq.join("</li><li>") + "</li>"
+
+  end
+
 end

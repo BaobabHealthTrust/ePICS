@@ -4,6 +4,22 @@ class ProductController < ApplicationController
     render :layout => "custom"
   end
 
+  def view
+    @product = EpicsProduct.where("name = ?",params[:product])[0]
+    render :layout => "custom"
+  end
+
+  def search
+  end
+
+  def find_by_name_or_code
+    @products = EpicsProduct.where("(product_code LIKE(?) OR
+      name LIKE (?))", "%#{params[:search_str]}%",
+      "%#{params[:search_str]}%").limit(100).map{|product|[[product.name]]}
+
+    render :text => "<li></li><li>" + @products.join("</li><li>") + "</li>"
+  end
+
   def new
     @product = EpicsProduct.new
     @product_type_map = EpicsProductType.all.map{|product_type|[product_type.name,product_type.epics_product_type_id]}

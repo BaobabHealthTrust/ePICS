@@ -16,7 +16,7 @@ class UserController < ApplicationController
       redirect_to '/user/login'
     else
       session[:user_id] = user.id
-      #redirect_to '/user/enter_workstation'
+      redirect_to '/user/enter_workstation' and return
       redirect_to '/' and return
     end
   end
@@ -32,7 +32,8 @@ class UserController < ApplicationController
       if location.epics_location_type.name == "Management"
          redirect_to root_path
       else
-        redirect_to "/home/dispensary"
+        #redirect_to "/home/dispensary"
+        redirect_to '/'
       end
     end
   end

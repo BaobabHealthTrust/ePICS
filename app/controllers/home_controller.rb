@@ -1,16 +1,16 @@
 class HomeController < ApplicationController
   def index
     @application = [
-      ["Issue Items","orders/new","default.png"],
-      ["Receive Items","stock/new","default.png"],
-      ["Exchange Items","epics_exchange/index","default.png"],
-      ["Lend Items","orders/lend","default.png"],
-      ["Search","/product/search","default.png"]
+      ["Issue Items","orders/new","dispense.png"],
+      ["Receive Items","stock/new","receive.png"],
+      ["Exchange Items","epics_exchange/index","exchange_drugs1.png"],
+      ["Lend Items","orders/lend","lend.png"],
+      ["Search","/product/search","search.png"]
     ]
 
     @reports = [
       ["Drug Availability","/report/drug_availability","default.png"],
-      ["Daily Dispensation","/report/daily_dispensation","default.png"],
+      ["Daily Dispensation","/report/daily_dispensation","daily_dispense.png"],
       ["Central Hospital Monthly LMIS Report","/report/monthly_report","default.png"],
       ["Audit Report","/report/audit_report","default.png"],
       ["View Received/Issued","/report/received_items","default.png"],

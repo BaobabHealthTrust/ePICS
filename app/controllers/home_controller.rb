@@ -19,7 +19,7 @@ class HomeController < ApplicationController
     ]
     @activities = []
     @administration = [
-      ["Set Item Units","/product_units/index","default.png"],
+      ["Set Item Units","/product_units/index","units_icon.png"],
       ["Set Item Types","/product_type/index","default.png"],
       ["Set Item Categories","/product_category/index","default.png"],
       ["Set Items","/product/index","default.png"],

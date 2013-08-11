@@ -36,12 +36,12 @@
 <style>
     .left-content {
         float: left;
-        width:64%;
+        width:75%;
     }
 
     .right-content {
         float: right;
-        width:34%;
+        width:25%;
     }
 
     .main-content {
@@ -146,16 +146,22 @@
           <th style="text-align: left; width: 10%;">Item Quantity</th>
           <th style="text-align: left; width: 10%;">Expiry Date</th>
         </tr>
+      </table>
+    </div>
+
+    <div class="div-products" style="height: 260px; overflow: auto;">
+
+      <table style="width:100%;>
         <%
            for item in @cart.items
              tr_class = cycle("blue", "white")
         %>
 
             <tr class ="tr_<%= tr_class %>">
-              <td><%=  item.name %></td>
-              <td><%=  item.product.product_code rescue "Code not found"  %></td>
-              <td><%=  item.quantity %></td>
-              <td><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+              <td style="text-align: left; width: 10%;"><%=  item.name %></td>
+              <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
+              <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
+              <td style="text-align: left; width: 9.8%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
             </tr>
         <% end rescue []%>
       </table>

@@ -52,12 +52,12 @@ window.setTimeout("sendData();",300);
 <style>
     .left-content {
         float: left;
-        width:64%;
+        width:80%;
     }
 
     .right-content {
         float: right;
-        width:34%;
+        width:20%;
     }
 
     .main-content {
@@ -161,25 +161,25 @@ window.setTimeout("sendData();",300);
 
       <div class="div-receiving">
         <table style="width:100%;" class="receiving">
+          <caption style="text-align: left;margin-left: 25%;font-weight: bold;">Receiving</caption>
           <tr>
             <th>Item code</th>
             <th>Quantity</th>
           </tr>
-          <%(@issue_cart.items || []).each do |item|%>
-            <tr>
-              <td><%=item.product.product_code%></td>
-              <td><%=item.quantity%></td>
-            </tr>
-          <%end%>
         </table>
       </div>
 
       <div class="div-issuing">
         <table style="width:100%;" class="issuing">
+          <caption  style="text-align: left;margin-left: 25%;font-weight: bold;">Issuing</caption>
           <tr>
             <th>Item code</th>
             <th>Quantity</th>
           </tr>
+        </table>
+      </div>
+      <div class="div-receiving" style="height:300px;overflow:auto;">
+        <table style="width:100%;" class="receiving">
           <%(@receive_cart.items || []).each do |item|%>
               <tr>
                 <td><%=item.product.product_code%></td>
@@ -188,7 +188,16 @@ window.setTimeout("sendData();",300);
           <%end%>
         </table>
       </div>
-
+      <div class="div-issuing" style="height:300px;overflow:auto;">
+        <table style="width:100%;" class="receiving">
+          <%(@issue_cart.items || []).each do |item|%>
+              <tr>
+                <td><%=item.product.product_code%></td>
+                <td><%=item.quantity%></td>
+              </tr>
+          <%end%>
+        </table>
+      </div>
     </div>
 
   </div>

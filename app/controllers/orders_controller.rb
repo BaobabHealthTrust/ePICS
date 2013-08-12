@@ -145,9 +145,16 @@ class OrdersController < ApplicationController
     cart = session[:orders]
     cart.remove_product(product)
     render :text => "true"
-  end
-
-   
+ end
+ 
+ def remove_product_from_lend_cart
+    product_id = params[:product_id]
+    product = EpicsProduct.find(product_id)
+    cart = session[:lent_items]
+    cart.remove_product(product)
+    render :text => "true"
+ end
+ 
  protected                                                                     
                                                                                 
  def find_product_cart(type)

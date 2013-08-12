@@ -1,0 +1,45 @@
+<script type='text/javascript'><!--
+
+tt_cancel_show='/'
+tt_cancel_destination='/'
+
+//-->
+</script>
+
+<%= form_tag :action => 'borrow_index', :method => :post  do %>
+
+    <%= select_tag :facility, options_for_select(@supplier_map),
+                   {:id => "supplier_id",:field_type => 'alpha',
+                    :helpText => "Borrow from"} %>
+
+    <%= text_field_tag :authorizer, nil,
+                       {:id => 'authorizer',
+                        :field_type => 'alpha',
+                        :ajaxURL => '/orders/get_authoriser?search_string=',
+                        :allowFreeText => true,
+                        :helpText => 'Who Authorised'} %>
+
+    <%= text_field_tag :grn_number, nil,
+                       {:id => 'grn_number', :field_type => 'alpha',
+                        :helpText => 'Enter GRN/Batch Number'} %>
+
+    <%= text_field_tag :borrow_date, nil,
+                       {:id => 'borrow_date', :field_type => 'date',
+                        :helpText => 'Enter borrowing date'} %>
+
+    <%= text_field_tag :witness_name,nil,
+                       {:id => 'witness_name',
+                        :field_type => 'alpha',
+                        :ajaxURL => '/stock/get_witness_names?search_string=',
+                        :allowFreeText => false,
+                        :helpText => 'Enter Witness Names'} %>
+
+    <%= text_field_tag :return_date, nil,
+                       {:id => 'return_date', :field_type => 'date',
+                        :helpText => 'Enter date for returning items'} %>
+
+
+    <%= submit_tag "Create borrowing" %>
+
+
+<% end %>

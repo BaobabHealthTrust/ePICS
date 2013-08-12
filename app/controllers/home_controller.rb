@@ -7,7 +7,7 @@ class HomeController < ApplicationController
       ["Lend Items","orders/lend","lend.png"],
       ["Borrow Items","stock/borrow","default.png"],
       ["Receive Loan Returns","/product/search","default.png"],
-      ["Reimburse Borrowed Items","orders/lend","lend.png"],
+      ["Reimburse Borrowed Items","orders/lend","default.png"],
       ["Search","/product/search","search.png"]
     ]
 

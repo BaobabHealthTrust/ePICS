@@ -74,11 +74,22 @@ class OrdersController < ApplicationController
 
           if ord_type.eql?('lend')
 
+            fname = session[:lend_details]['authorizer'].split(" ")[0].squish!
+            lname = session[:lend_details]['authorizer'].split(" ")[1].squish!
+            person = EpicsPerson.where("fname = ? AND lname = ?",fname,lname ).first.id
+
             lend = EpicsLendsOrBorrows.new
-            lend.date_issued = session[:lend_details]['issue_date']
-            lend.epics_stock_details_id = stock_id
             lend.epics_orders_id = order.id
+            lend.lend_or_borrow_date = session[:lend_details]['issue_date']
+            lend.epics_lends_or_borrows_type_id = EpicsLendsOrBorrowsType.find_by_name("lend").id
+            lend.return_date = session[:lend_details]['return_date']
             lend.save
+
+            authorizer = EpicsLendBorrowAuthorizer.new
+            authorizer.epics_person_id = person
+            authorizer.epics_lends_or_borrows_id = lend.id
+            authorizer.save
+
           end
           update_stock_details(stock_id, quantity)
         end
@@ -113,6 +124,7 @@ class OrdersController < ApplicationController
      session[:lend_details] = {}
      session[:lend_details]['lend_to_location'] = @location
      session[:lend_details]['issue_date'] = params[:issue_date]
+     session[:lend_details]['return_date'] = params[:return_date]
      session[:lend_details]['authorizer'] = params[:authorizer]
    end
    render :layout => 'custom'
@@ -134,7 +146,7 @@ class OrdersController < ApplicationController
      quantity = params[:item]['quantity'].to_f
      expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
      @cart.add_product(product,quantity,nil,expiry_date)
-    redirect_to :action => :lend_index, :location => EpicsLocation.find(session[:issuing_location_id]).name
+    redirect_to :action => :lend_index, :location => session[:lend_details]['lend_to_location'].id
    end
 
  end

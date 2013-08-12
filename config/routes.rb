@@ -48,6 +48,7 @@ EPICS::Application.routes.draw do
   post "orders/lend_create"
   get "orders/lend_index"
   post "orders/lend_index"
+
   ######### orders end ########
 
   ######### stock_details start ########
@@ -59,6 +60,9 @@ EPICS::Application.routes.draw do
   get "stock_details/edit"
   post "stock_details/update"
   get "stock_details/void"
+  get "stock_details/borrow"
+  post "stock_details/borrow"
+
   ######### stock_details end ########
 
   ######### stock start ########
@@ -69,6 +73,10 @@ EPICS::Application.routes.draw do
   get "stock/edit"
   post "stock/update"
   get "stock/void"
+  get "stock/borrow"
+  get "stock/borrow_index"
+  post "stock/borrow_index"
+  get "stock/receive_loan_returns"
   ######### stock end ########
 
   ######### location_type start ########

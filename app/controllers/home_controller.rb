@@ -5,6 +5,9 @@ class HomeController < ApplicationController
       ["Receive Items","stock/new","receive.png"],
       ["Exchange Items","epics_exchange/index","exchange_drugs1.png"],
       ["Lend Items","orders/lend","lend.png"],
+      ["Borrow Items","stock/borrow","default.png"],
+      ["Receive Loan Returns","/product/search","default.png"],
+      ["Reimburse Borrowed Items","orders/lend","default.png"],
       ["Search","/product/search","search.png"]
     ]
 

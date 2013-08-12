@@ -27,6 +27,11 @@ tt_cancel_destination='/'
                        {:id => 'issue_date', :field_type => 'date',
                         :helpText => 'Date issued'} %>
 
+    <%= text_field_tag :return_date, nil,
+                       {:id => 'return_date', :field_type => 'date',
+                        :helpText => 'Enter date for returning items'} %>
+
+
     <%= submit_tag "Create lend order" %>
 
 

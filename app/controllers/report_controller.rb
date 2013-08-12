@@ -18,7 +18,12 @@ class ReportController < ApplicationController
   def monthly_report
     
   end
+
   def view_alerts
-    
+    @expiring_products = EpicsStockExpiryDates.joins("
+      INNER JOIN epics_stock_details s ON s.epics_stock_id = epicsStock_expiry_dates.epics_stock_details_id
+      INNER JOIN epics_products p 
+      ON p.epics_products_id = s.epics_products_id").where("")  
   end
+
 end

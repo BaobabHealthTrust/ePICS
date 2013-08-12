@@ -90,6 +90,14 @@ class StockDetailsController < ApplicationController
     render :layout => "custom"
   end
 
+  def remove_product_from_cart
+    product_id = params[:product_id]
+    product = EpicsProduct.find(product_id)
+    cart = session[:cart]
+    cart.remove_product(product)
+    render :text => "true"
+  end
+
   protected
   
   def find_product_cart

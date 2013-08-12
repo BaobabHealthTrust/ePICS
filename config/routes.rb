@@ -59,6 +59,7 @@ EPICS::Application.routes.draw do
   get "stock_details/edit"
   post "stock_details/update"
   get "stock_details/void"
+  post "stock_details/remove_product_from_cart"
   ######### stock_details end ########
 
   ######### stock start ########

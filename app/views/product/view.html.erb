@@ -1,7 +1,18 @@
 <%= render  :partial =>  "/layouts/top" %>
 
 <script>
+  function voidNode(){
 
+    jQuery.ajax({
+      type: "POST",
+      url: "/void",
+      data: "product_id="<%=@product.id %>,
+      success: function(){
+        document.location.href="/"
+      }
+
+    });
+  }
 </script>
 
 <style type="text/css">
@@ -39,7 +50,7 @@
     width: 95%;                                                                 
   }                                                                             
                                                                                 
-  .buttons {                                                                    
+  .buttons{
     background-color: grey;                                                     
     border-bottom: 1px outset #EEEEEE;                                          
     border-style: outset;                                                       
@@ -103,7 +114,7 @@
       <td>&nbsp;</td>
     </tr>
     <tr>
-      <td><%= link_to "Edit", "#", :class => 'buttons' %></td>
+      <td><%= link_to "Edit", {:action=>"edit_product", :product_id => @product.id}, :class => 'buttons' %></td>
     </tr>
     <tr>
       <td>&nbsp;</td>

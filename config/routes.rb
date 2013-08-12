@@ -140,6 +140,9 @@ EPICS::Application.routes.draw do
   get "product/search"
   get "product/view"
   post "product/view"
+  get "product/edit_product"
+  post "product/edit_product"
+  post "product/save_edited_product"
   ####### product ends #######
 
 

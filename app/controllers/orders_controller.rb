@@ -171,10 +171,7 @@ class OrdersController < ApplicationController
     @debtors = EpicsLocation.find(:all, :conditions => ["epics_location_id IN (?)", facilities]).collect{|x| x.name}.uniq
 
   end
-   
 
- end
- 
  def remove_product_from_lend_cart
     product_id = params[:product_id]
     product = EpicsProduct.find(product_id)

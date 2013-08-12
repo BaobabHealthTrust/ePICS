@@ -39,8 +39,13 @@ class HomeController < ApplicationController
     @buttons_count = @activities.length if @activities.length > @buttons_count
     @buttons_count = @administration.length if @administration.length > @buttons_count
 
+    ############################ alerts ######################################
+    if params[:show_alerts_popup] == 'true'
+      @alerts = EpicsReport.alerts
+    end
+    ################################ end #####################################
+
     render :layout => false
-    
   end
 
 end

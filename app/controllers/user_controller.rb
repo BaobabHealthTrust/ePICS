@@ -32,8 +32,16 @@ class UserController < ApplicationController
       if location.epics_location_type.name == "Management"
          redirect_to root_path
       else
-        #redirect_to "/home/dispensary"
-        redirect_to '/'
+        show_alerts_popup = false
+        (EpicsReport.alerts || []).each do |name , count|
+          if count > 0
+            show_alerts_popup = true 
+            break
+          end 
+        end
+        
+        redirect_to :controller => :home , :action => :index , 
+          :show_alerts_popup => show_alerts_popup
       end
     end
   end

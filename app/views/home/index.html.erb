@@ -20,11 +20,17 @@
         height: 128px;
       }
 
+      #shadow, #question {
+        -moz-user-select: none;
+      }
     </style>
+
+    <%= stylesheet_link_tag "disable_page" %>
+    <%= javascript_include_tag "disable_page"%>
     
     <script type="text/javascript">
       <!--
-      
+       
         function __$(id){
           return document.getElementById(id);
         }
@@ -184,9 +190,19 @@
 
         </tr>
       </table>
-
-
-
     </div>
+  
+
+    <div id="shadow" class="opaqueLayer"> </div>                                    
+      <div id="question" class="questionLayer" style="font-size: 0.9em;">             
+          <%= render "alerts" %> 
+      </div>
+    </div>
+
+    <% unless @alerts.blank? %>
+      <script>
+        showLayer();
+      </script>
+    <%end%>
   </body>
 </html>

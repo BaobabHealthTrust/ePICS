@@ -53,6 +53,10 @@
   top:1px;
 }
 
+.close {
+  width: 300px;
+  height: 70px;
+}
 </style>
 
 <table class="alerts">
@@ -66,5 +70,10 @@
     <%end%>
   </tr>
   <%end%>
+   <tr>
+    <td colspan="2" style="text-align: center;">
+      <input type="button" onclick="hideLayer();" value="View later" class="btn close" />
+    </td>
+   </tr>
 </table>
 

@@ -31,7 +31,7 @@ class ReportController < ApplicationController
           LEFT JOIN epics_stock_expiry_dates x ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
         ").group('epics_stock_details.epics_stock_details_id').select("p.product_code code,p.name name, 
         SUM(current_quantity) quantity, min_stock,
-        max_stock,expiry_date").having("quantity <= min_stock").order("p.product_code,p.name")
+        max_stock,expiry_date").having("quantity > 0 AND quantity <= min_stock").order("p.product_code,p.name")
       when 'Out of stock items'
         @alerts = EpicsStockDetails.joins("
           INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id

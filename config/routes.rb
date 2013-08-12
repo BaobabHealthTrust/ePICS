@@ -48,6 +48,7 @@ EPICS::Application.routes.draw do
   post "orders/lend_create"
   get "orders/lend_index"
   post "orders/lend_index"
+  post "orders/remove_product_from_cart"
   ######### orders end ########
 
   ######### stock_details start ########

@@ -134,6 +134,7 @@ EPICS::Application.routes.draw do
   get "product/edit"
   post "product/update"
   get "product/void"
+  post "product/void"
   get "product/get_products"
   match 'get_batch' => 'product#get_batch_details'
   get "product/find_by_name_or_code"

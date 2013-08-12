@@ -53,12 +53,12 @@ function issueItems() {
 <style>
   .left-content {
     float: left;
-    width:64%;
+    width:75%;
   }
 
   .right-content {
     float: right;
-    width:34%;
+    width:25%;
   }
 
   .main-content {
@@ -122,7 +122,7 @@ function issueItems() {
 <div class="main-content">
 
 <div class="left-content">
-<table style="width:100%;">
+<table style="width:100%;" >
   <tr>
     <th colspan="3" style="text-align: left;"><h2>Issuing to:<br /><%=@location.name%></h2></th>
   </tr>
@@ -154,21 +154,27 @@ function issueItems() {
     <th style="text-align: left; width: 10%;">Item Quantity</th>
     <th style="text-align: left; width: 10%;">Expiry Date</th>
   </tr>
-  <% 
-  for item in @cart.items
-    tr_class = cycle("blue", "white")
-  %>
-   
-  <tr class ="tr_<%= tr_class %>">
-    <td><%=  item.name %></td>
-    <td><%=  item.product.product_code rescue "Code not found"  %></td>
-    <td><%=  item.quantity %></td>
-    <td><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
-  </tr>
-  <% end rescue []%>
  </table>
-
 </div>
+
+  <div class="div-products" style="border: 0px; height: 250px;overflow: auto;">
+    <table style="width:100%;">
+      <%
+         for item in @cart.items
+           tr_class = cycle("blue", "white")
+      %>
+
+          <tr class ="tr_<%= tr_class %>">
+            <td style="text-align: left; width: 10%;"><%=  item.name %></td>
+            <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
+            <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
+            <td style="text-align: left; width: 10%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+          </tr>
+      <% end rescue []%>
+    </table>
+  </div>
+
+
 
 </div>
 

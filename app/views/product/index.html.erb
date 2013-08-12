@@ -40,32 +40,35 @@ function showMsg(msg){
     <td>
       <table cellpadding=5 width='100%'>
         <tr>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Code</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Name</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Type</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Category</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Expires?</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Unit</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Min Stock</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Item Max Stock</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>Fast Moving?</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;'>&nbsp;</th></tr>
-
-        <% @products.each do |product| %>
-          <tr>
-            <td style='border: 1px solid #ccc;'><%= product.product_code rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.name rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.epics_product_type.name rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.epics_product_category.name rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.expire == true ? 'Yes' : 'No' rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.epics_product_units.name rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.min_stock rescue '&nbsp;' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.max_stock rescue '&nbsp;' %></td>
-            <td style='border: 1px solid #ccc;'><%= product.movement == true ? 'Yes' : 'No' rescue '' %></td>
-            <td style='border: 1px solid #ccc;'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='window.location="/product/edit?product=" + <%= product.epics_products_id %>' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product/void?product_id=" + <%= product.epics_products_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
-
-        <% end %>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Code</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Name</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Type</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Category</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Expires?</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Unit</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Min Stock</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Max Stock</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Fast Moving?</th>
+          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>&nbsp;</th></tr>
       </table>
+      <div style="height:400px; overflow: auto; width: 100%;">
+        <table cellpadding=5 width='100%'>
+          <% @products.each do |product| %>
+              <tr>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.product_code rescue '' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.name rescue '' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.epics_product_type.name rescue '' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.epics_product_category.name rescue '' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.expire == true ? 'Yes' : 'No' rescue '' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.epics_product_units.name rescue '' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.min_stock rescue '&nbsp;' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.max_stock rescue '&nbsp;' %></td>
+                <td style='border: 1px solid #ccc;width:10%'><%= product.movement == true ? 'Yes' : 'No' rescue '' %></td>
+                <td style='border: 1px solid #ccc;width:9%'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='window.location="/product/edit?product=" + <%= product.epics_products_id %>' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product/void?product_id=" + <%= product.epics_products_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
+
+          <% end %>
+        </table>
+      </div>
     </td>
   </tr>
   <tr>

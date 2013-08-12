@@ -124,7 +124,7 @@ class EpicsExchangeController < ApplicationController
       exchanging = EpicsExchange.new()
       exchanging.epics_stock_id = @stock.epics_stock_id
       exchanging.epics_order_id = @order.id
-      exchanging.epics_location_id = EpicsLocation.find_all_by_name(@exchange_details[:exchange_facility]).id
+      exchanging.epics_location_id = EpicsLocation.find_by_name(@exchange_details[:exchange_facility]).id
       exchanging.epics_exchange_date = @exchange_details[:exchange_date]
       exchanging.creator = User.current
       exchanging.save!

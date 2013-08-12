@@ -1,0 +1,67 @@
+<script type='text/javascript'><!--
+
+tt_cancel_show='/stock/borrow_index'
+tt_cancel_destination='/stock/borrow_index'
+showDate = false
+
+var product_expire_details = {};
+
+<%@product_expire_details.each do |product_name , expire| %>
+product_expire_details["<%=product_name%>"] = "<%=expire%>";
+<%end%>
+
+
+
+function set_ajaxURL_for_suggestions(value) {
+    url = "/product/get_products?product_category_id=" + value + "&search_str=";
+    $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', url);
+    listSuggestions(tstCurrentPage);
+}
+
+function showExpiryDate() {
+    if(product_expire_details[$('product_name').value] == 'true')
+        return true;
+
+    return false;
+}
+
+
+//-->
+</script>
+
+<%= form_tag :action => 'borrow', :method => :post  do %>
+
+    <%= select_tag "stock_details[location_id]", options_for_select(@locations_map),
+                   {:id => "stock_details_location_id",:field_type => 'alpha',
+                    :helpText => "Select Item Location"} %>
+
+    <%= select_tag "stock_details[product_category_id]", options_for_select(@product_category_map),
+                   { :id => "product_category_id",
+                     :field_type => 'alpha',
+                     :helpText => "Select Item Category"} %>
+
+    <%= select_tag "stock_details[product_name]", nil,
+                   {:id => "product_name",
+                    :field_type => 'alpha',
+                    :tt_onLoad => 'set_ajaxURL_for_suggestions($("product_category_id").value)',
+                    :ajaxURL => '',
+                    :helpText => "Select Item"} %>
+
+
+    <%= text_field_tag "stock_details[expiry_date]", nil,
+                       {:id => "product_expire",
+                        :field_type => 'date',
+                        :condition => 'showExpiryDate();',
+                        :maxDate => (Date.today + 20.year).to_date,
+                        :helpText => "Select Item Expiry Date"} %>
+
+    <%= text_field_tag "stock_details[quantity]", nil,
+                       {:id => 'product_quantity',
+                        :field_type => 'number',
+                        :min => 1,
+                        :helpText => 'Select Item Quantity'} %>
+
+    <%= submit_tag "Create Stock Details" %>
+
+
+<% end %>

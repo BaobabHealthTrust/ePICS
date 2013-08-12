@@ -185,19 +185,16 @@ EPICS::Application.routes.draw do
 
   post "supplier_type/update"
 
+  ########### reports start #########
   get"report/drug_availability"
-
   get"report/audit_report"
-
   get"report/daily_dispensation"
-
   get"report/store_room"
-
   get"report/received_items"
-
   get"report/monthly_report"
-
   get"report/view_alerts"
+  match 'alerts/:name' => 'report#alerts', :as => :alerts
+  ########### reports end #########
 
   #get "home/index"
 

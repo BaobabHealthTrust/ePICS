@@ -73,4 +73,16 @@ class StockController < ApplicationController
     render :text => "<li></li><li>" + names.uniq.join("</li><li>") + "</li>"
   end
 
+  def get_batches_not_reimbursed_to_facility
+
+    loans = EpicsLendsOrBorrows.find(:all,
+                                     :conditions => ["epics_lends_or_borrows_type_id = ? AND reimbursed = false AND facility = ? ",
+                                      EpicsLendsOrBorrowsType.find_by_name(params[:type]).id,
+                                      EpicsLocation.find_by_name(params[:facility]).id])
+
+    batches = EpicsStock.find(:all, :conditions => ["epics_stock_id IN (?)", loans.collect{|c| c.epics_stock_id}]).collect{|x| x.grn_number}
+
+    render :text => "<li></li><li>" + batches.join("</li><li>") + "</li>"
+  end
+
 end

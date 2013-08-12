@@ -39,10 +39,11 @@ class StockDetailsController < ApplicationController
 
   def checkout
 
+    type = ActiveSupport::JSON.decode params[:type] rescue nil
     if params[:type].blank?
       stock = session[:stock]
       stock_details = find_product_cart
-    else
+    elsif type == 'borrow'
       stock = session[:borrow]
       stock_details = (session[:borrow_cart] ||= ProductCart.new)
     end
@@ -66,12 +67,15 @@ class StockDetailsController < ApplicationController
           @witness.epics_person_id = person
           @witness.save!
 
-          if params[:type].eql?('borrow')
+
+
+          if type.eql?('borrow')
 
             lend = EpicsLendsOrBorrows.new
             lend.epics_stock_id = @stock.id
+            lend.facility = EpicsLocation.find_by_name(stock[:borrowing_from]).id
             lend.lend_or_borrow_date = stock[:grn_date]
-            lend.epics_lends_or_borrows_type_id = EpicsLendsOrBorrowsType.find_by_name("lend").id
+            lend.epics_lends_or_borrows_type_id = EpicsLendsOrBorrowsType.find_by_name("borrow").id
             lend.return_date = stock[:return_date]
             lend.save
 
@@ -100,7 +104,7 @@ class StockDetailsController < ApplicationController
             end
           end
 
-          if params[:type].eql?('borrow')
+          if type.eql?('borrow')
             session[:borrow] = session[:borrow_cart] = nil
           else
             session[:cart] = session[:stock] = nil

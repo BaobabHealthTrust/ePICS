@@ -1,4 +1,26 @@
 <%= render  :partial =>  "/layouts/top" %>
+<script>
+  function removeFromCart(node){
+    product_id = node.getAttribute('id');
+    jQuery.ajax({
+      type: "POST",
+      url: "/stock_details/remove_product_from_cart",
+      data: "product_id=" + product_id,
+      success: function(){
+        elements = document.getElementsByTagName("tr")
+        for(i=0; i<elements.length; i++){
+           if (elements[i].getAttribute('product_id')){
+             if (elements[i].getAttribute('product_id') == product_id){
+               elements[i].parentNode.removeChild(elements[i]);
+               break;
+             }
+           }
+        }
+      }
+
+    });
+  }
+</script>
 
 <style>
   .left-content {
@@ -67,6 +89,9 @@
 
     .tr_white td {
     }
+    .img{
+    float:right;
+    }
 </style>
 
 <div class="main-content">
@@ -103,12 +128,12 @@
 
 <table style="width:100%;">
   <tr>
-    <th colspan ="4" style="text-align: left;">
+    <th colspan ="5" style="text-align: left;">
       Stock Details
     </th>
   </tr>
   <tr>
-    <th colspan ="4" style="text-align: left;">
+    <th colspan ="5" style="text-align: left;">
       &nbsp;
     </th>
   </tr>
@@ -117,6 +142,7 @@
     <th style="text-align: left; width: 10%;">Item Code</th>
     <th style="text-align: left; width: 10%;">Item Quantity</th>
     <th style="text-align: left; width: 10%;">Expiry Date</th>
+    <th style="text-align: left; width: 10%;">&nbsp;</th>
   </tr>
 </table>
  <div style="height: 200px; overflow: auto;">
@@ -125,12 +151,12 @@
         for item in @cart.items
           tr_class = cycle("blue", "white")
      %>
-
-         <tr class ="tr_<%= tr_class %>">
+         <tr class ="tr_<%= tr_class %>" product_id="<%= item.product.id %>">
            <td style="text-align: left; width: 10%;"><%=  item.name %></td>
            <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
            <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
            <td style="text-align: left; width: 10%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+           <td style="width: 10%;"><%= image_tag("delete.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
          </tr>
      <% end %>
    </table>

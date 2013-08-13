@@ -185,4 +185,20 @@ class EpicsExchangeController < ApplicationController
    session[:receive] ||= ProductCart.new
   end
 
+  def remove_product_from_issue_cart
+    product_id = params[:product_id]
+    product = EpicsProduct.find(product_id)
+    cart = session[:issue]
+    cart.remove_product(product)
+    render :text => "true"
+  end
+
+  def remove_product_from_receive_cart
+    product_id = params[:product_id]
+    product = EpicsProduct.find(product_id)
+    cart = session[:receive]
+    cart.remove_product(product)
+    render :text => "true"
+  end
+ 
 end

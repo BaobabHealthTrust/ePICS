@@ -19,6 +19,8 @@ EPICS::Application.routes.draw do
   post "epics_exchange/exchange"
   get "epics_exchange/exchange"
   get "epics_exchange/summary"
+  post "epics_exchange/remove_product_from_issue_cart"
+  post "epics_exchange/remove_product_from_receive_cart"
   ######## exchange ########
 
   ######## user ########
@@ -82,6 +84,7 @@ EPICS::Application.routes.draw do
   get "stock/borrow_index"
   post "stock/borrow_index"
   get "stock/receive_loan_returns"
+  post "stock/remove_product_from_borrow_cart"
   get "stock/get_batches_not_reimbursed_to_facility"
   ######### stock end ########
 

@@ -73,6 +73,14 @@ class StockController < ApplicationController
     render :text => "<li></li><li>" + names.uniq.join("</li><li>") + "</li>"
   end
 
+ def remove_product_from_borrow_cart
+    product_id = params[:product_id]
+    product = EpicsProduct.find(product_id)
+    cart = session[:borrow_cart]
+    cart.remove_product(product)
+    render :text => "true"
+ end
+
   def get_batches_not_reimbursed_to_facility
 
     loans = EpicsLendsOrBorrows.find(:all,

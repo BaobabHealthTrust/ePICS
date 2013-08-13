@@ -79,6 +79,7 @@ EPICS::Application.routes.draw do
   get "stock/borrow_index"
   post "stock/borrow_index"
   get "stock/receive_loan_returns"
+  post "stock/remove_product_from_borrow_cart"
   ######### stock end ########
 
   ######### location_type start ########

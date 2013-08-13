@@ -6,7 +6,7 @@
 //-->
 </script>
 
-<%= form_tag :action => 'borrow_index', :method => :post  do %>
+<%= form_tag :action => 'create', :method => :post  do %>
 
  <%= select_tag "stock[supplier_id]", options_for_select(@supplier_map),
     {:id => "supplier_id",:field_type => 'alpha',

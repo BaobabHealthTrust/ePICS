@@ -80,6 +80,7 @@ class OrdersController < ApplicationController
 
             lend = EpicsLendsOrBorrows.new
             lend.epics_orders_id = order.id
+            lend.facility = session[:lend_details]['lend_to_location'].id
             lend.lend_or_borrow_date = session[:lend_details]['issue_date']
             lend.epics_lends_or_borrows_type_id = EpicsLendsOrBorrowsType.find_by_name("lend").id
             lend.return_date = session[:lend_details]['return_date']
@@ -157,8 +158,20 @@ class OrdersController < ApplicationController
     cart = session[:orders]
     cart.remove_product(product)
     render :text => "true"
- end
- 
+
+  end
+
+
+  def return_loans
+
+    facilities = EpicsLendsOrBorrows.find(:all,
+                                        :conditions => ["epics_lends_or_borrows_type_id = ? AND reimbursed = false",
+                                                        EpicsLendsOrBorrowsType.find_by_name('borrow').id]).collect{|x| x.facility}
+
+    @debtors = EpicsLocation.find(:all, :conditions => ["epics_location_id IN (?)", facilities]).collect{|x| x.name}.uniq
+
+  end
+
  def remove_product_from_lend_cart
     product_id = params[:product_id]
     product = EpicsProduct.find(product_id)
@@ -167,6 +180,7 @@ class OrdersController < ApplicationController
     render :text => "true"
  end
  
+
  protected                                                                     
                                                                                 
  def find_product_cart(type)

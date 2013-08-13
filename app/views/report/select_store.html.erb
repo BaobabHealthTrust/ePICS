@@ -1,0 +1,15 @@
+
+
+<script>
+</script>
+
+<style>
+  #tt_page_select_store_room .options { height: 506px; }
+</style>
+
+
+<form method = 'get' action = "/report/<%=@report_name%>">
+  <%= select_tag 'store_room',
+      options_for_select(@store_rooms),
+      :helpText => "Select store room" %>
+</form>

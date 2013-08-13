@@ -1,22 +1,15 @@
 class ReportController < ApplicationController
 
-  def drug_availability
-    
-  end
   def audit_report
-    
   end
+
   def daily_dispensation
-    
   end
-  def store_room
 
-  end
   def received_items
-
   end
+
   def monthly_report
-    
   end
 
   def view_alerts
@@ -49,6 +42,31 @@ class ReportController < ApplicationController
           BETWEEN 1 AND 183").select("p.product_code code,p.name name, 
           current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,MIN(expiry_date)")
     end
+  end
+
+  def select_store
+    @report_name = params[:report]
+    @report_name = 'store_room' if @report_name.blank?
+    @store_rooms = EpicsLocation.all.map{|l| l.name }
+    render :layout => 'application'
+  end
+
+  def store_room
+    location_id = EpicsLocation.where("name = ?",params[:store_room])[0].id
+
+    @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
+      ON s.epics_products_id = epics_products.epics_products_id").where("s.epics_location_id = ?",
+      location_id).select("epics_products.* , s.*").group("s.epics_products_id")
+  end
+
+  def drug_availability
+    location_id = EpicsLocation.where("name = ?",params[:store_room])[0].id
+
+    @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
+      ON s.epics_products_id = epics_products.epics_products_id
+      LEFT JOIN epics_stock_expiry_dates x 
+      ON x.epics_stock_details_id = s.epics_stock_details_id 
+      ").where("s.epics_location_id = ?",location_id).select("epics_products.* , s.*, x.*")
   end
 
 end

@@ -207,6 +207,7 @@ EPICS::Application.routes.draw do
   get"report/received_items"
   get"report/monthly_report"
   get"report/view_alerts"
+  get"report/select_store"
   match 'alerts/:name' => 'report#alerts', :as => :alerts
   ########### reports end #########
 

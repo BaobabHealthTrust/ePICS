@@ -19,6 +19,8 @@ EPICS::Application.routes.draw do
   post "epics_exchange/exchange"
   get "epics_exchange/exchange"
   get "epics_exchange/summary"
+  post "epics_exchange/remove_product_from_issue_cart"
+  post "epics_exchange/remove_product_from_receive_cart"
   ######## exchange ########
 
   ######## user ########

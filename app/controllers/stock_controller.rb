@@ -73,7 +73,7 @@ class StockController < ApplicationController
     render :text => "<li></li><li>" + names.uniq.join("</li><li>") + "</li>"
   end
 
-  def remove_product_from_borrow_cart
+ def remove_product_from_borrow_cart
     product_id = params[:product_id]
     product = EpicsProduct.find(product_id)
     cart = session[:borrow_cart]

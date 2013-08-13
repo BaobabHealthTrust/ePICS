@@ -29,16 +29,16 @@ class ReportController < ApplicationController
         @alerts = EpicsStockDetails.joins("
           INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
           LEFT JOIN epics_stock_expiry_dates x ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
-        ").group('epics_stock_details.epics_stock_details_id').select("p.product_code code,p.name name, 
+        ").group('epics_stock_details.epics_products_id').select("p.product_code code,p.name name, 
         SUM(current_quantity) quantity, min_stock,
-        max_stock,expiry_date").having("quantity > 0 AND quantity <= min_stock").order("p.product_code,p.name")
+        max_stock,expiry_date").having("quantity > 0 AND quantity <= min_stock").order("p.product_code,p.name,MIN(expiry_date)")
       when 'Out of stock items'
         @alerts = EpicsStockDetails.joins("
           INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
           LEFT JOIN epics_stock_expiry_dates x ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
         ").group('epics_stock_details.epics_stock_details_id').select("p.product_code code,p.name name, 
         SUM(current_quantity) quantity, min_stock,
-        max_stock,expiry_date").having("quantity <= 0").order("p.product_code,p.name")
+        max_stock,expiry_date").having("quantity <= 0").order("p.product_code,p.name,MIN(expiry_date)")
       when 'Missing items'
       when 'Removed items'
       when 'Items expiring in the next 6 months'
@@ -47,7 +47,7 @@ class ReportController < ApplicationController
           INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id AND p.expire = 1
           ").where("DATEDIFF(expiry_date,CURRENT_DATE())
           BETWEEN 1 AND 183").select("p.product_code code,p.name name, 
-          current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name")
+          current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,MIN(expiry_date)")
     end
   end
 

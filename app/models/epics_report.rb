@@ -42,7 +42,9 @@ class EpicsReport < ActiveRecord::Base
           @item_categories[receipt[:grn_date]]["#{cat.name}: #{cat.description}"][receipt[:item_id]] = {
             :item_code => receipt[:item_code],
             :item => receipt[:item_name],
-            :unit_of_issue => receipt[:unit_of_issue]
+            :unit_of_issue => receipt[:unit_of_issue],
+            :current_quantity => item.current_quantity(start_date.to_date, end_date.to_date),
+            :received_quantity => item.received_quantity(start_date.to_date, end_date.to_date)
           }
         end 
 
@@ -59,7 +61,7 @@ class EpicsReport < ActiveRecord::Base
       INNER JOIN epics_products e ON s.epics_products_id = e.epics_products_id
       INNER JOIN epics_product_units u ON u.epics_product_units_id = e.epics_product_units_id
       AND e.epics_product_category_id = #{category_id}
-    ").group("e.epics_products_id, epics_stocks.grn_date").select("
+    ").group("e.epics_products_id").select("
       epics_stocks.grn_date, e.epics_products_id , product_code, e.name product_name, u.name unit
     ").collect do |r| {
       :grn_date => r.grn_date, :item_id => r.epics_products_id.to_i , 

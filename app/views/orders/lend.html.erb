@@ -25,6 +25,7 @@ tt_cancel_destination='/'
 
     <%= text_field_tag :issue_date, nil,
                        {:id => 'issue_date', :field_type => 'date',
+                        :maxDate => (Date.today + 20.year).to_date,
                         :helpText => 'Date issued'} %>
 
     <%= text_field_tag :return_date, nil,

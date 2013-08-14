@@ -73,6 +73,11 @@ EPICS::Application.routes.draw do
   get "stock_details/borrow"
   post "stock_details/borrow"
   post "stock_details/remove_product_from_cart"
+  get "stock_details/return_index"
+  post "stock_details/return_index"
+  post "stock_details/return_index"
+  get "stock_details/return_index"
+  get "stock_details/return_item"
 
   ######### stock_details end ########
 
@@ -93,6 +98,8 @@ EPICS::Application.routes.draw do
   post "stock/get_returners_details"
   get "stock/reimburse_index"
   get "/stock/get_lent_items"
+  get "stock/get_returners_details"
+
   ######### stock end ########
 
   ######### location_type start ########

@@ -173,7 +173,9 @@ window.setTimeout("sendData();",300);
       width: 42%;
       text-align: left;
     }
-
+    .img{
+    height: 45px;
+    }
 </style>
 
 <div class="main-content">
@@ -231,7 +233,7 @@ window.setTimeout("sendData();",300);
               <tr product_id="receive_<%= item.product.id %>">
                 <td><%=item.product.product_code%></td>
                 <td><%=item.quantity%></td>
-                <td style="width: 10%;"><%= image_tag("delete.png",:id => item.product.id,
+                <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id,
                   :class=>"img", :onclick=>"removeFromReceiveCart(this)") %></td>
               </tr>
           <%end%>
@@ -243,7 +245,7 @@ window.setTimeout("sendData();",300);
               <tr product_id="issue_<%= item.product.id %>">
                 <td><%=item.product.product_code%></td>
                 <td><%=item.quantity%></td>
-                <td style="width: 10%;"><%= image_tag("delete.png",:id => item.product.id,
+                <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id,
                   :class=>"img", :onclick=>"removeFromIssueCart(this)") %></td>
               </tr>
           <%end%>

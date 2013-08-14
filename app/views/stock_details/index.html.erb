@@ -91,6 +91,7 @@
     }
     .img{
     float:right;
+    height: 60px;
     }
 </style>
 
@@ -156,7 +157,7 @@
            <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
            <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
            <td style="text-align: left; width: 10%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
-           <td style="width: 10%;"><%= image_tag("delete.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
+           <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
          </tr>
      <% end %>
    </table>

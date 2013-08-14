@@ -75,9 +75,22 @@ class StockController < ApplicationController
   def get_returners_details
 
     loans = EpicsLendsOrBorrows.find(:all, :conditions=> ["reimbursed = false AND facility = ? AND epics_lends_or_borrows_type_id = ?",
-                                                          params[:facility], EpicsLendsOrBorrowsType.find_by_name("Lend").id]).collect{|x| [x.epics_order_id, x.lend_or_borrow_date]}
+                                                          EpicsLocation.find_by_name(params[:facility]).id,
+                                                          EpicsLendsOrBorrowsType.find_by_name("Lend").id])
 
-    @batches =
+    @dates = []
+    @details = {}
+    loans.each do |x|
+      @dates << [x.lend_or_borrow_date, x.epics_orders_id]
+      temp = EpicsProductOrders.find_all_by_epics_order_id(x.epics_orders_id)
+      @details[x.epics_orders_id] = []
+      temp.each do |f|
+        @details[x.epics_orders_id] << [f.epics_stock_details.epics_product.name,f.quantity]
+      end
+
+    end
+
+
 
     render :layout => "application"
   end

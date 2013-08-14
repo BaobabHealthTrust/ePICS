@@ -1,3 +1,51 @@
+<script type="text/javascript">
+
+    function load(id) {
+
+        var table = document.getElementById("borrowed_items");
+
+        while (table.rows.length > 1 )
+        {
+            table.deleteRow(table.rows.length - 1)
+        }
+
+        <% @details.each do |y| %>
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+
+        var cell1 = row.insertCell(0);
+        cell1.innerHTML = <%=y[0] %>
+
+        var cell2 = row.insertCell(1);
+        cell2.innerHTML = <%=y[1] %>;
+       <% end %>
+
+    }
+
+    function deleteRow(tableID) {
+        try {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+
+            for(var i=0; i<rowCount; i++) {
+                var row = table.rows[i];
+                var chkbox = row.cells[0].childNodes[0];
+                if(null != chkbox && true == chkbox.checked) {
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+
+
+            }
+        }catch(e) {
+            alert(e);
+        }
+    }
+
+
+</script>
+
 <style type="text/css">
   td{
       font-size: 30px;
@@ -14,21 +62,32 @@
 </style>
 
 
-<div style="margin:0.5%; border: 1px solid black; height: 45%;width: 99%;overflow: auto">
+  <span style="margin-left: 0.5; font-size: 25px;font-weight: bold;">&nbsp;Loaned Items</span>
 
-</div>
+  <div style="margin:0.5%; border: 1px solid black; height: 40%;width: 99%;overflow: auto">
+     <table style="width: 100%;padding: 2px; cell-spacing:4px;" id="borrowed_items">
+       <tr> <th>Product</th> <th>Borrowed Quantity</th></tr>
 
-<div style="margin:0.5%; border: 1px solid black; height: 40%;width: 99%; overflow: auto">
 
-  <table style="width: 100%;padding: 2px; cell-spacing:4px;">
+     </table>
+  </div>
 
-    <tr>
-      <td class=<%=cycle('even','odd') %>> &nbsp;</td>
-    </tr>
+<span style="margin-left: 0.5; font-size: 25px;font-weight: bold;">&nbsp;Dates For Outstanding Loan</span>
 
-  </table>
+  <div style="margin-left:0.5%; border: 1px solid black; height: 36%;width: 99%; overflow: auto">
 
-</div>
+    <table style="width: 100%;padding: 2px; cell-spacing:4px;">
+      <% @dates.each do |x| %>
+          <tr>
+            <td onclick="load(<%= x[1] %>)" class=<%=cycle('even','odd') %>> <%= x[0] %></td>
+          </tr>
+      <% end %>
+    </table>
+
+  </div>
+
+
+
 
 
 

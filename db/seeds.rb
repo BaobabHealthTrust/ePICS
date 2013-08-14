@@ -7,22 +7,26 @@
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
 
-location_types = ["Facility","Pharmarcy"]
+location_types = [
+  ["Facility","Other health centers"],
+  ["Store room","Pharmacy store rooms"],
+  ["Departmets","Facility departments"]
+]
 
-(location_types).each do |name|
+(location_types).each do |name , description|
   type = EpicsLocationType.new()
   type.name = name
-  type.description = "Epics location type: #{name}"
+  type.description = description
   type.save
 end
 
 
 locations = ["Tablets Stores","Injectable Stores","Surgical Stores"]
-epics_location_type_id = EpicsLocationType.where("name = ?", location_types[0]).first.id
+epics_location_type_id = EpicsLocationType.where("name = ?", location_types[1]).first.id
 (locations).each do |name|
   type = EpicsLocation.new()
   type.name = name
-  type.description = "Epics Pharmarcy location"
+  type.description = "Epics store location"
   type.epics_location_type_id = epics_location_type_id
   type.save
 end
@@ -45,7 +49,7 @@ order_types = ["Dispense","Exchange","Receive"]
   type.save
 end
 
-supplier_types = ["Government", "Donor", "Borrowed"]
+supplier_types = ["Government", "Donor", "Borrowed", "Private","Other"]
 
 (supplier_types).each do |name|
   type = EpicsSupplierType.new()
@@ -56,7 +60,8 @@ end
 
 
 suppliers = [
-  ["Central Medical Stores", supplier_types[0]] 
+  ["Central Medical Stores", supplier_types[0]],
+  ["Other", supplier_types[4]]
 ]
 
 (suppliers).each do |name, stype|

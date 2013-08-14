@@ -4,19 +4,19 @@
 </script>
 <style>
   #viewport {
-    display: none;
 }
 
 </style>
 
-<% form_tag :action => 'monthly_report' do %>
-  <%= select_tag "dates[start]", nil,                            
+<% form_tag :method => :post, :action => 'monthly_report' do %>
+  <%= text_field_tag "dates[start]", nil,                            
     {:id => "start_date",                                                   
     :field_type => 'date',
     :maxDate => "#{Date.today.to_date}",
     :helpText => "Select start date"} %>
+ 
   
-  <%#= select_tag "end_date", nil,                            
+  <%= text_field_tag "dates[end]", nil,                            
     {:id => "end_date",                                                   
     :field_type => 'date',
     :minDate => "#{Date.today.to_date}",

@@ -13,7 +13,7 @@ class HomeController < ApplicationController
 
     @reports = [
       ["Drug Availability","/report/select_store?report=drug_availability","available_drugs.png"],
-      ["Daily Dispensation","/report/daily_dispensation","daily_dispense.png"],
+      ["Daily Dispensation","/report/select_daily_dispensation_date","daily_dispense.png"],
       ["Central Hospital Monthly LMIS Report","/report/select_date_range","monthly_report.png"],
       ["Audit Report","/report/audit_report","audit_report.png"],
       ["View Received/Issued","/report/received_items","view_issued_received.png"],

@@ -10,7 +10,7 @@
 location_types = [
   ["Facility","Other health centers"],
   ["Store room","Pharmacy store rooms"],
-  ["Departmets","Facility departments"]
+  ["Departments","Facility departments"]
 ]
 
 (location_types).each do |name , description|

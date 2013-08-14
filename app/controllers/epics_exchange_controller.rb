@@ -76,7 +76,7 @@ class EpicsExchangeController < ApplicationController
     @issued_items = find_product_issue_cart
     @exchange_details = session[:exchange]
 
-    order_type = EpicsOrderTypes.find_by_name('Dispense')
+    order_type = EpicsOrderTypes.find_by_name('Exchange')
     EpicsExchange.transaction do
 
       @stock = EpicsStock.new()

@@ -9,10 +9,10 @@ tt_cancel_destination='/'
 
 <%= form_tag :action => 'lend_index', :method => :post  do %>
 
-    <%= text_field_tag :facility, nil,
+    <%= select_tag :facility, options_for_select(@locations),
                        {:field_type => 'alpha',
                         :helpText => 'Requesting Facility',
-                        :ajaxURL => '/location/search?search_string=' }%>
+                        }%>
 
     <%= text_field_tag :authorizer, nil,
                        {:id => 'authorizer',
@@ -29,6 +29,7 @@ tt_cancel_destination='/'
 
     <%= text_field_tag :return_date, nil,
                        {:id => 'return_date', :field_type => 'date',
+                        :maxDate => (Date.today + 20.year).to_date,
                         :helpText => 'Enter date for returning items'} %>
 
 

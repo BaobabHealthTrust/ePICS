@@ -1,0 +1,39 @@
+<style type="text/css">
+  td{
+      font-size: 30px;
+
+  }
+  td.even{
+      background-color: #87ceeb;
+  }
+  td.odd{
+      background-color: silver;
+  }
+
+
+</style>
+
+
+<div style="margin:0.5%; border: 1px solid black; height: 45%;width: 99%;overflow: auto">
+
+</div>
+
+<div style="margin:0.5%; border: 1px solid black; height: 40%;width: 99%; overflow: auto">
+
+  <table style="width: 100%;padding: 2px; cell-spacing:4px;">
+
+    <tr>
+      <td class=<%=cycle('even','odd') %>> &nbsp;</td>
+    </tr>
+
+  </table>
+
+</div>
+
+
+
+<div id="buttons" class="buttonsDiv">
+  <button class="red"><span>Cancel</span></button>
+  <button style="float: right;"class="green"><span>Finish</span></button>
+  <button style="float: right;"><span>Back</span></button>
+</div>

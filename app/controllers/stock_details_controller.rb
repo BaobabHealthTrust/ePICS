@@ -9,7 +9,8 @@ class StockDetailsController < ApplicationController
   def new
     unless session[:stock].nil?
       @stock_detail = EpicsStockDetails.new()
-      @locations_map = EpicsLocation.all.map{|location| [location.name,location.epics_location_id]}
+      @locations_map = EpicsLocation.find(:all, :conditions => ["epics_location_type_id = ? ",
+                                                   EpicsLocationType.find_by_name("Store room").id ]).map{|location| [location.name,location.epics_location_id]}
       @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
       @product_expire_details = {}
       epics_products = EpicsProduct.all
@@ -117,7 +118,8 @@ class StockDetailsController < ApplicationController
   end
 
   def borrow
-    @locations_map = EpicsLocation.all.map{|location| [location.name,location.epics_location_id]}
+    @locations_map = EpicsLocation.find(:all, :conditions => ["epics_location_type_id = ? ",
+                                                              EpicsLocationType.find_by_name("Store room").id ]).map{|location| [location.name,location.epics_location_id]}
     @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
     @product_expire_details = {}
     epics_products = EpicsProduct.all
@@ -149,6 +151,7 @@ class StockDetailsController < ApplicationController
     cart.remove_product(product)
     render :text => "true"
   end
+
 
   protected
   

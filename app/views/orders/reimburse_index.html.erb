@@ -1,0 +1,219 @@
+<%= render  :partial =>  "/layouts/top" %>
+<script>
+    function removeFromCart(node){
+        product_id = node.getAttribute('id');
+        jQuery.ajax({
+            type: "POST",
+            url: "/orders/remove_reimburse_from_cart",
+            data: "product_id=" + product_id,
+            success: function(){
+                elements = document.getElementsByTagName("tr")
+                for(i=0; i<elements.length; i++){
+                    if (elements[i].getAttribute('product_id')){
+                        if (elements[i].getAttribute('product_id') == product_id){
+                            elements[i].parentNode.removeChild(elements[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        });
+    }
+</script>
+
+<script>
+
+
+    function issueItems() {
+
+        submitForm = document.createElement("FORM");
+        submitForm.setAttribute("type","hidden");
+        document.body.appendChild(submitForm);
+        submitForm.method = "POST";
+
+    <%(@return_cart.items || []).each do |cart| %>
+        newElement = document.createElement("input")
+        newElement.setAttribute("name",'item_quantity["<%=cart.name%>"]')
+        newElement.setAttribute("type","hidden");
+        newElement.value = "<%=cart.quantity%>";
+        submitForm.appendChild(newElement);
+
+    <%if cart.expiry_date%>
+        newElement = document.createElement("input")
+        newElement.setAttribute("name",'item_expiry_date["<%=cart.name%>"]')
+        newElement.setAttribute("type","hidden");
+        newElement.value = "<%=cart.expiry_date%>";
+        submitForm.appendChild(newElement);
+    <%end%>
+    <%end%>
+
+        submitForm.action= "/orders/dispense?type='return'";
+        submitForm.submit();
+
+    }
+
+</script>
+
+
+<style>
+    .left-content {
+        float: left;
+        width:75%;
+    }
+
+    .right-content {
+        float: right;
+        width:25%;
+    }
+
+    .main-content {
+        width: 98%;
+    }
+
+    .menu-buttons {
+        padding: 10px;
+        float: right;
+        width: 30%;
+        margin-right: 10px;
+        border-style: solid;
+        border-width: 0px 0px 0px 1px;
+    }
+
+    .menu-buttons a {
+        width: 95%;
+    }
+
+    .buttons {
+        background-color: grey;
+        border-bottom: 1px outset #EEEEEE;
+        border-style: outset;
+        border-top: 1px outset #EEEEEE;
+        color: white;
+        display: block;
+        padding: 10px;
+        text-align: center;
+        text-decoration: none;
+
+
+        background-color: rgb(0, 116, 204);
+        background-image: -moz-linear-gradient(center top , rgb(0, 136, 204), rgb(0, 85, 204));
+        background-repeat: repeat-x;
+        border-bottom-color: rgba(0, 0, 0, 0.25);
+        border-left-color-ltr-source: physical;
+        border-left-color-rtl-source: physical;
+        border-left-color-value: rgba(0, 0, 0, 0.1);
+        border-right-color-ltr-source: physical;
+        border-right-color-rtl-source: physical;
+        border-right-color-value: rgba(0, 0, 0, 0.1);
+        border-top-color: rgba(0, 0, 0, 0.1);
+
+        font-size: 1.3em;
+    }
+
+    .div-products {
+        width: 98%;
+        overflow: auto;
+        border-width: 1px 0px 0px 0px;
+        border-style: solid;
+    }
+    .tr_blue td {
+        background-color: rgb(196, 255, 196)
+    }
+
+    .tr_white td {
+    }
+    .img{
+        float:right;
+    }
+</style>
+
+<div class="main-content">
+
+  <div class="left-content">
+    <table style="width:100%;" >
+      <tr>
+        <th style="text-align: left; width: 20%; font-size: 25px;font-weight: bold">Returning to</th>
+        <td style="width:10px;">:</td>
+        <td style="text-align: left;font-size: 25px;"><%= session[:return_details][:return_to] %></td>
+      </tr>
+      <tr>
+        <th style="text-align: left; width: 20%;font-size: 25px;font-weight: bold ">Batch Borrowed</th>
+        <td style="width:10px;">:</td>
+        <td style="text-align: left;font-size: 25px;"><%= session[:return_details][:return_batch]%></td>
+      </tr>
+      <tr>
+        <th colspan="3" style="text-align: left;">&nbsp;</th>
+      </tr>
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    <div class="div-products">
+
+      <table style="width:100%;">
+        <tr>
+          <th colspan ="4" style="text-align: left;">
+            Issued Item Details
+          </th>
+        </tr>
+        <tr>
+          <th colspan ="4" style="text-align: left;">
+            &nbsp;
+          </th>
+        </tr>
+        <tr>
+          <th style="text-align: left; width: 10%;">Item Name</th>
+          <th style="text-align: left; width: 10%;">Item Code</th>
+          <th style="text-align: left; width: 10%;">Item Quantity</th>
+          <th style="text-align: left; width: 10%;">Expiry Date</th>
+          <th style="text-align: left; width: 10%;">&nbsp;</th>
+        </tr>
+      </table>
+    </div>
+
+    <div class="div-products" style="border: 0px; height: 250px;overflow: auto;">
+      <table style="width:100%;">
+        <%
+           for item in @return_cart.items
+             tr_class = cycle("blue", "white")
+        %>
+
+            <tr class ="tr_<%= tr_class %>" product_id="<%= item.product.id %>">
+              <td style="text-align: left; width: 10%;"><%=  item.name %></td>
+              <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
+              <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
+              <td style="text-align: left; width: 10%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+              <td style="width: 10%;"><%= image_tag("delete.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
+            </tr>
+        <% end rescue []%>
+      </table>
+    </div>
+
+
+
+  </div>
+
+
+  <div class="right-content">
+
+    <table style="width: 100%;">
+      <tr style="line-height: 50px;">
+        <td><%= link_to "Add Item", '/orders/select_item_to_return', :class => 'buttons' %></td>
+      </tr>
+
+      <tr style="line-height: 50px;">
+        <td>&nbsp;</td>
+      </tr>
+
+      <tr style="line-height: 50px;">
+        <td><%= link_to "Return Items", "javascript:issueItems();", :class => 'buttons' %></td>
+      </tr>
+
+    </table>
+
+  </div>
+
+</div>

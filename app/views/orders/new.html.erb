@@ -9,10 +9,10 @@
 
 <%= form_tag :action => 'select', :method => :post  do %>
 
- <%= text_field_tag :location, nil,
+ <%= select_tag :location, options_for_select(@locations_map),
     {:field_type => 'alpha',
-     :helpText => 'Location/Department',
-     :ajaxURL => '/location/search?search_string=' }%>
+     :helpText => 'Location/Department'
+      }%>
 
   <%= submit_tag "Create Order" %>
 

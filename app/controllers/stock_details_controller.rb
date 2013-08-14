@@ -36,6 +36,14 @@ class StockDetailsController < ApplicationController
   end
 
   def void
+   stock_id = params[:stock_id]
+   reason = params[:reason]
+   stock = EpicsStockDetails.find(stock_id)
+   stock.voided=1
+   stock.void_reason = reason
+   stock.voided_by = session[:user_id]
+   stock.save!
+   render :text => "done"
   end
 
   def checkout

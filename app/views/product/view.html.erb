@@ -1,6 +1,8 @@
 <%= render  :partial =>  "/layouts/top" %>
 
 <script>
+  current_stock_id = ""
+  current_reason = ""
   function voidNode(){
 
     jQuery.ajax({
@@ -12,6 +14,42 @@
       }
 
     });
+  }
+
+  function showPopup(node){
+    current_stock_id = node.getAttribute('id')
+    document.getElementsByClassName('select_reason')[0].style.display=''
+    document.getElementById('cover').style.display=''
+  }
+
+  function hidePopups(){
+    document.getElementsByClassName('select_reason')[0].style.display='none'
+    document.getElementById('cover').style.display='none'
+  }
+
+  function selectReason(node){
+    current_reason = node.getAttribute('reason');
+    jQuery.ajax({
+      type: "POST",
+      url: "/stock_details/void",
+      data: "stock_id=" + current_stock_id + '&reason=' + current_reason,
+      success: function(){
+        elements = document.getElementsByTagName("tr")
+        for(i=0; i<elements.length; i++){
+           if (elements[i].getAttribute('stock_id')){
+             if (elements[i].getAttribute('stock_id') == current_stock_id){
+               elements[i].parentNode.removeChild(elements[i]);
+               break;
+             }
+           }
+        }
+        current_stock_id = ""
+        current_reason = ""
+        hidePopups();
+      }
+
+    });
+    
   }
 </script>
 
@@ -74,7 +112,9 @@
     font-size: 1.3em;                                                           
   }       
 
-
+  .img{
+    height: 60px;
+   }
 </style>
 
 
@@ -90,13 +130,15 @@
       <th style="width: 20%; text-align: right;padding-right: 10px;">Received quantity</th>
       <th style="width: 20%; text-align: right;padding-right: 10px;">Current quantity</th>
       <th style="width: 25%;padding-left: 10px;">Location</th>
+      <th>&nbsp;</th>
     </tr>
     <%(@product.epics_stock_details || []).each do |stock|%>
-      <tr>
+      <tr stock_id="<%= stock.id %>">
         <td><%=stock.epics_stock_expiry_date.expiry_date.strftime('%B %Y') rescue 'N/A'%></td>
         <td style="text-align: right;padding-right: 10px;"><%=stock.received_quantity%></td>
         <td style="text-align: right;padding-right: 10px;"><%=stock.current_quantity%></td>
         <td style="padding-left: 10px;"><%=stock.epics_location.name%></td>
+        <td style="width: 10%;"><%= image_tag("close.png",:id => stock.id, :class=>"img", :onclick=>"showPopup(this);") %></td>
       </tr>
     <%end%>
   </table>
@@ -113,20 +155,80 @@
     <tr>
       <td>&nbsp;</td>
     </tr>
-    <tr>
-      <td><%= link_to "Edit", {:action=>"edit_product", :product_id => @product.id}, :class => 'buttons' %></td>
+    <!--<tr>
+      <td><%#= link_to "Edit", {:action=>"edit_product", :product_id => @product.id}, :class => 'buttons' %></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
     </tr>
     <tr>
-      <td><%= link_to "Remove", "#", :class => 'buttons' ,:onclick=>"voidNode();"%></td>
-    </tr>
+      <td><%#= link_to "Remove", "#", :class => 'buttons' ,:onclick=>"voidNode();"%></td>
+    </tr>-->
   </table>
 </div>
+</div>
 
-
-
-
+<div class="select_reason" style="display:none;">
+  <div id="reasons">
+    <table  width="100%" border=0.5 style = "border-radius:10px;">
+      <tr>
+        <th colspan="2">Select Reason</th>
+      </tr>
+      <tr>
+        <td cospan="2"><a class="buttons" reason="expired" onclick="selectReason(this);"><span>Expired</span></a> </td>
+      </tr>
+      <tr>
+        <td cospan="2"><hr/></td>
+      </tr>
+      <tr>
+        <td colspan="2"><a class="buttons" reason="damaged" onclick="selectReason(this);"><span>Damaged</span></a> </td>
+      </tr>
+      <tr>
+        <td><hr/></td>
+      </tr>
+      <tr>
+        <td colspan="2"><a class="buttons" reason="missing" onclick="selectReason(this);"><span>Missing</span></a> </td>
+      </tr>
+      <tr>
+        <td colspan="2"><%= image_tag("close.png",:id=>"close", :onclick=>"hidePopups();") %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div id="cover" style="display: none">
 
 </div>
+<style>
+  #close{
+    position: absolute;
+    height: 60px;
+    left: 45%;
+    padding-top: 10px;
+  }
+  #reasons table{
+      background-color:#FEF6E4;
+      color: black;
+      font-size: 18pt;
+      font-weight: bold;
+      left: 30%;
+      line-height: 35px;
+      position: absolute;
+      top: 152px;
+      width: 500px;
+      border: 1px solid black;
+      z-index: 999;
+      padding: 0px 20px 70px 20px;
+      -moz-user-select:none;
+    }
+   #cover{
+      position: absolute;
+      background-color: black;
+      width: 100%;
+      height: 102%;
+      left: 0%;
+      top: 0%;
+      z-index: 990;
+      opacity: 0.5;
+    }
+
+</style>

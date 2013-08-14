@@ -35,7 +35,7 @@ class StockController < ApplicationController
   end
 
   def borrow
-    @supplier_map =  EpicsLocationType.find(:first, :conditions => ["name = 'facility'"]).epics_locations.collect{|x| x.name }
+    @supplier_map =  EpicsLocationType.find(:first, :conditions => ["name = 'Facility'"]).epics_locations.collect{|x| x.name }
   end
 
   def borrow_index
@@ -49,7 +49,7 @@ class StockController < ApplicationController
       person = EpicsPerson.where("fname = ? AND lname = ?",fname,lname ).first.id
       borrow_hash = Hash.new()
       borrow_hash[:borrowing_from] = params[:facility]
-      borrow_hash[:supplier_id] = EpicsSupplier.find_by_name("Other facility").id
+      borrow_hash[:supplier_id] = EpicsSupplier.find_by_name("Other").id
       borrow_hash[:grn_number] = params[:grn_number]
       borrow_hash[:authorizer] = person
       borrow_hash[:grn_date] = params[:borrow_date]

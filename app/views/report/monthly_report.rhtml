@@ -71,8 +71,8 @@ th {
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
-  <%(@monthly_report || {}).each do |date, categories|
-    (categories).each do |category, items|
+  <%(@monthly_report || {}).sort_by {|x,y|x.to_date}.each do |date, categories|
+    (categories).sort_by {|x,y|x}.each do |category, items|
   %>
   <tr class="item_category">
     <td><%=category%></td>
@@ -86,7 +86,7 @@ th {
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
-  <% @monthly_report[date][category].each do |item_id , values|%>
+  <% @monthly_report[date][category].sort_by {|x,y|y[:item_code]}.each do |item_id , values|%>
   <tr>
     <td><%=values[:item_code]%></td>
     <td><%=values[:item]%></td>
@@ -94,9 +94,15 @@ th {
     <td style="text-align:right;padding-right: 10px;">
       <%=values[:current_quantity]%>
     </td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:losses]%>
+    </td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:positive_adjustments]%>
+    </td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:negative_adjustments]%>
+    </td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td style="text-align:right;padding-right: 10px;">

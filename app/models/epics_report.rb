@@ -44,7 +44,10 @@ class EpicsReport < ActiveRecord::Base
             :item => receipt[:item_name],
             :unit_of_issue => receipt[:unit_of_issue],
             :current_quantity => item.current_quantity(start_date.to_date, end_date.to_date),
-            :received_quantity => item.received_quantity(start_date.to_date, end_date.to_date)
+            :received_quantity => item.received_quantity(start_date.to_date, end_date.to_date),
+            :losses => item.losses_quantity(start_date.to_date, end_date.to_date),
+            :positive_adjustments => item.positive_adjustments(start_date.to_date, end_date.to_date),
+            :negative_adjustments => item.negative_adjustments(start_date.to_date, end_date.to_date)
           }
         end 
 

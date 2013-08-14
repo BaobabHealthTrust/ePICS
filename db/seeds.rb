@@ -22,7 +22,7 @@ end
 
 
 locations = ["Tablets Stores","Injectable Stores","Surgical Stores"]
-epics_location_type_id = EpicsLocationType.where("name = ?", location_types[1]).first.id
+epics_location_type_id = EpicsLocationType.where("name = ?", location_types[1][0]).first.id
 (locations).each do |name|
   type = EpicsLocation.new()
   type.name = name

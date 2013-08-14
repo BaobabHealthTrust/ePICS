@@ -1,3 +1,4 @@
+<%= javascript_include_tag 'jquery' %>
 <script type="text/javascript">
 
     function load(id) {
@@ -9,38 +10,29 @@
             table.deleteRow(table.rows.length - 1)
         }
 
-        <% @details.each do |y| %>
-        var rowCount = table.rows.length;
-        var row = table.insertRow(rowCount);
+        jQuery.ajax({
+            type: "GET",
+            dataType: "integer",
+            url: "/stock/get_lent_items?id=" + id,
+            success: function(data){
 
-        var cell1 = row.insertCell(0);
-        cell1.innerHTML = <%=y[0] %>
+                alert(data);
+                var i = 0;
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+                while(i < data.length)
+                {
+                    var cell1 = row.insertCell(0);
+                    cell1.innerHTML = data[i][0];
 
-        var cell2 = row.insertCell(1);
-        cell2.innerHTML = <%=y[1] %>;
-       <% end %>
-
-    }
-
-    function deleteRow(tableID) {
-        try {
-            var table = document.getElementById(tableID);
-            var rowCount = table.rows.length;
-
-            for(var i=0; i<rowCount; i++) {
-                var row = table.rows[i];
-                var chkbox = row.cells[0].childNodes[0];
-                if(null != chkbox && true == chkbox.checked) {
-                    table.deleteRow(i);
-                    rowCount--;
-                    i--;
+                    var cell2 = row.insertCell(1);
+                    cell2.innerHTML = data[i][1];
                 }
-
-
             }
-        }catch(e) {
-            alert(e);
-        }
+        });
+
+
+
     }
 
 

@@ -40,7 +40,7 @@ epics_lends_or_borrows_types = ["Borrow","Lend"]
   type.save
 end
 
-order_types = ["Dispense","Exchange","Receive"]
+order_types = ["Dispense","Exchange","Lend"]
 
 (order_types).each do |name|
   type = EpicsOrderTypes.new()

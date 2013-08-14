@@ -92,6 +92,7 @@ EPICS::Application.routes.draw do
   get "stock/get_batches_not_reimbursed_to_facility"
   post "stock/get_returners_details"
   get "stock/reimburse_index"
+  get "/stock/get_lent_items"
   ######### stock end ########
 
   ######### location_type start ########

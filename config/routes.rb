@@ -219,7 +219,7 @@ EPICS::Application.routes.draw do
   ########### reports start #########
   get "report/drug_availability"
   get "report/audit_report"
-  get "report/daily_dispensation"
+  post "report/daily_dispensation"
   get "report/store_room"
   get "report/received_items"
   get "report/view_alerts"
@@ -227,6 +227,7 @@ EPICS::Application.routes.draw do
   match 'alerts/:name' => 'report#alerts', :as => :alerts
   get "report/select_date_range"
   post "report/monthly_report"
+  get "report/select_daily_dispensation_date"
   ########### reports end #########
 
   #get "home/index"

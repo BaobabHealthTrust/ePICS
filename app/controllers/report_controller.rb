@@ -3,9 +3,6 @@ class ReportController < ApplicationController
   def audit_report
   end
 
-  def daily_dispensation
-  end
-
   def received_items
   end
 
@@ -71,6 +68,17 @@ class ReportController < ApplicationController
   end
 
   def monthly_report
-    @monthly_report = EpicsReport.monthly_report(Date.today,Date.today)
+    start_date = params[:dates]['start'].to_date
+    end_date = params[:dates]['end'].to_date
+    @monthly_report = EpicsReport.monthly_report(start_date, end_date)
   end
+  
+  def daily_dispensation
+    @daily_dispensation = EpicsReport.daily_dispensation(params[:date].to_date)
+  end
+
+  def select_daily_dispensation_date
+    render :layout => 'application'
+  end
+
 end

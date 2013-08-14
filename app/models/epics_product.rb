@@ -42,57 +42,69 @@ class EpicsProduct < ActiveRecord::Base
   end
 
   def positive_adjustments(start_date = Date.today, end_date = Date.today)
-    epics_exchanges_positive = EpicsStockDetails.joins("INNER JOIN epics_products p 
-      ON epics_stock_details.epics_products_id = p.epics_products_id 
-      AND p.epics_products_id = #{self.id}
-      INNER JOIN epics_stocks s 
-      ON s.epics_stock_id = epics_stock_details.epics_stock_id
-      INNER JOIN epics_exchanges x ON x.epics_stock_id = s.epics_stock_id
-      INNER JOIN epics_product_orders po 
-      ON po.epics_stock_details_id = epics_stock_details.epics_stock_details_id").where("
-      s.grn_date >= ? AND s.grn_date <= ?",start_date,end_date).sum(:quantity.to_s)
-
     type = EpicsLendsOrBorrowsType.where("name = ?",'Borrow')[0]
 
-    epics_borrows = EpicsStockDetails.joins("INNER JOIN epics_products p 
-      ON epics_stock_details.epics_products_id = p.epics_products_id 
-      AND p.epics_products_id = #{self.id}
-      INNER JOIN epics_stocks s 
-      ON s.epics_stock_id = epics_stock_details.epics_stock_id
-      INNER JOIN epics_lends_or_borrows b ON b.epics_stock_id = s.epics_stock_id
-      AND b.epics_lends_or_borrows_type_id=#{type.id}
-      INNER JOIN epics_product_orders po                                        
-      ON po.epics_stock_details_id = epics_stock_details.epics_stock_details_id").where("
-      s.grn_date >= ? AND s.grn_date <= ?",start_date,end_date).sum(:quantity.to_s)
+    borrowed = EpicsLendsOrBorrows.joins("INNER JOIN epics_stocks es
+    ON es.epics_stock_id = epics_lends_or_borrows.epics_stock_id
+    AND epics_lends_or_borrows.epics_lends_or_borrows_type_id = #{type.id}
+    INNER JOIN epics_stock_details s ON s.epics_stock_id = es.epics_stock_id
+    AND s.epics_products_id = #{self.id}").where("es.grn_date >= ? AND es.grn_date <= ?",
+    start_date,end_date).sum(:received_quantity)
 
-    return [epics_borrows.to_f , epics_exchanges_positive.to_f].sum
+
+    exchange = EpicsExchange.joins("INNER JOIN epics_product_orders o ON o.epics_order_id=epics_exchanges.epics_order_id
+      INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
+      AND s.epics_products_id = #{self.id} INNER JOIN epics_stocks e              
+      ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date >= ?           
+      AND e.grn_date <= ?",start_date,end_date).sum(:received_quantity)
+       
+    count = [exchange.to_f , borrowed.to_f].sum
+    if(count.to_s.split('.')[1] == '0')
+      return count.to_i
+    end
+    return count
   end
 
   def negative_adjustments(start_date = Date.today, end_date = Date.today)
-    type = EpicsLendsOrBorrowsType.where("name = ?",'Lend')[0]
+    type_ids = EpicsOrderTypes.where("name IN(?)",['Lend','Exchange']).map(&:id)
 
-    epics_lends = EpicsLendsOrBorrows.joins("INNER JOIN epics_orders o
-    ON o.epics_order_id = epics_lends_or_borrows.epics_orders_id
-    INNER JOIN epics_product_orders po ON po.epics_order_id = o.epics_order_id
-    INNER JOIN epics_stock_details s ON s.epics_stock_id = po.epics_stock_details_id 
-    AND s.epics_products_id = #{self.id} 
-    INNER JOIN epics_stocks ON epics_stocks.epics_stock_id = s.epics_stock_id
-    ").where("epics_stocks.grn_date >= ? AND epics_stocks.grn_date <= ?
-    AND epics_lends_or_borrows.epics_lends_or_borrows_type_id = ?",
-    start_date,end_date,type.id).sum(:quantity)
+    epics_lends = EpicsOrders.joins("INNER JOIN epics_product_orders o
+      ON o.epics_order_id = epics_orders.epics_order_id
+      AND epics_orders.epics_order_type_id IN(#{type_ids.join(',')})
+      INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
+      AND s.epics_products_id=#{self.id} INNER JOIN epics_stocks e 
+      ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date >= ? 
+      AND e.grn_date <= ?",start_date,end_date).sum(:quantity)
     
-    epics_exchanges_negatives = EpicsExchange.joins("INNER JOIN epics_orders o
-      ON o.epics_order_id = epics_exchanges.epics_order_id
-      INNER JOIN epics_product_orders po ON po.epics_order_id = o.epics_order_id
-      INNER JOIN epics_stock_details d ON d.epics_stock_details_id = po.epics_stock_details_id
-      AND d.epics_products_id = #{self.id}
-      INNER JOIN epics_stocks s ON s.epics_stock_id = d.epics_stock_id").where(" 
-      s.grn_date >= ? AND s.grn_date <= ?",start_date,end_date).sum(:quantity)
-
-    return [epics_exchanges_negatives.to_f , epics_lends.to_f].sum
+    return epics_lends
   end
 
   def issued(start_date = Date.today, end_date = Date.today)
+    type = EpicsOrderTypes.where("name = ?",'Dispense')[0]
+
+    issued = EpicsOrders.joins("INNER JOIN epics_product_orders o
+      ON o.epics_order_id = epics_orders.epics_order_id
+      AND epics_orders.epics_order_type_id IN(#{type.id})
+      INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
+      AND s.epics_products_id=#{self.id} INNER JOIN epics_stocks e 
+      ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date >= ? 
+      AND e.grn_date <= ?",start_date,end_date).sum(:quantity)
+    
+    return issued
+  end
+
+  def days_stocked_out(start_date = Date.today, end_date = Date.today)
+    stocked_out = EpicsStockDetails.joins("INNER JOIN epics_stocks s 
+      ON s.epics_stock_id = epics_stock_details.epics_stock_id").where("epics_products_id = ? 
+      AND s.grn_date <=?", self.id, end_date).select("epics_stock_details.updated_at last_update, 
+      SUM(current_quantity) curr_quantity").having("curr_quantity <= 0").order("last_update DESC").map(&:last_update)
+
+    unless stocked_out.blank?
+      days = EpicsStockDetails.select("DATEDIFF(DATE('#{stocked_out.last.to_date}'),DATE('#{end_date}')) AS days_gone")[0]
+      return days[:days_gone].to_i
+    else
+      return 'N/A'
+    end
   end
 
 end

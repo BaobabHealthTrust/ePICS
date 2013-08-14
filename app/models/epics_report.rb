@@ -47,7 +47,9 @@ class EpicsReport < ActiveRecord::Base
             :received_quantity => item.received_quantity(start_date.to_date, end_date.to_date),
             :losses => item.losses_quantity(start_date.to_date, end_date.to_date),
             :positive_adjustments => item.positive_adjustments(start_date.to_date, end_date.to_date),
-            :negative_adjustments => item.negative_adjustments(start_date.to_date, end_date.to_date)
+            :negative_adjustments => item.negative_adjustments(start_date.to_date, end_date.to_date),
+            :issued => item.issued(start_date.to_date, end_date.to_date),
+            :days_stocked_out => item.days_stocked_out(start_date.to_date, end_date.to_date)
           }
         end 
 

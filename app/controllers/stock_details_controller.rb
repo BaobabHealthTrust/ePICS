@@ -48,6 +48,7 @@ class StockDetailsController < ApplicationController
 
   def checkout
 
+
     type = ActiveSupport::JSON.decode params[:type] rescue nil
     if params[:type].blank?
       stock = session[:stock]
@@ -55,6 +56,9 @@ class StockDetailsController < ApplicationController
     elsif type == 'borrow'
       stock = session[:borrow]
       stock_details = (session[:borrow_cart] ||= ProductCart.new)
+    elsif type == 'return'
+      stock = session[:item_returns]
+      stock_details = (session[:return_items] ||= ProductCart.new)
     end
 
     unless stock.nil?
@@ -93,6 +97,13 @@ class StockDetailsController < ApplicationController
             authorizer.epics_lends_or_borrows_id = lend.id
             authorizer.save
 
+          elsif type.eql?('return')
+
+            returning = EpicsLendsOrBorrows.find(stock[:loan_id])
+            returning.epics_stock_id = @stock.epics_stock_id
+            returning.reimbursed = true
+            returning.save
+
           end
 
           for item in stock_details.items
@@ -115,6 +126,8 @@ class StockDetailsController < ApplicationController
 
           if type.eql?('borrow')
             session[:borrow] = session[:borrow_cart] = nil
+          elsif type.eql?('return')
+            session[:item_returns] = session[:return_items] = nil
           else
             session[:cart] = session[:stock] = nil
           end
@@ -160,6 +173,38 @@ class StockDetailsController < ApplicationController
     render :text => "true"
   end
 
+
+  def return_index
+
+    @return_cart = session[:return_items] ||= ProductCart.new
+
+    if !params[:id].blank?
+      session[:item_returns][:loan_id] = EpicsLendsOrBorrows.find_by_epics_orders_id(params[:id]).id
+    end
+
+    if request.post?
+      @return_cart =  (session[:return_items] ||= ProductCart.new)
+      product = EpicsProduct.find_by_name(params[:stock_details][:product_name])
+      quantity = params[:stock_details][:quantity].to_f
+      location = params[:stock_details][:location_id]
+      expiry_date = params[:stock_details][:expiry_date]
+      @return_cart.add_product(product,quantity,location,expiry_date)
+    end
+
+    render :layout => "custom"
+  end
+
+
+  def return_item
+
+    @locations_map = EpicsLocation.find(:all, :conditions => ["epics_location_type_id = ? ",
+                                                              EpicsLocationType.find_by_name("Store room").id ]).map{|location| [location.name,location.epics_location_id]}
+    @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
+    @product_expire_details = {}
+    epics_products = EpicsProduct.all
+    epics_products.map{|product| @product_expire_details[product.name] = product.expire }
+
+  end
 
   protected
   

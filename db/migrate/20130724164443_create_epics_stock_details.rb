@@ -8,6 +8,8 @@ class CreateEpicsStockDetails < ActiveRecord::Migration
 			t.integer :epics_product_units_id
 			t.integer :epics_location_id
 			t.boolean :voided, :default => false
+			t.string :void_reason
+      t.integer :voided_by
 			t.timestamps
 		end
   end

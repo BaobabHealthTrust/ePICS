@@ -1,0 +1,90 @@
+<%= javascript_include_tag 'jquery' %>
+<script type="text/javascript">
+
+    function load(id) {
+
+        var table = document.getElementById("borrowed_items");
+
+        while (table.rows.length > 1 )
+        {
+            table.deleteRow(table.rows.length - 1)
+        }
+
+        jQuery.ajax({
+            type: "GET",
+            dataType: "integer",
+            url: "/stock/get_lent_items?id=" + id,
+            success: function(data){
+
+                alert(data);
+                var i = 0;
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+                while(i < data.length)
+                {
+                    var cell1 = row.insertCell(0);
+                    cell1.innerHTML = data[i][0];
+
+                    var cell2 = row.insertCell(1);
+                    cell2.innerHTML = data[i][1];
+                }
+            }
+        });
+
+
+
+    }
+
+
+</script>
+
+<style type="text/css">
+  td{
+      font-size: 30px;
+
+  }
+  td.even{
+      background-color: #87ceeb;
+  }
+  td.odd{
+      background-color: silver;
+  }
+
+
+</style>
+
+
+  <span style="margin-left: 0.5; font-size: 25px;font-weight: bold;">&nbsp;Loaned Items</span>
+
+  <div style="margin:0.5%; border: 1px solid black; height: 40%;width: 99%;overflow: auto">
+     <table style="width: 100%;padding: 2px; cell-spacing:4px;" id="borrowed_items">
+       <tr> <th>Product</th> <th>Borrowed Quantity</th></tr>
+
+
+     </table>
+  </div>
+
+<span style="margin-left: 0.5; font-size: 25px;font-weight: bold;">&nbsp;Dates For Outstanding Loan</span>
+
+  <div style="margin-left:0.5%; border: 1px solid black; height: 36%;width: 99%; overflow: auto">
+
+    <table style="width: 100%;padding: 2px; cell-spacing:4px;">
+      <% @dates.each do |x| %>
+          <tr>
+            <td onclick="load(<%= x[1] %>)" class=<%=cycle('even','odd') %>> <%= x[0] %></td>
+          </tr>
+      <% end %>
+    </table>
+
+  </div>
+
+
+
+
+
+
+<div id="buttons" class="buttonsDiv">
+  <button class="red"><span>Cancel</span></button>
+  <button style="float: right;"class="green"><span>Finish</span></button>
+  <button style="float: right;"><span>Back</span></button>
+</div>

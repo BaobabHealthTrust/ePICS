@@ -8,6 +8,8 @@ class OrdersController < ApplicationController
 
   def new
     @order = EpicsOrderTypes.all.map{|order| [order.name,order.epics_order_type_id]}
+    @locations_map = EpicsLocation.find(:all, :conditions => ["epics_location_type_id = ? ",
+                                                              EpicsLocationType.find_by_name("Departments").id ]).map{|location| [location.name,location.epics_location_id]}
   end
 
   def create
@@ -29,12 +31,13 @@ class OrdersController < ApplicationController
   end
 
   def select
+
     @product_category_map = EpicsProductCategory.all.map do |product_category|
       [product_category.name,product_category.epics_product_category_id]
     end
 
     if session[:issuing_location_id].blank?
-      @location = EpicsLocation.find_by_name(params['location'])
+      @location = EpicsLocation.find(params['location'])
       session[:issuing_location_id] = @location.id
     end 
     @product_expire_details = {}
@@ -91,6 +94,13 @@ class OrdersController < ApplicationController
             authorizer.epics_lends_or_borrows_id = lend.id
             authorizer.save
 
+          elsif ord_type.eql?('return')
+            lend = EpicsLendsOrBorrows.find(:first, :conditions => ["epics_stock_id = ?",
+                                                                    EpicsStock.find_by_grn_number(session[:return_details][:return_batch]).id ])
+            lend.epics_orders_id = order.id
+            lend.reimbursed = true
+            lend.save
+
           end
           update_stock_details(stock_id, quantity)
         end
@@ -100,6 +110,10 @@ class OrdersController < ApplicationController
     if ord_type == 'lend'
       session[:lent_items] = nil
       session[:lend_details] = nil
+
+    elsif ord_type == 'return'
+      session[:return_details] = nil
+      session[:reimburse_cart] = nil
     else
       session[:orders] = nil
     end
@@ -113,6 +127,8 @@ class OrdersController < ApplicationController
   end
 
  def lend
+
+   @locations = EpicsLocationType.find(:first, :conditions => ["name = 'Facility'"]).epics_locations.collect{|x| x.name }
 
 
  end
@@ -161,6 +177,14 @@ class OrdersController < ApplicationController
 
   end
 
+  def remove_reimburse_from_cart
+    product_id = params[:product_id]
+    product = EpicsProduct.find(product_id)
+    cart = session[:reimburse_cart]
+    cart.remove_product(product)
+    render :text => "true"
+
+  end
 
   def return_loans
 
@@ -179,9 +203,46 @@ class OrdersController < ApplicationController
     cart.remove_product(product)
     render :text => "true"
  end
- 
 
- protected                                                                     
+  def reimburse_index
+    @return_cart = session[:reimburse_cart] ||= ProductCart.new
+
+    if request.post?
+      session[:return_details] = {}
+      session[:return_details][:return_to] = params["facility"]
+      session[:return_details][:return_batch] = params["batch"]
+    end
+
+    render :layout => "custom"
+  end
+
+  def select_item_to_return
+
+
+    if request.post?
+
+      @return_cart = session[:reimburse_cart] ||= ProductCart.new
+      product = EpicsProduct.find_by_name(params[:item][:name])
+      quantity = params[:item][:quantity].to_f
+      expiry_date = params[:item][:expiry_date]
+      @return_cart.add_product(product,quantity,location,expiry_date)
+
+      redirect_to :action => :reimburse_index
+
+    end
+
+    @locations_map = EpicsLocation.find(:all, :conditions => ["epics_location_type_id = ? ",
+                                                              EpicsLocationType.find_by_name("Store room").id ]).map{|location| [location.name,location.epics_location_id]}
+    @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
+    @product_expire_details = {}
+    epics_products = EpicsProduct.all
+    epics_products.map{|product| @product_expire_details[product.name] = product.expire }
+
+  end
+
+
+
+  protected
                                                                                 
  def find_product_cart(type)
    case (type)

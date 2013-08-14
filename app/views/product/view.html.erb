@@ -112,7 +112,9 @@
     font-size: 1.3em;                                                           
   }       
 
-
+  .img{
+    height: 60px;
+   }
 </style>
 
 
@@ -136,7 +138,7 @@
         <td style="text-align: right;padding-right: 10px;"><%=stock.received_quantity%></td>
         <td style="text-align: right;padding-right: 10px;"><%=stock.current_quantity%></td>
         <td style="padding-left: 10px;"><%=stock.epics_location.name%></td>
-        <td style="width: 10%;"><%= image_tag("delete.png",:id => stock.id, :class=>"img", :onclick=>"showPopup(this);") %></td>
+        <td style="width: 10%;"><%= image_tag("close.png",:id => stock.id, :class=>"img", :onclick=>"showPopup(this);") %></td>
       </tr>
     <%end%>
   </table>
@@ -153,15 +155,15 @@
     <tr>
       <td>&nbsp;</td>
     </tr>
-    <tr>
-      <td><%= link_to "Edit", {:action=>"edit_product", :product_id => @product.id}, :class => 'buttons' %></td>
+    <!--<tr>
+      <td><%#= link_to "Edit", {:action=>"edit_product", :product_id => @product.id}, :class => 'buttons' %></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
     </tr>
     <tr>
-      <td><%= link_to "Remove", "#", :class => 'buttons' ,:onclick=>"voidNode();"%></td>
-    </tr>
+      <td><%#= link_to "Remove", "#", :class => 'buttons' ,:onclick=>"voidNode();"%></td>
+    </tr>-->
   </table>
 </div>
 </div>
@@ -170,7 +172,7 @@
   <div id="reasons">
     <table  width="100%" border=0.5 style = "border-radius:10px;">
       <tr>
-        <th>Select Reason <%= image_tag("close.png",:id=>"close", :onclick=>"hidePopups();") %></th>
+        <th colspan="2">Select Reason</th>
       </tr>
       <tr>
         <td cospan="2"><a class="buttons" reason="expired" onclick="selectReason(this);"><span>Expired</span></a> </td>
@@ -187,6 +189,9 @@
       <tr>
         <td colspan="2"><a class="buttons" reason="missing" onclick="selectReason(this);"><span>Missing</span></a> </td>
       </tr>
+      <tr>
+        <td colspan="2"><%= image_tag("close.png",:id=>"close", :onclick=>"hidePopups();") %></td>
+      </tr>
     </table>
   </div>
 </div>
@@ -195,11 +200,13 @@
 </div>
 <style>
   #close{
-  height: 50px;
-  float: right;
+    position: absolute;
+    height: 60px;
+    left: 45%;
+    padding-top: 10px;
   }
   #reasons table{
-      background-color:gold;
+      background-color:#FEF6E4;
       color: black;
       font-size: 18pt;
       font-weight: bold;
@@ -210,7 +217,7 @@
       width: 500px;
       border: 1px solid black;
       z-index: 999;
-      padding: 0px 20px 10px 20px;
+      padding: 0px 20px 70px 20px;
       -moz-user-select:none;
     }
    #cover{

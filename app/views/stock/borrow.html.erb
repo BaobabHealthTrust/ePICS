@@ -16,7 +16,7 @@ tt_cancel_destination='/'
                        {:id => 'authorizer',
                         :field_type => 'alpha',
                         :ajaxURL => '/orders/get_authoriser?search_string=',
-                        :allowFreeText => true,
+                        :allowFreeText => false,
                         :helpText => 'Who Authorised'} %>
 
     <%= text_field_tag :grn_number, nil,
@@ -25,6 +25,7 @@ tt_cancel_destination='/'
 
     <%= text_field_tag :borrow_date, nil,
                        {:id => 'borrow_date', :field_type => 'date',
+                        :maxDate => (Date.today + 20.year).to_date,
                         :helpText => 'Enter borrowing date'} %>
 
     <%= text_field_tag :witness_name,nil,
@@ -36,6 +37,7 @@ tt_cancel_destination='/'
 
     <%= text_field_tag :return_date, nil,
                        {:id => 'return_date', :field_type => 'date',
+                        :maxDate => (Date.today + 20.year).to_date,
                         :helpText => 'Enter date for returning items'} %>
 
 

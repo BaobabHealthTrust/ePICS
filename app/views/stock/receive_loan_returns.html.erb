@@ -1,0 +1,28 @@
+
+<script type='text/javascript'><!--
+
+tt_cancel_show='/'
+tt_cancel_destination='/'
+
+function set_ajaxURL_for_batch(value) {
+    url = "/stock/get_batches_not_reimbursed_to_facility?facility=" + value + "&type=borrow" ;
+    $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', url);
+    listSuggestions(tstCurrentPage);
+}
+
+//-->
+</script>
+
+<%= form_tag :action => 'get_returners_details', :method => :post  do %>
+
+    <%= select_tag :facility, options_for_select(@creditors),
+                   { :id => "facility",
+                     :field_type => 'alpha',
+                     :helpText => "Select facility returning items"} %>
+
+
+
+    <%= submit_tag "Create Loan Return" %>
+
+
+<% end %>

@@ -10,7 +10,7 @@
 location_types = [
   ["Facility","Other health centers"],
   ["Store room","Pharmacy store rooms"],
-  ["Departmets","Facility departments"]
+  ["Departments","Facility departments"]
 ]
 
 (location_types).each do |name , description|
@@ -40,7 +40,7 @@ epics_lends_or_borrows_types = ["Borrow","Lend"]
   type.save
 end
 
-order_types = ["Dispense","Exchange","Receive"]
+order_types = ["Dispense","Exchange","Lend"]
 
 (order_types).each do |name|
   type = EpicsOrderTypes.new()

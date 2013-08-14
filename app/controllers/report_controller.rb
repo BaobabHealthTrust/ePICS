@@ -9,9 +9,6 @@ class ReportController < ApplicationController
   def received_items
   end
 
-  def monthly_report
-  end
-
   def view_alerts
     @alerts = EpicsReport.alerts
   end
@@ -69,4 +66,11 @@ class ReportController < ApplicationController
       ").where("s.epics_location_id = ?",location_id).select("epics_products.* , s.*, x.*")
   end
 
+  def select_date_range
+    render :layout => 'application'
+  end
+
+  def monthly_report
+    @monthly_report = EpicsReport.monthly_report(Date.today,Date.today)
+  end
 end

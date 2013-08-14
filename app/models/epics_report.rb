@@ -25,4 +25,47 @@ class EpicsReport < ActiveRecord::Base
     return alerts
   end
 
+  def self.monthly_report(start_date, end_date)
+    @item_categories = {}
+    EpicsProductCategory.all.each do |cat|
+      (self.get_receipts_by_category_and_date(cat.id,start_date,end_date) || []).each do |receipt|
+        if @item_categories[receipt[:grn_date]].blank?
+          @item_categories[receipt[:grn_date]] = {}
+        end
+        
+        if @item_categories[receipt[:grn_date]]["#{cat.name}: #{cat.description}"].blank?  
+          @item_categories[receipt[:grn_date]]["#{cat.name}: #{cat.description}"] = {} 
+        end
+      
+        if @item_categories[receipt[:grn_date]]["#{cat.name}: #{cat.description}"][receipt[:item_id]].blank?
+          item = EpicsProduct.find(receipt[:item_id])
+          @item_categories[receipt[:grn_date]]["#{cat.name}: #{cat.description}"][receipt[:item_id]] = {
+            :item_code => receipt[:item_code],
+            :item => receipt[:item_name],
+            :unit_of_issue => receipt[:unit_of_issue]
+          }
+        end 
+
+      end
+    end
+
+    return @item_categories
+  end
+
+  def self.get_receipts_by_category_and_date(category_id, start_date, end_date)
+    EpicsStock.joins("
+      INNER JOIN epics_stock_details s ON epics_stocks.epics_stock_id = s.epics_stock_id 
+      AND epics_stocks.grn_date >= '#{start_date}' AND epics_stocks.grn_date <= '#{end_date}'
+      INNER JOIN epics_products e ON s.epics_products_id = e.epics_products_id
+      INNER JOIN epics_product_units u ON u.epics_product_units_id = e.epics_product_units_id
+      AND e.epics_product_category_id = #{category_id}
+    ").group("e.epics_products_id, epics_stocks.grn_date").select("
+      epics_stocks.grn_date, e.epics_products_id , product_code, e.name product_name, u.name unit
+    ").collect do |r| {
+      :grn_date => r.grn_date, :item_id => r.epics_products_id.to_i , 
+      :item_code => r.product_code, :item_name => r.product_name, 
+      :unit_of_issue => r.unit } 
+    end
+  end
+
 end

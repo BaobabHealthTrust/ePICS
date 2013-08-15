@@ -170,26 +170,22 @@
 
       <table style="width:100%;">
         <tr>
-          <th colspan ="5" style="text-align: left;">
+          <th colspan ="5" style="text-align: left;font-size: 20px;">
             Details For Items To Lend
           </th>
         </tr>
+
         <tr>
-          <th colspan ="5" style="text-align: left;">
-            &nbsp;
-          </th>
-        </tr>
-        <tr>
-          <th style="text-align: left; width: 10%;">Item Name</th>
-          <th style="text-align: left; width: 10%;">Item Code</th>
-          <th style="text-align: left; width: 10%;">Item Quantity</th>
-          <th style="text-align: left; width: 10%;">Expiry Date</th>
-          <th style="text-align: left; width: 10%;">&nbsp;</th>
+          <th style="text-align: left; width: 10%;background-color: silver;">Item Name</th>
+          <th style="text-align: left; width: 10%;background-color: silver;text-align: center">Item Code</th>
+          <th style="text-align: left; width: 10%;background-color: silver;text-align: center">Item Quantity</th>
+          <th style="text-align: left; width: 10%;background-color: silver;text-align: center">Expiry Date</th>
+          <th style="text-align: left; width: 10%;background-color: silver;">&nbsp;</th>
         </tr>
       </table>
     </div>
 
-    <div class="div-products" style="height: 260px; overflow: auto;">
+    <div class="div-products" style="height: 280px; overflow: auto;border: 0px">
 
       <table style="width:100%;">
         <%
@@ -199,9 +195,9 @@
 
             <tr class ="tr_<%= tr_class %>" product_id="<%= item.product.id %>">
               <td style="text-align: left; width: 10%;"><%=  item.name %></td>
-              <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
-              <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
-              <td style="text-align: left; width: 9.8%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+              <td style="text-align: center; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
+              <td style="text-align: center; width: 10%;"><%=  item.quantity %></td>
+              <td style="text-align: center; width: 9.8%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
               <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
             </tr>
         <% end rescue []%>

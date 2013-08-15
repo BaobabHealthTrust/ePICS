@@ -116,15 +116,15 @@
 
       <div class="div-receiving">
         <table style="width:100%;" class="receiving">
-          <caption  style="text-align: left;margin-left: 25%;font-weight: bold;">Issuing</caption>
+          <caption  style="text-align: center;font-weight: bold;background-color: silver;">Issuing</caption>
           <tr>
-            <th>Item code</th>
-            <th>Quantity</th>
+            <th style="background-color: silver;">Item </th>
+            <th style="background-color: silver;text-align: center">Quantity</th>
           </tr>
           <%(@issued_cart.items || []).each do |item|%>
             <tr>
-              <td><%=item.product.product_code%></td>
-              <td><%=item.quantity%></td>
+              <td><%=item.product.name%></td>
+              <td style="text-align: center"><%=item.quantity%></td>
             </tr>
           <%end%>
         </table>
@@ -132,15 +132,15 @@
 
       <div class="div-issuing">
         <table style="width:100%;" class="issuing">
-          <caption style="text-align: left;margin-left: 25%;font-weight: bold;">Receiving</caption>
+          <caption  style="text-align: center;font-weight: bold;background-color: silver;">Receiving</caption>
           <tr>
-            <th>Item code</th>
-            <th>Quantity</th>
+            <th style="background-color: silver;">Item</th>
+            <th style="background-color: silver;text-align: center">Quantity</th>
           </tr>
           <%(@received_cart.items || []).each do |item|%>
               <tr>
-                <td><%=item.product.product_code%></td>
-                <td><%=item.quantity%></td>
+                <td><%=item.product.name%></td>
+                <td style="text-align: center"><%=item.quantity%></td>
               </tr>
           <%end%>
         </table>

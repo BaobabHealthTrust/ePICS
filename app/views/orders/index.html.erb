@@ -1,4 +1,16 @@
 <%= render  :partial =>  "/layouts/top" %>
+
+<script type="text/javascript">
+
+  function  setup(){
+
+      document.getElementById('option').setAttribute('src', '/images/close.png')
+  }
+  setTimeout('setup()', 10)
+</script>
+
+
+
 <script>
   function removeFromCart(node){
     product_id = node.getAttribute('id');
@@ -42,30 +54,36 @@ function addItem(){
 
 function issueItems() {
 
-  submitForm = document.createElement("FORM");                                
-  submitForm.setAttribute("type","hidden");                                   
-  document.body.appendChild(submitForm);                                      
+ <% if (@cart.number_of_items > 0) %>
+  submitForm = document.createElement("FORM");
+  submitForm.setAttribute("type","hidden");
+  document.body.appendChild(submitForm);
   submitForm.method = "POST";
-                           
-  <%(@cart.items || []).each do |cart| %>                                                           
-    newElement = document.createElement("input")                                
-    newElement.setAttribute("name",'item_quantity["<%=cart.name%>"]')                      
-    newElement.setAttribute("type","hidden");                                   
-    newElement.value = "<%=cart.quantity%>";
-    submitForm.appendChild(newElement);    
-    
-    <%if cart.expiry_date%>
-      newElement = document.createElement("input")                                
-      newElement.setAttribute("name",'item_expiry_date["<%=cart.name%>"]')                      
-      newElement.setAttribute("type","hidden");                                   
-      newElement.value = "<%=cart.expiry_date%>";
-      submitForm.appendChild(newElement);    
-    <%end%>                                    
-  <%end%>                                    
-                                                            
-  submitForm.action= "/orders/dispense?type='issue'";
-  submitForm.submit();                                                        
 
+  <%(@cart.items || []).each do |cart| %>
+    newElement = document.createElement("input")
+    newElement.setAttribute("name",'item_quantity["<%=cart.name%>"]')
+    newElement.setAttribute("type","hidden");
+    newElement.value = "<%=cart.quantity%>";
+    submitForm.appendChild(newElement);
+
+    <%if cart.expiry_date%>
+      newElement = document.createElement("input")
+      newElement.setAttribute("name",'item_expiry_date["<%=cart.name%>"]')
+      newElement.setAttribute("type","hidden");
+      newElement.value = "<%=cart.expiry_date%>";
+      submitForm.appendChild(newElement);
+    <%end%>
+  <%end%>
+
+  submitForm.action= "/orders/dispense?type='issue'";
+  submitForm.submit();
+
+ <% else %>
+
+    alert("Can not issue order without items");
+
+ <%end%>
 }
 
 </script>
@@ -157,28 +175,23 @@ function issueItems() {
 </table>
 
 <br />
-<br />
-<br />
 
 <div class="div-products">
 
 <table style="width:100%;">
   <tr>
-    <th colspan ="4" style="text-align: left;">
+    <th colspan ="4" style="text-align: left;font-size: 20px;">
       Issued Item Details
+      <br/>
     </th>
   </tr>
+
   <tr>
-    <th colspan ="4" style="text-align: left;">
-      &nbsp;
-    </th>
-  </tr>
-  <tr>
-    <th style="text-align: left; width: 10%;">Item Name</th>
-    <th style="text-align: left; width: 10%;">Item Code</th>
-    <th style="text-align: left; width: 10%;">Item Quantity</th>
-    <th style="text-align: left; width: 10%;">Expiry Date</th>
-    <th style="text-align: left; width: 10%;">&nbsp;</th>
+    <th style="text-align: left; width: 10%;background-color: silver;font-size: 18px">Item Name</th>
+    <th style="text-align: left; width: 10%;background-color: silver;font-size: 18px;text-align: center">Item Code</th>
+    <th style="text-align: left; width: 10%;background-color: silver;font-size: 18px;text-align: center ">Item Quantity</th>
+    <th style="text-align: left; width: 10%;background-color: silver;font-size: 18px;text-align: center">Expiry Date</th>
+    <th style="text-align: left; width: 10%;background-color: silver;">&nbsp;</th>
   </tr>
  </table>
 </div>
@@ -192,9 +205,9 @@ function issueItems() {
 
           <tr class ="tr_<%= tr_class %>" product_id="<%= item.product.id %>">
             <td style="text-align: left; width: 10%;"><%=  item.name %></td>
-            <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
-            <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
-            <td style="text-align: left; width: 10%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+            <td style="text-align: center; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
+            <td style="text-align: center; width: 10%;"><%=  item.quantity %></td>
+            <td style="text-align: center; width: 10%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
             <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
           </tr>
       <% end rescue []%>

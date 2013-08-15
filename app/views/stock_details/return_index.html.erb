@@ -1,4 +1,13 @@
 <%= render  :partial =>  "/layouts/top" %>
+<script type="text/javascript">
+
+    function  setup(){
+
+        document.getElementById('option').setAttribute('src', '/images/close.png')
+    }
+    setTimeout('setup()', 10)
+</script>
+
 <script>
     function removeFromCart(node){
         product_id = node.getAttribute('id');

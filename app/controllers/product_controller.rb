@@ -145,12 +145,12 @@ class ProductController < ApplicationController
       end
 
       @trail[grn_number][date] = {
-        :received_quantity => @item.received_quantity(date),
-        :quantity_issued => @item.issued(date),
-        :losses => @item.losses_quantity(date),
-        :positive_adjustments => @item.positive_adjustments(date),
-        :negative_adjustments => @item.negative_adjustments(date),
-        :current_quantity => @item.current_quantity
+        :received_quantity => EpicsReport.received_quantity(stock, @item, date),
+        :quantity_issued => EpicsReport.issued(stock, @item, date),
+        :losses => EpicsReport.losses_quantity(stock, @item, date),
+        :positive_adjustments => EpicsReport.positive_adjustments(stock, @item, date),
+        :negative_adjustments => EpicsReport.negative_adjustments(stock, @item, date),
+        :current_quantity => EpicsReport.current_quantity(stock,@item)
       }
 
     end

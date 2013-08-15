@@ -168,6 +168,8 @@ EPICS::Application.routes.draw do
   get "product/edit_product"
   post "product/edit_product"
   post "product/save_edited_product"
+  get "product/stock_card"
+  post "product/stock_card"
   ####### product ends #######
 
 

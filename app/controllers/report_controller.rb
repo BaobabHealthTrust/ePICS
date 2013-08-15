@@ -47,23 +47,23 @@ class ReportController < ApplicationController
   end
 
   def store_room
-    location_id = EpicsLocation.where("name = ?",params[:store_room])[0].id
-    @page_title = "#{params[:store_room]}"
+    location = EpicsLocation.find(params[:store_room])
+    @page_title = "#{location.name}"
 
     @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
       ON s.epics_products_id = epics_products.epics_products_id").where("s.epics_location_id = ?",
-      location_id).select("epics_products.* , s.*").group("s.epics_products_id")
+      location.id).select("epics_products.* , s.*").group("s.epics_products_id")
   end
 
   def drug_availability
-    location_id = EpicsLocation.where("name = ?",params[:store_room])[0].id
-    @page_title = "#{params[:store_room]}<br />Drug availability"
+    location = EpicsLocation.find(params[:store_room])
+    @page_title = "#{location.name}<br />Drug availability"
 
     @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
       ON s.epics_products_id = epics_products.epics_products_id
       LEFT JOIN epics_stock_expiry_dates x 
       ON x.epics_stock_details_id = s.epics_stock_details_id 
-      ").where("s.epics_location_id = ?",location_id).select("epics_products.* , s.*, x.*")
+      ").where("s.epics_location_id = ?",location.id).select("epics_products.* , s.*, x.*")
   end
 
   def select_date_range
@@ -76,6 +76,7 @@ class ReportController < ApplicationController
   end
   
   def daily_dispensation
+    @page_title = "Daily dispensation<br />#{params[:date].to_date.strftime('%d, %B, %Y')}"
     @daily_dispensation = EpicsReport.daily_dispensation(params[:date].to_date)
   end
 

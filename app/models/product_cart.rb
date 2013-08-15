@@ -22,4 +22,8 @@ def remove_product(product)
   end
 end
 
+def number_of_items
+  @items.length rescue 0
+end
+
 end

@@ -1,4 +1,13 @@
 <%= render  :partial =>  "/layouts/top" %>
+<script type="text/javascript">
+
+    function  setup(){
+
+        document.getElementById('option').setAttribute('src', '/images/close.png')
+    }
+    setTimeout('setup()', 10)
+</script>
+
 <script>
   function removeFromReceiveCart(node){
     product_id = node.getAttribute('id');
@@ -183,47 +192,47 @@ window.setTimeout("sendData();",300);
   <div class="left-content">
     <table style="width:100%;">
       <tr>
-        <th colspan="3" style="text-align: left;">Exchange Facility Details</th>
+        <th colspan="3" style="text-align: left;font-size: 20px;">Exchange Facility Details</th>
       </tr>
       <tr>
         <th colspan="3" style="text-align: left;">&nbsp;</th>
       </tr>
       <tr>
-        <td style="text-align: left; width: 20%;">Facility Name:</td><td>&nbsp;</td>
-        <td><%= session[:exchange][:exchange_facility] rescue " "   %></td>
+        <td style="text-align: left; width: 20%;font-size: 18px;font-weight: bold;">Facility Name</td><td>:</td>
+        <td style="text-align: left; font-size: 18px;"><%= session[:exchange][:exchange_facility] rescue " "   %></td>
       </tr>
       <tr>
-        <td style="text-align: left; width: 20%;">Exchange Date:</td>
-        <td>&nbsp;</td>
-        <td><%= session[:exchange][:exchange_date] %></td>
+        <td style="text-align: left; width: 20%;font-size: 18px;font-weight: bold;">Exchange Date</td>
+        <td>:</td>
+        <td style="text-align: left; font-size: 18px;"><%= session[:exchange][:exchange_date] %></td>
       </tr>
 
     </table>
 
     <br />
     <br />
-    <br />
+
 
     <div class="div-products">
 
       <div class="div-receiving">
         <table style="width:100%;" class="receiving">
-          <caption style="text-align: left;margin-left: 25%;font-weight: bold;">Receiving</caption>
+          <caption style="text-align: center;font-weight: bold; background-color: silver;">Receiving</caption>
           <tr>
-            <th>Item code</th>
-            <th>Quantity</th>
-            <th>&nbsp;</th>
+            <th style="width: 55%;background-color: silver;">Item</th>
+            <th style="background-color: silver;text-align: center">Quantity</th>
+            <th style="background-color: silver;width: 10%">&nbsp;</th>
           </tr>
         </table>
       </div>
 
       <div class="div-issuing">
         <table style="width:100%;" class="issuing">
-          <caption  style="text-align: left;margin-left: 25%;font-weight: bold;">Issuing</caption>
+          <caption  style="text-align: center;font-weight: bold;background-color: silver;">Issuing</caption>
           <tr>
-            <th>Item code</th>
-            <th>Quantity</th>
-            <th>&nbsp;</th>
+            <th style="width: 55%;background-color: silver;">Item </th>
+            <th style="background-color: silver;text-align: center">Quantity</th>
+            <th style="background-color: silver;width: 10%">&nbsp;</th>
           </tr>
         </table>
       </div>
@@ -231,8 +240,8 @@ window.setTimeout("sendData();",300);
         <table style="width:100%;" class="receiving">
           <%(@receive_cart.items || []).each do |item|%>
               <tr product_id="receive_<%= item.product.id %>">
-                <td><%=item.product.product_code%></td>
-                <td><%=item.quantity%></td>
+                <td style="width: 55%"><%=item.product.name%></td>
+                <td style="text-align: center"><%=item.quantity%></td>
                 <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id,
                   :class=>"img", :onclick=>"removeFromReceiveCart(this)") %></td>
               </tr>
@@ -243,8 +252,8 @@ window.setTimeout("sendData();",300);
         <table style="width:100%;" class="receiving">
           <%(@issue_cart.items || []).each do |item|%>
               <tr product_id="issue_<%= item.product.id %>">
-                <td><%=item.product.product_code%></td>
-                <td><%=item.quantity%></td>
+                <td style="width: 55%"><%=item.product.name%></td>
+                <td style="text-align: center"><%=item.quantity%></td>
                 <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id,
                   :class=>"img", :onclick=>"removeFromIssueCart(this)") %></td>
               </tr>

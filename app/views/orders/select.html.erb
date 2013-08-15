@@ -50,15 +50,15 @@ tt_cancel_destination='/'
 
   <%= select_tag "item[expiry_date]", nil,                            
     {:id => "item_stock_details",                                                   
-    :field_type => 'alpha',                                                   
+    :field_type => 'numeric',
     :tt_onLoad => 'set_ajaxURL_for_stock_details($("item_name").value)',
-    :ajaxURL => '',   
     :condition => 'showExpiryDate();',                                                        
     :helpText => "Select batch by expiry date"} %>
 
   <%= text_field_tag "item[quantity]", nil,                            
     {:id => 'item_quantity',                                              
-    :field_type => 'number',                                                
+    :field_type => 'number',
+    :tt_pageStyleClass => "Keyboard Numeric NumbersOnlyWithDecimal",
     :min => 1,                                                              
     :helpText => 'Select Item Quantity'} %>
 

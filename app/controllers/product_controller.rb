@@ -127,4 +127,8 @@ class ProductController < ApplicationController
        redirect_to :action => :edit, :product_id => params[:product][:product_id]
     end
   end
+
+  def stock_card
+   render :layout => "report"
+  end
 end

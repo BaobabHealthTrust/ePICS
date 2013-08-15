@@ -20,6 +20,12 @@
         height: 128px;
       }
 
+      .page-title {
+        font-size: 25px;
+        font-weight: bold;
+        position: absolute;
+        vertical-align: middle;
+      }
     </style>
 
     <script type="text/javascript">
@@ -63,6 +69,7 @@
     <table width="100%" cellspacing="0" cellpadding="10">
       <tr>
         <td style="width: 100px; border-bottom: 1px solid #5496ef;">
+          <font class="page-title"><%=@page_title.html_safe rescue nil%></font>
           <img alt="EPICS" src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ?
                    "app.png" : "mw.gif") %>" height="80" style="float: right;" />
         </td>

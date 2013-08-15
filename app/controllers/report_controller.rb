@@ -47,6 +47,7 @@ class ReportController < ApplicationController
 
   def store_room
     location_id = EpicsLocation.where("name = ?",params[:store_room])[0].id
+    @page_title = "#{params[:store_room]}"
 
     @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
       ON s.epics_products_id = epics_products.epics_products_id").where("s.epics_location_id = ?",
@@ -55,6 +56,7 @@ class ReportController < ApplicationController
 
   def drug_availability
     location_id = EpicsLocation.where("name = ?",params[:store_room])[0].id
+    @page_title = "#{params[:store_room]}<br />Drug availability"
 
     @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
       ON s.epics_products_id = epics_products.epics_products_id

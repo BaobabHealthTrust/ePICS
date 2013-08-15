@@ -86,7 +86,8 @@ class EpicsProduct < ActiveRecord::Base
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
       AND s.epics_products_id=#{self.id} INNER JOIN epics_stocks e 
       ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date <= ?", end_date).sum(:quantity)
-    
+   
+    return 0 if issued == '0' 
     return issued
   end
 

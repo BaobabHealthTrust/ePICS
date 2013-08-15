@@ -1,30 +1,54 @@
+
+
 <html>
   <head>
     <style>
-      thead tr td{
-        border-right: solid 1px black; 
+     .tbody-header tr, td {
+     /*   border-right: solid 1px black; 
         border-bottom: solid 1px black;
         border-left: solid 1px black;
-        border-top: solid 1px black;
+        border-top: solid 1px black; */
+        padding-left: 10px;
       }
+
+      .stock_card {
+        width: 100%;                                                                  
+        border-collapse: collapse;                                                    
+        margin-top: 10px;
+      }
+
+      .tbody-header td {
+        border-style: solid;
+        border-width: 1px;
+        font-weight:bold;
+      }
+
+      .tbody-data td {
+        border-style: solid;
+        border-width: 1px;
+      }
+
+      .row_blue td {
+        background-color: lightgrey;
+      }
+
     </style>
   </head>
   <body>
-    <table width="100%">
+    <table class="stock_card">
       <thead>
-        <tr>
-          <td>Product name</td>
-          <td>&nbsp;</td>
-          <td>Forms and Strength</td>
-          <td colspan="6"></td>
+        <tr class="tbody-header">
+          <td style="padding-left: 10px;">Product name</td>
+          <td style="padding-left: 10px;font-weight: normal;"><%=@item.name%></td>
+          <td colspan="67"></td>
         </tr>
-        <tr>
+        <tr class="tbody-header">
           <td>CODE</td>
-          <td>&nbsp;</td>
+          <td style="padding-left: 10px;font-weight: normal;"><%=@item.product_code%></td>
           <td>Unit of issue</td>
-          <td colspan="6"></td>
+          <td colspan="6" style="padding-left: 10px;font-weight: normal;"><%=@item.epics_product_units.name%></td>
         </tr>
-        <tr>
+        <tr class="tbody-header">
           <td>DATE<br />(A)</td>
           <td>Voucher To/From<br />(B)</td>
           <td>Quantity Received<br />(C)</td>
@@ -37,7 +61,43 @@
         </tr>
       </thead>
       <tbody>
-        
+
+      <tr class="tbody-data">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+
+      <%
+      color = 'white'
+      (@trail || {}).sort_by {|x,y| x }.each do |grn_number , attributes| 
+          (attributes).each do |date , data|
+            if color == 'white'
+              color = 'blue'
+            else
+              color = 'white'
+            end
+      %>
+      <tr class="tbody-data row_<%=color%>">
+        <td><%=date.strftime("%d-%b-%Y")%></td>
+        <td><%=grn_number%></td>
+        <td><%=data[:received_quantity]%></td>
+        <td><%=data[:quantity_issued]%></td>
+        <td><%=data[:losses]%></td>
+        <td><%=data[:positive_adjustments]%></td>
+        <td><%=data[:negative_adjustments]%></td>
+        <td><%=data[:current_quantity]%></td>
+        <td>&nbsp;</td>
+      </tr>
+      
+      <%end
+      end %>
       </tbody>
     </table>
   </body>

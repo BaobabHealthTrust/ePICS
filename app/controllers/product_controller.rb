@@ -129,6 +129,33 @@ class ProductController < ApplicationController
   end
 
   def stock_card
-   render :layout => "report"
+    stocks = EpicsStock.joins(:epics_stock_details).where("epics_products_id =?", params[:id])
+    @item = EpicsProduct.find(params[:id])
+    @trail = {}
+
+    (stocks || []).each do |stock|
+      date = stock.grn_date.to_date
+      grn_number = stock.grn_number
+
+      if @trail[grn_number].blank?
+        @trail[grn_number] = {}
+        @trail[grn_number][date] = {}
+      elsif not @trail[grn_number].blank? and @trail[grn_number][date].blank?
+        @trail[grn_number][date] = {}
+      end
+
+      @trail[grn_number][date] = {
+        :received_quantity => @item.received_quantity(date),
+        :quantity_issued => @item.issued(date),
+        :losses => @item.losses_quantity(date),
+        :positive_adjustments => @item.positive_adjustments(date),
+        :negative_adjustments => @item.negative_adjustments(date),
+        :current_quantity => @item.current_quantity
+      }
+
+    end
+
+    render :layout => "report"
   end
+
 end

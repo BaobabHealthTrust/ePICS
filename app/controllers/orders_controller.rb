@@ -256,7 +256,10 @@ class OrdersController < ApplicationController
 
   def get_stock_detail(name, values)
     details = EpicsStockDetails.joins("INNER JOIN epics_products e 
-      ON e.epics_products_id = epics_stock_details.epics_products_id").where("e.name" => name)
+      ON e.epics_products_id = epics_stock_details.epics_products_id
+      INNER JOIN epics_stock_expiry_dates x 
+      ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id 
+      ").where("e.name = ? AND x.expiry_date = ?",name,values[:expiry_date])
 
     max_quantity = values[:quantity].to_f
     stock_details = []
@@ -274,6 +277,28 @@ class OrdersController < ApplicationController
       end
     end
 
+  if max_quantity > 0
+    details = EpicsStockDetails.joins("INNER JOIN epics_products e 
+      ON e.epics_products_id = epics_stock_details.epics_products_id
+      INNER JOIN epics_stock_expiry_dates x 
+      ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id 
+      ").where("e.name = ? AND x.expiry_date <> ?",name,values[:expiry_date])
+    
+    (details || []).each do |e|
+      next if e.current_quantity < 1
+      break if max_quantity == 0
+      if e.current_quantity <= max_quantity
+        stock_details << [e.id, e.current_quantity]
+        max_quantity -= e.current_quantity
+      else
+        stock_details << [e.id, max_quantity]
+        max_quantity = 0
+        break
+      end
+    end
+
+   end
+    
     return stock_details
   end
 

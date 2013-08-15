@@ -41,7 +41,8 @@ class ReportController < ApplicationController
   def select_store
     @report_name = params[:report]
     @report_name = 'store_room' if @report_name.blank?
-    @store_rooms = EpicsLocation.all.map{|l| l.name }
+    @store_rooms =  EpicsLocation.find(:all, :conditions => ["epics_location_type_id = ? ",
+                                                             EpicsLocationType.find_by_name("Store room").id ]).map{|location| [location.name,location.epics_location_id]}
     render :layout => 'application'
   end
 

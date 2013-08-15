@@ -25,10 +25,10 @@ class EpicsReport < ActiveRecord::Base
     return alerts
   end
 
-  def self.monthly_report(start_date, end_date)
+  def self.monthly_report(end_date)
     @item_categories = {}
     EpicsProductCategory.all.each do |cat|
-      (self.get_receipts_by_category_and_date(cat.id,start_date,end_date) || []).each do |receipt|
+      (self.get_receipts_by_category_and_date(cat.id,end_date) || []).each do |receipt|
         if @item_categories[receipt[:grn_date]].blank?
           @item_categories[receipt[:grn_date]] = {}
         end
@@ -43,13 +43,13 @@ class EpicsReport < ActiveRecord::Base
             :item_code => receipt[:item_code],
             :item => receipt[:item_name],
             :unit_of_issue => receipt[:unit_of_issue],
-            :current_quantity => item.current_quantity(start_date.to_date, end_date.to_date),
-            :received_quantity => item.received_quantity(start_date.to_date, end_date.to_date),
-            :losses => item.losses_quantity(start_date.to_date, end_date.to_date),
-            :positive_adjustments => item.positive_adjustments(start_date.to_date, end_date.to_date),
-            :negative_adjustments => item.negative_adjustments(start_date.to_date, end_date.to_date),
-            :issued => item.issued(start_date.to_date, end_date.to_date),
-            :days_stocked_out => item.days_stocked_out(start_date.to_date, end_date.to_date)
+            :current_quantity => item.current_quantity(end_date.to_date),
+            :received_quantity => item.received_quantity(end_date.to_date),
+            :losses => item.losses_quantity(end_date.to_date),
+            :positive_adjustments => item.positive_adjustments(end_date.to_date),
+            :negative_adjustments => item.negative_adjustments(end_date.to_date),
+            :issued => item.issued(end_date.to_date),
+            :days_stocked_out => item.days_stocked_out(end_date.to_date)
           }
         end 
 
@@ -59,10 +59,10 @@ class EpicsReport < ActiveRecord::Base
     return @item_categories
   end
 
-  def self.get_receipts_by_category_and_date(category_id, start_date, end_date)
+  def self.get_receipts_by_category_and_date(category_id, end_date)
     EpicsStock.joins("
       INNER JOIN epics_stock_details s ON epics_stocks.epics_stock_id = s.epics_stock_id 
-      AND epics_stocks.grn_date >= '#{start_date}' AND epics_stocks.grn_date <= '#{end_date}'
+      AND epics_stocks.grn_date <= '#{end_date}'
       INNER JOIN epics_products e ON s.epics_products_id = e.epics_products_id
       INNER JOIN epics_product_units u ON u.epics_product_units_id = e.epics_product_units_id
       AND e.epics_product_category_id = #{category_id}

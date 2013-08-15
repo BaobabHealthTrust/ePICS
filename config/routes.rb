@@ -73,6 +73,11 @@ EPICS::Application.routes.draw do
   get "stock_details/borrow"
   post "stock_details/borrow"
   post "stock_details/remove_product_from_cart"
+  get "stock_details/return_index"
+  post "stock_details/return_index"
+  post "stock_details/return_index"
+  get "stock_details/return_index"
+  get "stock_details/return_item"
 
   ######### stock_details end ########
 
@@ -93,6 +98,8 @@ EPICS::Application.routes.draw do
   post "stock/get_returners_details"
   get "stock/reimburse_index"
   get "/stock/get_lent_items"
+  get "stock/get_returners_details"
+
   ######### stock end ########
 
   ######### location_type start ########
@@ -214,7 +221,7 @@ EPICS::Application.routes.draw do
   ########### reports start #########
   get "report/drug_availability"
   get "report/audit_report"
-  get "report/daily_dispensation"
+  post "report/daily_dispensation"
   get "report/store_room"
   get "report/received_items"
   get "report/view_alerts"
@@ -222,6 +229,7 @@ EPICS::Application.routes.draw do
   match 'alerts/:name' => 'report#alerts', :as => :alerts
   get "report/select_date_range"
   post "report/monthly_report"
+  get "report/select_daily_dispensation_date"
   ########### reports end #########
 
   #get "home/index"

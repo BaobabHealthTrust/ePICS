@@ -9,10 +9,10 @@ tt_cancel_destination='/'
 
 <%= form_tag :action => 'create', :method => :post  do %>
 
-    <%= text_field_tag :location, nil,
-                       {:field_type => 'alpha',
-                        :helpText => 'Facility to exchange with',
-                        :ajaxURL => '/location/search?search_string=' }%>
+    <%= select_tag :facility, options_for_select(@locations),
+                   {:field_type => 'alpha',
+                    :helpText => 'Facility to exchange with',
+                   }%>
 
     <%= text_field_tag :batch_number, nil,
                        {:id => 'grn_number', :field_type => 'alpha',

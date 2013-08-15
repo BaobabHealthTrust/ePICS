@@ -74,6 +74,13 @@ class StockController < ApplicationController
 
   def get_returners_details
 
+    session[:item_returns] = {}
+    session[:item_returns][:lent_to] = params[:facility]
+    session[:item_returns][:grn_number] = params[:grn_number]
+    session[:item_returns][:grn_date] = params[:grn_date]
+    session[:item_returns][:witness_names] = params[:witness_names]
+    session[:item_returns][:supplier_id] = EpicsSupplier.find_by_name('Other').id
+
     @dates = EpicsLendsOrBorrows.find(:all, :conditions=> ["reimbursed = false AND facility = ? AND epics_lends_or_borrows_type_id = ?",
                                                           EpicsLocation.find_by_name(params[:facility]).id,
                                                           EpicsLendsOrBorrowsType.find_by_name("Lend").id]).map{|x| [x.lend_or_borrow_date, x.epics_orders_id]}
@@ -83,15 +90,17 @@ class StockController < ApplicationController
 
   def get_lent_items
 
-    @details = []
+    details = {}
 
     temp = EpicsProductOrders.find_all_by_epics_order_id(params[:id])
 
     temp.each do |f|
-      @details << [ f.epics_stock_details.epics_product.name , f.quantity ]
+      details[f.epics_stock_details.epics_product.name] =  f.quantity
     end
 
-    render :json => @details
+#    raise details.inspect
+
+    render :json => details
   end
 
   def reimburse_index

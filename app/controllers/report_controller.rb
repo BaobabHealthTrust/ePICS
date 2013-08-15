@@ -3,9 +3,6 @@ class ReportController < ApplicationController
   def audit_report
   end
 
-  def daily_dispensation
-  end
-
   def received_items
   end
 
@@ -36,8 +33,8 @@ class ReportController < ApplicationController
           INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
           INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id AND p.expire = 1
           ").where("DATEDIFF(expiry_date,CURRENT_DATE())
-          BETWEEN 1 AND 183").select("p.product_code code,p.name name, 
-          current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,MIN(expiry_date)")
+          BETWEEN 1 AND 183 AND current_quantity > 0").select("p.product_code code,p.name name, 
+          current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,expiry_date")
     end
   end
 
@@ -71,6 +68,17 @@ class ReportController < ApplicationController
   end
 
   def monthly_report
-    @monthly_report = EpicsReport.monthly_report(Date.today,Date.today)
+    start_date = params[:dates]['start'].to_date
+    end_date = params[:dates]['end'].to_date
+    @monthly_report = EpicsReport.monthly_report(start_date, end_date)
   end
+  
+  def daily_dispensation
+    @daily_dispensation = EpicsReport.daily_dispensation(params[:date].to_date)
+  end
+
+  def select_daily_dispensation_date
+    render :layout => 'application'
+  end
+
 end

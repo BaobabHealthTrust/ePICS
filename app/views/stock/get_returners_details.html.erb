@@ -15,19 +15,22 @@
             dataType: "integer",
             url: "/stock/get_lent_items?id=" + id,
             success: function(data){
+                answers = data.responseText
+                ans = eval('(' + data +')')
 
-                alert(data);
-                var i = 0;
-                var rowCount = table.rows.length;
-                var row = table.insertRow(rowCount);
-                while(i < data.length)
+                for (items in ans)
                 {
+                    var rowCount = table.rows.length;
+                    var row = table.insertRow(rowCount);
                     var cell1 = row.insertCell(0);
-                    cell1.innerHTML = data[i][0];
+                    cell1.innerHTML = items;
 
                     var cell2 = row.insertCell(1);
-                    cell2.innerHTML = data[i][1];
+                    cell2.innerHTML = ans[items];
+                    cell2.setAttribute('class', 'center')
+
                 }
+                table.rows[0].setAttribute('id', id)
             }
         });
 
@@ -35,6 +38,17 @@
 
     }
 
+    function verify(){
+
+        if (document.getElementById("borrowed_items").rows[0].id == "")
+        {
+          showMessage("Please select loan being returned");
+        }
+        else
+        {
+           window.location="/stock_details/return_index?id=" + document.getElementById("borrowed_items").rows[0].id;
+        }
+    }
 
 </script>
 
@@ -43,10 +57,17 @@
       font-size: 30px;
 
   }
-  td.even{
+  th{
+      font-size: 30px;
+
+  }
+  td.center{
+      text-align: center;
+  }
+  tr.even{
       background-color: #87ceeb;
   }
-  td.odd{
+  tr.odd{
       background-color: silver;
   }
 
@@ -58,7 +79,7 @@
 
   <div style="margin:0.5%; border: 1px solid black; height: 40%;width: 99%;overflow: auto">
      <table style="width: 100%;padding: 2px; cell-spacing:4px;" id="borrowed_items">
-       <tr> <th>Product</th> <th>Borrowed Quantity</th></tr>
+       <tr><th style="text-align: left">Product</th> <th>Borrowed Quantity</th></tr>
 
 
      </table>
@@ -70,8 +91,8 @@
 
     <table style="width: 100%;padding: 2px; cell-spacing:4px;">
       <% @dates.each do |x| %>
-          <tr>
-            <td onclick="load(<%= x[1] %>)" class=<%=cycle('even','odd') %>> <%= x[0] %></td>
+          <tr class=<%=cycle('even','odd') %>>
+            <td onclick="load(<%= x[1] %>)" > <%= x[0] %></td>
           </tr>
       <% end %>
     </table>
@@ -84,7 +105,7 @@
 
 
 <div id="buttons" class="buttonsDiv">
-  <button class="red"><span>Cancel</span></button>
-  <button style="float: right;"class="green"><span>Finish</span></button>
-  <button style="float: right;"><span>Back</span></button>
+  <button class="red" onclick="window.location= '/'"><span>Cancel</span></button>
+  <button style="float: right;"class="green" onclick="verify()"><span>Finish</span></button>
+  <button style="float: right;" onclick="window.location='/stock/receive_loan_returns'"><span>Back</span></button>
 </div>

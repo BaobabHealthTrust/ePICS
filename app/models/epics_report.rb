@@ -8,7 +8,7 @@ class EpicsReport < ActiveRecord::Base
       INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
       INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id  
       AND p.expire = 1").where("DATEDIFF(expiry_date,CURRENT_DATE())            
-      BETWEEN 1 AND 183").count(:expiry_date)                                   
+      BETWEEN 1 AND 183 AND current_quantity > 0").count(:expiry_date)                                   
                                                                                 
     alerts['Items below minimum stock'] += EpicsStockDetails.joins("           
       INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
@@ -72,6 +72,28 @@ class EpicsReport < ActiveRecord::Base
       :grn_date => r.grn_date, :item_id => r.epics_products_id.to_i , 
       :item_code => r.product_code, :item_name => r.product_name, 
       :unit_of_issue => r.unit } 
+    end
+  end
+
+  def self.daily_dispensation(date = Date.today)
+    type = EpicsOrderTypes.where("name = ?",'Dispense')[0]
+    start_date = date.strftime('%Y-%m-%d 00:00:00')
+    end_date = date.strftime('%Y-%m-%d 23:59:59')
+
+    issued = EpicsOrders.joins("INNER JOIN epics_product_orders o
+      ON o.epics_order_id = epics_orders.epics_order_id
+      AND epics_orders.epics_order_type_id IN(#{type.id})
+      INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
+      AND s.created_at >= '#{start_date}' AND s.created_at <= '#{end_date}'
+      INNER JOIN epics_locations l ON l.epics_location_id = s.epics_location_id
+      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
+      ").select("p.name pname,l.name lname,s.created_at dispensed_date,SUM(quantity) quantity,
+        p.product_code item_code").group("s.epics_products_id,l.epics_location_id")
+    
+    return issued.collect do |r|{
+      :item_name => r.pname, :issued_to => r.lname,:item_code => r.item_code,
+      :issue_date => r.dispensed_date, :quantity_issued => r.quantity
+      }
     end
   end
 

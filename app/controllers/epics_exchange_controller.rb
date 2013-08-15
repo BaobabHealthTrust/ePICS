@@ -4,7 +4,7 @@ class EpicsExchangeController < ApplicationController
 
     session[:exchange] = nil
     exchange_hash = Hash.new()
-    exchange_hash[:exchange_facility] = params[:location]
+    exchange_hash[:exchange_facility] = params[:facility]
     exchange_hash[:exchange_date] = params[:exchange_date]
     exchange_hash[:exchange_batch_id] = params[:batch_number]
     session[:exchange] = exchange_hash
@@ -26,7 +26,7 @@ class EpicsExchangeController < ApplicationController
   end
 
   def index
-
+    @locations = EpicsLocationType.find(:first, :conditions => ["name = 'Facility'"]).epics_locations.collect{|x| x.name }
   end
 
   def give_item
@@ -55,7 +55,7 @@ class EpicsExchangeController < ApplicationController
     @product_expire_details = {}
     epics_products = EpicsProduct.all
     epics_products.map{|product| @product_expire_details[product.name] = product.expire }
-    @locations_map = EpicsLocation.all.map{|location| [location.name,location.epics_location_id]}
+    @locations_map = EpicsLocationType.find(:first, :conditions => ["name = 'Store room'"]).epics_locations.collect{|x| x.name }
     @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
 
     if request.post?
@@ -76,13 +76,14 @@ class EpicsExchangeController < ApplicationController
     @issued_items = find_product_issue_cart
     @exchange_details = session[:exchange]
 
+
     order_type = EpicsOrderTypes.find_by_name('Exchange')
     EpicsExchange.transaction do
 
       @stock = EpicsStock.new()
       @stock.grn_date = @exchange_details[:exchange_date]
       @stock.grn_number = @exchange_details[:exchange_batch_id]
-      @stock.epics_supplier_id = @exchange_details[:exchange_facility] #need to change this
+      @stock.epics_supplier_id = EpicsSupplier.find_by_name('Other')
       @stock.save!
 
       for item in @received_items.items

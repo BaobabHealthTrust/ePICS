@@ -51,20 +51,25 @@
     }
 
     .buttons {
-        background-color: grey;
         border-bottom: 1px outset #EEEEEE;
         border-style: outset;
         border-top: 1px outset #EEEEEE;
         color: white;
         display: block;
-        padding: 10px;
+        padding: 14px;
         text-align: center;
         text-decoration: none;
-
-
-        background-color: rgb(0, 116, 204);
-        background-image: -moz-linear-gradient(center top , rgb(0, 136, 204), rgb(0, 85, 204));
-        background-repeat: repeat-x;
+        box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+        background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+        background-color:#79bbff;
+        -moz-border-radius:42px;
+        -webkit-border-radius:42px;
+        -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+        border-radius:42px;
+        border:1px solid #84bbf3;
         border-bottom-color: rgba(0, 0, 0, 0.25);
         border-left-color-ltr-source: physical;
         border-left-color-rtl-source: physical;
@@ -73,8 +78,8 @@
         border-right-color-rtl-source: physical;
         border-right-color-value: rgba(0, 0, 0, 0.1);
         border-top-color: rgba(0, 0, 0, 0.1);
-
         font-size: 1.3em;
+        font-weight:bold;
     }
 
     .div-products {

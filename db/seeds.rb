@@ -122,5 +122,5 @@ product_units = ["Each" , "Tablet","mg","KG","cm","Ltr","mL","Other"]
 end
 
 `rails runner #{Rails.root}/script/load_epics_products.rb`
-
+`rails runner #{Rails.root}/script/load_epics_facilities.rb`
 puts "Your new application is almost ready: make sure you configure your database.yml to point to your openmrs database for user management"

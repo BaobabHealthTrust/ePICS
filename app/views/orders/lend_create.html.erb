@@ -60,6 +60,7 @@ tt_cancel_destination='/orders/lend_index'
     <%= text_field_tag "item[quantity]", nil,
                        {:id => 'item_quantity',
                         :field_type => 'number',
+                        :tt_pageStyleClass => "Keyboard Numeric NumbersOnlyWithDecimal",
                         :min => 1,
                         :helpText => 'Select Item Quantity'} %>
 

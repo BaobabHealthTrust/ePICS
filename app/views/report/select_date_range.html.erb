@@ -2,25 +2,12 @@
 <script>
   var tt_cancel_destination="/"
 </script>
-<style>
-  #viewport {
-}
-
-</style>
 
 <% form_tag :method => :post, :action => 'monthly_report' do %>
-  <%= text_field_tag "dates[start]", nil,                            
+  <%= text_field_tag "date[start]", nil,                            
     {:id => "start_date",                                                   
     :field_type => 'date',
     :maxDate => "#{Date.today.to_date}",
-    :helpText => "Select start date"} %>
+    :helpText => "Select date"} %>
  
-  
-  <%= text_field_tag "dates[end]", nil,                            
-    {:id => "end_date",                                                   
-    :field_type => 'date',
-    :minDate => "#{Date.today.to_date}",
-    :maxDate => "#{(Date.today + 1.year).to_date}",
-    :helpText => "Select end date"} %>
-
 <%end%>

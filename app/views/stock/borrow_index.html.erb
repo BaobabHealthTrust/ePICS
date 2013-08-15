@@ -1,4 +1,13 @@
 <%= render  :partial =>  "/layouts/top" %>
+<script type="text/javascript">
+
+    function  setup(){
+
+        document.getElementById('option').setAttribute('src', '/images/close.png')
+    }
+    setTimeout('setup()', 10)
+</script>
+
 <script>
   function removeFromCart(node){
     product_id = node.getAttribute('id');
@@ -131,31 +140,25 @@
     </table>
 
     <br />
-    <br />
-    <br />
 
     <div class="div-products">
 
       <table style="width:100%;">
         <tr>
-          <th colspan ="4" style="text-align: left;">
+          <th colspan ="4" style="text-align: left;font-size: 25px;">
             Stock Details
           </th>
         </tr>
+
         <tr>
-          <th colspan ="4" style="text-align: left;">
-            &nbsp;
-          </th>
-        </tr>
-        <tr>
-          <th style="text-align: left; width: 10%;">Item Name</th>
-          <th style="text-align: left; width: 10%;">Item Code</th>
-          <th style="text-align: left; width: 10%;">Item Quantity</th>
-          <th style="text-align: left; width: 10%;">Expiry Date</th>
-          <th style="text-align: left; width: 10%;">&nbsp;</th>
+          <th style="text-align: left; width: 10%; background-color: silver;">Item Name</th>
+          <th style="text-align: left; width: 10%;background-color: silver;">Item Code</th>
+          <th style="text-align: left; width: 10%;background-color: silver;">Item Quantity</th>
+          <th style="text-align: left; width: 10%;background-color: silver;">Expiry Date</th>
+          <th style="text-align: left; width: 10%;background-color: silver;">&nbsp;</th>
         </tr>
       </table>
-      <div style="height: 200px; overflow: auto;">
+      <div style="height: 295px; overflow: auto;">
         <table style="width:100%;">
           <%
              for item in @borrow_cart.items

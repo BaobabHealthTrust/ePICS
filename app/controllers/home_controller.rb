@@ -33,10 +33,10 @@ class HomeController < ApplicationController
     if User.current.epics_user_role.name == "Administrator"
 
       @administration << ["Set Item Units","/product_units/index","units_icon.png"] << ["Set Item Types","/product_type/index","default.png"]
-      @administration << ["Set Supplier Types","/supplier_type/index","default.png"] << ["Set Order Types","/order_type/index","default.png"]
-      @administration << ["Add person","person/add_person","add_user.png"] << ["Set Location Types","/location_type/index","default.png"]
-      @administration << ["Set Locations","/location/index","default.png"] << ["Set Suppliers","/supplier/index","default.png"]
-      @administration << ["Add New User","/location/index","default.png"] << ["Set Item Categories","/product_category/index","Item_categories.png"]
+      @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","default.png"]
+      @administration << ["Set Supplier Types","/supplier_type/index","default.png"] << ["Set Suppliers","/supplier/index","default.png"]
+      @administration << ["Set Locations","/location/index","default.png"] << ["Set Location Types","/location_type/index","default.png"]
+      @administration << ["Add New User","/location/index","default.png"] << ["Add person","person/add_person","add_user.png"]
     end
 
     @buttons_count = @application.length

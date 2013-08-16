@@ -4,6 +4,7 @@ class CreateEpicsOrders < ActiveRecord::Migration
 			t.integer :epics_order_type_id
 			t.text :instructions
 			t.boolean :voided, :default => false
+      t.integer :creator
 			t.timestamps
 		end
   end

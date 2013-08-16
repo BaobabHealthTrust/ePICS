@@ -12,3 +12,4 @@ ActiveSupport::Inflector.inflections { |i|
 
 bart = (YAML.load_file("config/database.yml")['openmrs'] )
 User.establish_connection(bart)
+OpenmrsPerson.establish_connection(bart)

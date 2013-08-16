@@ -6,6 +6,7 @@ class CreateEpicsStocks < ActiveRecord::Migration
 			t.date :grn_date
 			t.boolean :voided, :default => false
 			t.timestamps
+      t.integer :creator
 		end
   end
 

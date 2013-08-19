@@ -78,7 +78,7 @@ EPICS::Application.routes.draw do
   post "stock_details/return_index"
   get "stock_details/return_index"
   get "stock_details/return_item"
-
+  get "stock_details/board_off"
   ######### stock_details end ########
 
   ######### stock start ########
@@ -232,6 +232,10 @@ EPICS::Application.routes.draw do
   get "report/select_date_range"
   post "report/monthly_report"
   get "report/select_daily_dispensation_date"
+  match 'drug_daily_dispensation/:id/:date' => 'report#drug_daily_dispensation', :as => :drug_daily_dispensation
+  get "report/expired_items"
+  get "report/select_date_ranges"
+  post "report/disposed_items"
   ########### reports end #########
 
   #get "home/index"

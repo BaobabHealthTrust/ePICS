@@ -25,6 +25,8 @@ class HomeController < ApplicationController
       ["Audit Report","#","audit_report.png"],
       ["View Received/Issued","#","view_issued_received.png"],
       ["View Store Room","/report/select_store","first_aid_kit_icon.png"],
+      ["View expired items","report/expired_items","expired.jpeg"],
+      ["View Disposed items","/report/select_date_ranges","disposal.png"],
       ["View alerts","/report/view_alerts","alert_list.png"]
     ]
 

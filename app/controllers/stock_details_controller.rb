@@ -206,6 +206,13 @@ class StockDetailsController < ApplicationController
 
   end
 
+  def board_off
+    stock = EpicsStockDetails.find(params[:stock_detail_id])
+    stock.voided = true
+    stock.void_reason = "Expired"
+    render :text => stock.save and return
+  end
+
   protected
   
   def find_product_cart

@@ -242,14 +242,11 @@ EPICS::Application.routes.draw do
   get "report/monthly_report_printable"
   post "report/monthly_report_printable"
   get "report/select_daily_dispensation_date"
-<<<<<<< HEAD
   match 'drug_daily_dispensation/:id/:date' => 'report#drug_daily_dispensation', :as => :drug_daily_dispensation
   get "report/expired_items"
   get "report/select_date_ranges"
   post "report/disposed_items"
-=======
   post "report/print_drug_availability_report"
->>>>>>> ef79da030d5bbe07a99e49644497e1af447182b4
   ########### reports end #########
 
   #get "home/index"

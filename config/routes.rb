@@ -29,6 +29,9 @@ EPICS::Application.routes.draw do
   post "user/authenticate"
   get "user/enter_workstation"
   post "user/locations"
+  get "/user/new"
+  post "user/create"
+  get "user/summary"
   ######## user end ########
 
   get "home/dispensary"

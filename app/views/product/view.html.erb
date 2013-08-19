@@ -129,7 +129,14 @@
 <h1><%=@product.product_code%>:&nbsp;<%=@product.name%></h1>
 <p><%=@product.epics_product_type.name%></p>
 <div class="product-container">
-<h4>Unit:&nbsp;<%=@product.epics_product_units.name%></h4>
+
+<% cost = @product.epics_item_cost %>
+<b>&nbsp;Unit:</b>&nbsp;<%=@product.epics_product_units.name %>
+<b>&nbsp;Unit price:</b>&nbsp;<%=cost.unit_price rescue nil %>
+<b>&nbsp;Pack size:</b>&nbsp;<%=cost.pack_size rescue nil %>
+<b>&nbsp;Billing charge:</b>&nbsp;<%=cost.billing_charge rescue nil %>
+<hr />
+<br />
 
 <div class="left-side">
   <table class="product-table">

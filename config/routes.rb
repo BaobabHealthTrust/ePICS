@@ -177,6 +177,8 @@ EPICS::Application.routes.draw do
   post "product/save_edited_product"
   get "product/stock_card"
   post "product/stock_card"
+  match 'edit_cost/:id' => 'product#edit_cost', :as => :edit_cost
+  post "product/edit_cost"
   ####### product ends #######
 
 

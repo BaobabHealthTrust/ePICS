@@ -188,6 +188,11 @@
             Location : <%= session[:location_name] %>
           </td>
           <td>
+            <% if @alerts %>
+                <img src="/images/alert.png" alt="">
+            <%end%>
+          </td>
+          <td>
             <img src="/images/Log-Out-icon.png" height="65" style="margin-right: 20px;
                     margin-top: 0px; cursor: pointer; float: right;" onclick="window.location='/logout'" />
           </td>

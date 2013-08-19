@@ -1,5 +1,39 @@
+<script>
+  function addPrinterIcon(){
+    nav = document.getElementById('nav')
+    img = document.createElement('img')
+    img.src="/images/emblem_print.png"
+    img.id='printer'
+    img.onclick=function(){
+      printReport();
+      //alert('Testing');
+      //window.location='/report/drug_availability_printable?store_room=<%= params[:store_room] %>'
+    }
+    nav.appendChild(img)
+  }
+  window.setTimeout("addPrinterIcon();", 50)
 
+  function printReport(){
+
+    jQuery.ajax({
+      type: "POST",
+      url: "/report/print_drug_availability_report",
+      data: "store_room=<%=params[:store_room]%>",
+      success: function(){
+        document.location.href="/"
+      }
+
+    });
+  }
+</script>
 <style>
+#printer{
+height: 60px;
+margin-left: 80px;
+margin-top: 10px;
+cursor: pointer;
+float: left;
+}
 .item-table {
   width: 98%;
   padding-top: 10px;

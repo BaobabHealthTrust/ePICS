@@ -92,6 +92,13 @@
       submitForm.appendChild(newElement);
     <%end%>
   <%end%>
+      
+  newElement = document.createElement("input")
+  newElement.setAttribute("name",'issue_to')
+  newElement.setAttribute("type","hidden");
+  newElement.value = "<%=EpicsLocation.where('name' => session[:exchange][:exchange_facility])[0].id%>";
+  submitForm.appendChild(newElement);
+
   submitForm.action= "exchange";
   submitForm.submit();
 
@@ -101,7 +108,9 @@ function sendData(){
   confirm = document.getElementById('confirm')
   confirm.setAttribute("onclick","exchangeItems();")
 }
+
 window.setTimeout("sendData();",300);
+
 </script>
 <style>
     .left-content {
@@ -209,7 +218,7 @@ window.setTimeout("sendData();",300);
       <tr>
         <td style="text-align: left; width: 20%;font-size: 18px;font-weight: bold;">Exchange Date</td>
         <td>:</td>
-        <td style="text-align: left; font-size: 18px;"><%= session[:exchange][:exchange_date] %></td>
+        <td style="text-align: left; font-size: 18px;"><%= session[:exchange][:exchange_date].to_date.strftime("%d, %B %Y") %></td>
       </tr>
 
     </table>
@@ -274,17 +283,15 @@ window.setTimeout("sendData();",300);
 
     <table style="width: 100%;">
       <tr style="line-height: 50px;">
-        <td><%= link_to "Issue item", '/epics_exchange/give_item', :class => 'buttons' %></td>
-      </tr>
-
-      <tr style="line-height: 50px;">
         <td><%= link_to "Receive Item", '/epics_exchange/receive_item', :class => 'buttons' %></td>
+      </tr>
+      <tr style="line-height: 50px;">
+        <td><%= link_to "Issue item", '/epics_exchange/give_item', :class => 'buttons' %></td>
       </tr>
       <tr style="line-height: 50px;">
         <td>&nbsp;</td>
       </tr>
       <tr style="line-height: 50px;">
-        <!--<td><%= link_to "Confirm Exchange", '/epics_exchange/exchange', :class => 'buttons', :id => "confirm" %></td>-->
         <td><a id="confirm" class="buttons">Confirm Exchange</a></td>
       </tr>
 

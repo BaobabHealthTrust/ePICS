@@ -61,9 +61,11 @@ class OrdersController < ApplicationController
 
     ord_type = ActiveSupport::JSON.decode params[:type]
     order_type = EpicsOrderTypes.find_by_name(ord_type)
+
     EpicsOrders.transaction do
       order = EpicsOrders.new() 
-      order.epics_order_type_id = order_type.id rescue 1
+      order.epics_order_type_id = order_type.id 
+      order.epics_location_id = params[:issue_to]
       order.save
 
       (items || {}).each do |name , values|

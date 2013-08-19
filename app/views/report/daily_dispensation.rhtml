@@ -1,4 +1,27 @@
+
+<script>
+  function addPrinterIcon(){
+    nav = document.getElementById('nav')
+    img = document.createElement('img')
+    img.src="/images/emblem_print.png"
+    img.id='printer'
+    img.onclick=function(){
+      alert('Testing');
+    }
+    nav.appendChild(img)
+  }
+  window.setTimeout("addPrinterIcon();", 50)
+</script>
+
 <style>
+#printer{
+  height: 60px;
+  margin-left: 80px;
+  margin-top: 10px;
+  cursor: pointer;
+  float: left;
+}
+
 .item-table {
   width: 98%;
   padding-top: 10px;

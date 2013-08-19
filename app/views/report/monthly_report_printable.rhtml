@@ -1,29 +1,3 @@
-<script>
-  function addPrinterIcon(){
-    nav = document.getElementById('nav')
-    img = document.createElement('img')
-    img.src="/images/emblem_print.png"
-    img.id='printer'
-    img.onclick=function(){
-      printReport();
-    }
-    nav.appendChild(img)
-  }
-  window.setTimeout("addPrinterIcon();", 50)
-
-  function printReport(){
-
-    jQuery.ajax({
-      type: "POST",
-      url: "/report/print_monthly_report",
-      data: "start_date=<%=@start_date%>",
-      success: function(){
-        document.location.href="/"
-      }
-
-    });
-  }
-</script>
 
 <style>
 #printer{
@@ -50,8 +24,7 @@ th {
 }
 </style>
 
-
-
+<%= render :partial=>"/layouts/top" %>
 
 <table class="monthly">
 <thead>

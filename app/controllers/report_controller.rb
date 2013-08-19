@@ -55,6 +55,10 @@ class ReportController < ApplicationController
       location.id).select("epics_products.* , s.*").group("s.epics_products_id")
   end
 
+  def store_room_printable
+    render :layout =>false
+  end
+  
   def drug_availability
     location = EpicsLocation.find(params[:store_room])
     @page_title = "#{location.name}<br />Drug availability"
@@ -66,6 +70,19 @@ class ReportController < ApplicationController
       ").where("s.epics_location_id = ?",location.id).select("epics_products.* , s.*, x.*")
   end
 
+  def drug_availability_printable
+    location = EpicsLocation.find(params[:store_room])
+    @page_title = "#{location.name}<br />Drug availability"
+
+    @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
+      ON s.epics_products_id = epics_products.epics_products_id
+      LEFT JOIN epics_stock_expiry_dates x
+      ON x.epics_stock_details_id = s.epics_stock_details_id
+      ").where("s.epics_location_id = ?",location.id).select("epics_products.* , s.*, x.*")
+
+    render :layout => false
+  end
+  
   def select_date_range
     render :layout => 'application'
   end
@@ -74,14 +91,79 @@ class ReportController < ApplicationController
     @start_date = params[:date]['start'].to_date
     @monthly_report = EpicsReport.monthly_report(@start_date)
   end
+
+  def monthly_report_printable
+    @start_date = params[:start_date].to_date
+    @monthly_report = EpicsReport.monthly_report(@start_date)
+    render :layout => false
+  end
   
   def daily_dispensation
     @page_title = "Daily dispensation<br />#{params[:date].to_date.strftime('%d, %B, %Y')}"
     @daily_dispensation = EpicsReport.daily_dispensation(params[:date].to_date)
   end
 
+  def daily_dispensation_printable
+    render :layout => false
+  end
+  
   def select_daily_dispensation_date
     render :layout => 'application'
   end
 
+  def print_drug_availability_report
+      location = request.remote_ip rescue ""
+      current_printer = ""
+      store_room = params[:store_room]
+      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations.each{|ward|
+        current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
+      } rescue []
+
+        t1 = Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/drug_availability_printable/" +\
+            "?store_room=#{store_room}" + "\" /tmp/output-drug_availability_report" + ".pdf \n"
+        }
+
+        file = "/tmp/output-drug_availability_report" + ".pdf"
+        t2 = Thread.new{
+          sleep(3)
+          print(file, current_printer)
+        }
+        render :text => "true" and return
+  end
+
+  def print_monthly_report
+      location = request.remote_ip rescue ""
+      current_printer = ""
+      start_date = params[:start_date]
+      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations.each{|ward|
+        current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
+      } rescue []
+
+        t1 = Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/monthly_report_printable/" +\
+            "?start_date=#{start_date}" + "\" /tmp/output-monthly_report" + ".pdf \n"
+        }
+
+        file = "/tmp/output-monthly_report_report" + ".pdf"
+        t2 = Thread.new{
+          sleep(3)
+          print(file, current_printer)
+        }
+        render :text => "true" and return
+  end
+
+  def print(file_name, current_printer)
+    sleep(3)
+    if (File.exists?(file_name))
+     Kernel.system "lp -o sides=two-sided-long-edge -o fitplot #{(!current_printer.blank? ? '-d ' + current_printer.to_s : "")} #{file_name}"
+    else
+      print(file_name)
+    end
+  end
+  
 end

@@ -13,9 +13,12 @@ class UserController < ApplicationController
     user = User.check_authenticity(params[:password], params[:login]) rescue nil
     if user.blank?
       flash[:error] = "Invalid user name or password"
-      redirect_to '/user/login'
+      redirect_to '/login'
     else
       session[:user_id] = user.id
+      if user.epics_user_role.blank?
+        set_defualt_role(user.id)
+      end
       redirect_to '/user/enter_workstation' and return
       redirect_to '/' and return
     end
@@ -44,6 +47,15 @@ class UserController < ApplicationController
           :show_alerts_popup => show_alerts_popup
       end
     end
+  end
+
+  def set_defualt_role(id)
+
+    new_user_role = EpicsUserRole.new
+    new_user_role.user_id = id
+    new_user_role.epics_role_id = EpicsRole.find_by_role("Pharmacist").id
+    new_user_role.save!
+
   end
 
 end

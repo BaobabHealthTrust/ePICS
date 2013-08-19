@@ -3,7 +3,8 @@ require 'digest/sha2'
 
 class User < ActiveRecord::Base
 	set_primary_key :user_id
-  cattr_accessor :current                                          
+  cattr_accessor :current
+  has_one :epics_user_role
 
   def self.check_authenticity(password, username)
     user = User.find_by_username(username)

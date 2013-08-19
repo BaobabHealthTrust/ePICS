@@ -98,7 +98,7 @@ class ProductController < ApplicationController
     @products = []
     (item.epics_stock_details ||[]).each do |detail|
       next if detail.epics_stock_expiry_date.blank?
-      @products << detail.epics_stock_expiry_date.expiry_date.to_date
+      @products << detail.epics_stock_expiry_date.expiry_date.to_date.strftime("%d-%b-%Y")
     end
     render :text => "<li></li><li>" + @products.uniq.join("</li><li>") + "</li>"
   end

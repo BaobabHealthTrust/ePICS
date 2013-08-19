@@ -155,7 +155,7 @@
       </tr>
       <tr>
         <th  style="text-align: left;">Issue Date</th><th style="width:2px; ">:</th>
-        <th style="text-align: left"><%= session[:lend_details]['issue_date'] %>  </th>
+        <th style="text-align: left"><%= session[:lend_details]['issue_date'].to_date.strftime("%d, %B %Y") %>  </th>
       </tr>
       <tr>
         <th  style="text-align: left;">Authorised By</th><th style="width:2px; ">:</th>

@@ -121,6 +121,15 @@ product_units = ["Each" , "Tablet","mg","KG","cm","Ltr","mL","Other"]
   type.save
 end
 
+roles = [["Administrator","overseer of all activities"], ["Pharmacist", "receiver and issuer of items"]]
+
+(roles || []).each do |role, description|
+  new_role = EpicsRole.new()
+  new_role.role = role
+  new_role.description = description
+  new_role.save
+end
+
 `rails runner #{Rails.root}/script/load_epics_products.rb`
 `rails runner #{Rails.root}/script/load_epics_facilities.rb`
 puts "Your new application is almost ready: make sure you configure your database.yml to point to your openmrs database for user management"

@@ -55,6 +55,8 @@ class HomeController < ApplicationController
     ############################ alerts ######################################
     if params[:show_alerts_popup] == 'true'
       @alerts = EpicsReport.alerts
+    else
+      @alerts = []
     end
     ################################ end #####################################
 

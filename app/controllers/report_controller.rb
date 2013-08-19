@@ -111,7 +111,6 @@ class ReportController < ApplicationController
     render :layout => 'application'
   end
 
-<<<<<<< HEAD
   def drug_daily_dispensation
     item_name = EpicsProduct.find(params[:id]).name
     @page_title = "#{item_name} Daily dispensation<br />#{params[:date].to_date.strftime('%d, %B, %Y')}"
@@ -135,7 +134,6 @@ class ReportController < ApplicationController
     @items = EpicsReport.disposed_items(start_date, end_date)
   end
 
-=======
   def print_drug_availability_report
       location = request.remote_ip rescue ""
       current_printer = ""

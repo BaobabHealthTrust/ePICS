@@ -188,7 +188,7 @@
             Location : <%= session[:location_name] %>
           </td>
           <td>
-            <% if @alerts %>
+            <% if not @alerts.blank? %>
                 <img src="/images/alert.png" alt="">
             <%end%>
           </td>

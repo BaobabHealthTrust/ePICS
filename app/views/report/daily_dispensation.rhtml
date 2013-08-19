@@ -29,7 +29,8 @@ th {
 <tr>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
-  <th class='right-align'>Issued to</th>
+  <th class='left-align'>Issued from</th>
+  <th class='left-align'>Issued to</th>
   <th class='right-align'>Issue date</th>
   <th class='right-align'>Quantity</th>
 </tr>
@@ -37,12 +38,13 @@ th {
   <tr>
     <td class='left-align'><%=dispenstion[:item_code] %></td>
     <td class='left-align'><%=dispenstion[:item_name] %></td>
-    <td class='right-align'><%=dispenstion[:issued_to] %></td>
+    <td class='left-align'><%=dispenstion[:issued_from] %></td>
+    <td class='left-align'><%=dispenstion[:issued_to] %></td>
     <td class='right-align'><%=dispenstion[:issue_date].to_date.strftime('%d-%b-%Y') %></td>
     <td class='right-align'><%=dispenstion[:quantity_issued] %></td>
   </tr>
   <tr>
-    <td colspan="5"><hr /><td>
+    <td colspan="6"><hr /><td>
   </tr>
 <%end%>
 </table>

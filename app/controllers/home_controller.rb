@@ -1,5 +1,12 @@
 class HomeController < ApplicationController
   def index
+    (session || {}).each do |name , values|
+      next if name == 'location_name'
+      next if name == 'location_id'
+      next if name == 'user_id'
+      session[name] = nil
+    end
+
     @application = [
       ["Issue Items","orders/new","dispense.png"],
       ["Receive Items","stock/new","receive.png"],

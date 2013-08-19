@@ -54,8 +54,8 @@
     <%end%>
     <%end%>
 
-        submitForm.action= "/orders/dispense?type='lend'";
-        submitForm.submit();
+    submitForm.action= "/orders/dispense?type=lend&issue_to=<%= session[:lend_details]['lend_to_location'].id %>";
+    submitForm.submit();
 
     }
 

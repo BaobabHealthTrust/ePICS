@@ -8,6 +8,8 @@ class EpicsProduct < ActiveRecord::Base
   belongs_to :epics_product_category, :foreign_key => :epics_product_category_id
   has_many :epics_stock_details,:class_name => 'EpicsStockDetails', 
     :foreign_key => :epics_products_id, :conditions => {:voided => 0}
+  has_one :epics_item_cost,:class_name => 'EpicsItemCost', 
+    :foreign_key => :epics_products_id, :conditions => {:voided => 0}
 
 
   def current_quantity(end_date = Date.today)

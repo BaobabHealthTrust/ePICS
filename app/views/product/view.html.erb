@@ -163,10 +163,10 @@
     <tr>
       <td>&nbsp;</td>
     </tr>
-    <!--<tr>
-      <td><%#= link_to "Edit", {:action=>"edit_product", :product_id => @product.id}, :class => 'buttons' %></td>
-    </tr>
     <tr>
+      <td><%= link_to "Set/Edit Cost", edit_cost_url(:id => @product.id), :class => 'buttons' %></td>
+    </tr>
+    <!--tr>
       <td>&nbsp;</td>
     </tr>
     <tr>

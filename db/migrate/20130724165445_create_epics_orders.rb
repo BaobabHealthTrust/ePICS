@@ -5,6 +5,7 @@ class CreateEpicsOrders < ActiveRecord::Migration
 			t.integer :epics_location_id
 			t.text :instructions
 			t.boolean :voided, :default => false
+      t.integer :creator
 			t.timestamps
 		end
   end

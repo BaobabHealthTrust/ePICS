@@ -76,7 +76,6 @@ class EpicsExchangeController < ApplicationController
     @issued_items = find_product_issue_cart
     @exchange_details = session[:exchange]
 
-
     order_type = EpicsOrderTypes.find_by_name('Exchange')
     EpicsExchange.transaction do
 
@@ -90,7 +89,7 @@ class EpicsExchangeController < ApplicationController
         @stock_detail = EpicsStockDetails.new()
         @stock_detail.epics_stock_id = @stock.epics_stock_id
         @stock_detail.epics_products_id = item.product_id
-        @stock_detail.epics_location_id = item.location
+        @stock_detail.epics_location_id = params[:issue_to]
         @stock_detail.received_quantity = item.quantity
         @stock_detail.current_quantity = item.quantity
         @stock_detail.epics_product_units_id = item.product.epics_product_units_id
@@ -106,7 +105,8 @@ class EpicsExchangeController < ApplicationController
 
 
       @order = EpicsOrders.new()
-      @order.epics_order_type_id = order_type.id rescue 1
+      @order.epics_order_type_id = order_type.id 
+      @order.epics_location_id = params[:issue_to]
       @order.save
 
       (@issued_items.items || {}).each do |item, values|

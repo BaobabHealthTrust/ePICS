@@ -1,0 +1,29 @@
+
+<style>
+ #qwerty, #num , #plus, #apostrophe, #star, #char, #Unknown, #backspace,
+  #abc, #date, #slash, #minus, #comma, #percent { display:none; }
+</style>
+
+<script type='text/javascript'>
+
+	tt_cancel_show = '/'
+	tt_cancel_destination = '/'
+
+</script>
+
+<%= form_tag :action => 'edit_cost', :method => :post  do %>
+
+  <%= text_field_tag "item[unit_price]", (@cost.unit_price rescue nil),
+       {:id => 'unit_price', :field_type => 'number',
+        :helpText => 'Enter unit price'} %>
+
+  <%= text_field_tag "item[pack_size]",  (@cost.pack_size rescue nil),
+       {:id => 'pack_size', :field_type => 'number',
+        :helpText => 'Enter pack size'} %>
+
+  <%= text_field_tag "item[billing_charge]",  (@cost.billing_charge rescue nil),
+       {:id => 'blling_charge', :field_type => 'number',
+        :helpText => 'Enter blling charge'} %>
+
+  <input type='hidden' name="item[id]" value="<%=params[:id]%>" />
+<%end%>

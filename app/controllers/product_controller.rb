@@ -161,4 +161,28 @@ class ProductController < ApplicationController
     render :layout => "report"
   end
 
+  def edit_cost
+    if request.post?
+      EpicsItemCost.transaction do
+        cost = EpicsItemCost.find_by_epics_products_id(params[:item]['id'])
+        if cost.blank?
+          cost = EpicsItemCost.new()
+        else
+          cost.voided = true
+          cost.void_reason = 'Setting new cost'
+          cost.save
+          cost = EpicsItemCost.new()
+        end
+        cost.epics_products_id = params[:item]['id']
+        cost.unit_price = params[:item]['unit_price']
+        cost.pack_size = params[:item]['pack_size']
+        cost.billing_charge = params[:item]['billing_charge']
+        cost.save
+        redirect_to :action => :view, 
+          :product => EpicsProduct.find(cost.epics_products_id).name
+      end
+    end
+    @cost = EpicsItemCost.find_by_epics_products_id(params[:id])
+  end
+
 end

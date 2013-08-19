@@ -1,26 +1,11 @@
-<script>
-  function addPrinterIcon(){
-    nav = document.getElementById('nav')
-    img = document.createElement('img')
-    img.src="/images/emblem_print.png"
-    img.id='printer'
-    img.onclick=function(){
-      alert('Testing');
-    }
-    nav.appendChild(img)
-  }
-  window.setTimeout("addPrinterIcon();", 50)
-</script>
-
 <style>
 #printer{
-  height: 60px;
-  margin-left: 80px;
-  margin-top: 10px;
-  cursor: pointer;
-  float: left;
+height: 60px;
+margin-left: 80px;
+margin-top: 10px;
+cursor: pointer;
+float: left;
 }
-
 .item-table {
   width: 98%;
   padding-top: 10px;
@@ -45,15 +30,15 @@ th {
 }
 
 </style>
-
+<%= render :partial=>"/layouts/top" %>
 <table class="item-table">
 <tr>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
   <th class='right-align'>Item minimun stock</th>
   <th class='right-align'>Item maximum stock</th>
+  <th class='right-align'>Current quantity</th>
   <th class='right-align'>Item expires</th>
-  <th class='right-align'>Fast moving</th>
 </tr>
 <%(@epics_products || []).each do |product|%>
   <tr>
@@ -61,8 +46,8 @@ th {
     <td class='left-align'><%=product.name %></td>
     <td class='right-align'><%=product.min_stock %></td>
     <td class='right-align'><%=product.max_stock %></td>
-    <td class='right-align'><%=product.expire %></td>
-    <td class='right-align'><%=product.movement %></td>
+    <td class='right-align'><%=product.current_quantity%></td>
+    <td class='right-align'><%=product.expiry_date.to_date.strftime("%B %Y") rescue 'N/A' %></td>
   </tr>
   <tr>
     <td colspan="6"><hr /><td>

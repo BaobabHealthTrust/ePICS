@@ -129,7 +129,14 @@
 <h1><%=@product.product_code%>:&nbsp;<%=@product.name%></h1>
 <p><%=@product.epics_product_type.name%></p>
 <div class="product-container">
-<h4>Unit:&nbsp;<%=@product.epics_product_units.name%></h4>
+
+<% cost = @product.epics_item_cost %>
+<b>&nbsp;Unit:</b>&nbsp;<%=@product.epics_product_units.name %>
+<b>&nbsp;Unit price:</b>&nbsp;<%=cost.unit_price rescue nil %>
+<b>&nbsp;Pack size:</b>&nbsp;<%=cost.pack_size rescue nil %>
+<b>&nbsp;Billing charge:</b>&nbsp;<%=cost.billing_charge rescue nil %>
+<hr />
+<br />
 
 <div class="left-side">
   <table class="product-table">
@@ -163,10 +170,10 @@
     <tr>
       <td>&nbsp;</td>
     </tr>
-    <!--<tr>
-      <td><%#= link_to "Edit", {:action=>"edit_product", :product_id => @product.id}, :class => 'buttons' %></td>
-    </tr>
     <tr>
+      <td><%= link_to "Set/Edit Cost", edit_cost_url(:id => @product.id), :class => 'buttons' %></td>
+    </tr>
+    <!--tr>
       <td>&nbsp;</td>
     </tr>
     <tr>
@@ -196,6 +203,12 @@
       </tr>
       <tr>
         <td colspan="2"><a class="buttons" reason="missing" onclick="selectReason(this);"><span>Missing</span></a> </td>
+      </tr>
+      <tr>
+        <td><hr/></td>
+      </tr>
+      <tr>
+        <td colspan="2"><a class="buttons" reason="wrongly captured" onclick="selectReason(this);"><span>Wrongly captured</span></a> </td>
       </tr>
       <tr>
         <td colspan="2"><%= image_tag("close.png",:id=>"close", :onclick=>"hidePopups();") %></td>

@@ -92,6 +92,13 @@
       submitForm.appendChild(newElement);
     <%end%>
   <%end%>
+      
+  newElement = document.createElement("input")
+  newElement.setAttribute("name",'issue_to')
+  newElement.setAttribute("type","hidden");
+  newElement.value = "<%=EpicsLocation.where('name' => session[:exchange][:exchange_facility])[0].id%>";
+  submitForm.appendChild(newElement);
+
   submitForm.action= "exchange";
   submitForm.submit();
 
@@ -101,7 +108,9 @@ function sendData(){
   confirm = document.getElementById('confirm')
   confirm.setAttribute("onclick","exchangeItems();")
 }
+
 window.setTimeout("sendData();",300);
+
 </script>
 <style>
     .left-content {
@@ -283,7 +292,6 @@ window.setTimeout("sendData();",300);
         <td>&nbsp;</td>
       </tr>
       <tr style="line-height: 50px;">
-        <!--<td><%= link_to "Confirm Exchange", '/epics_exchange/exchange', :class => 'buttons', :id => "confirm" %></td>-->
         <td><a id="confirm" class="buttons">Confirm Exchange</a></td>
       </tr>
 

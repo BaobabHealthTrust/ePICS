@@ -8,6 +8,7 @@ class CreateEpicsLendsOrBorrows < ActiveRecord::Migration
 			t.date :lend_or_borrow_date, :null => false
 			t.date :return_date, :null => false
 			t.boolean :reimbursed, :default => false
+      t.integer :creator
 			t.boolean :voided, :default => false
 			t.timestamps
 		end

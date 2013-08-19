@@ -76,7 +76,7 @@ function issueItems() {
     <%end%>
   <%end%>
 
-  submitForm.action= "/orders/dispense?type='issue'";
+  submitForm.action= "/orders/dispense?type=Dispense&issue_to=<%=@location.id%>";
   submitForm.submit();
 
  <% else %>

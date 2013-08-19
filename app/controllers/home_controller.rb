@@ -1,5 +1,12 @@
 class HomeController < ApplicationController
   def index
+    (session || {}).each do |name , values|
+      next if name == 'location_name'
+      next if name == 'location_id'
+      next if name == 'user_id'
+      session[name] = nil
+    end
+
     @application = [
       ["Issue Items","orders/new","dispense.png"],
       ["Receive Items","stock/new","receive.png"],
@@ -24,19 +31,16 @@ class HomeController < ApplicationController
     @activities = []
 
     @administration = [
-
-
       ["Set Items","/product/index","default.png"],
-
     ]
 
     if User.current.epics_user_role.name == "Administrator"
-
       @administration << ["Set Item Units","/product_units/index","units_icon.png"] << ["Set Item Types","/product_type/index","default.png"]
       @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","default.png"]
       @administration << ["Set Supplier Types","/supplier_type/index","default.png"] << ["Set Suppliers","/supplier/index","default.png"]
       @administration << ["Set Locations","/location/index","default.png"] << ["Set Location Types","/location_type/index","default.png"]
-      @administration << ["Add New User","/user/new","default.png"] << ["Add person","person/add_person","add_user.png"]
+      @administration << ["Add New User","#","sysuser.png"] << ["Add person","person/add_person","add_user.png"]
+
     end
 
     @buttons_count = @application.length

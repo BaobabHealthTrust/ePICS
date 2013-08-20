@@ -133,7 +133,6 @@ class StockController < ApplicationController
     render :text => "<li></li><li>" + batches.join("</li><li>") + "</li>"
   end
 
-<<<<<<< HEAD
   def get_items_by_batch_number
     items = EpicsStock.joins("INNER JOIN epics_stock_details s 
       ON s.epics_stock_id = epics_stocks.epics_stock_id 

@@ -84,17 +84,15 @@ class EpicsReport < ActiveRecord::Base
       ON o.epics_order_id = epics_orders.epics_order_id
       AND epics_orders.epics_order_type_id IN(#{type.id})
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
-      AND s.created_at >= '#{start_date}' AND s.created_at <= '#{end_date}'
-      INNER JOIN epics_locations l ON l.epics_location_id = s.epics_location_id
-      INNER JOIN epics_locations i ON i.epics_location_id = epics_orders.epics_location_id
+      AND o.created_at >= '#{start_date}' AND o.created_at <= '#{end_date}'
       INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
-      ").select("p.name pname,l.name lname,s.created_at dispensed_date,SUM(quantity) quantity,
-        p.product_code item_code,i.name issued_to,s.epics_products_id item_id").group("s.epics_products_id")
+      ").select("p.name pname,s.created_at dispensed_date,SUM(quantity) quantity,
+        p.product_code item_code,s.epics_products_id item_id").group("s.epics_products_id")
     
     return issued.collect do |r|{
-      :item_name => r.pname, :issued_from => r.lname,:item_id => r.item_id,
+      :item_name => r.pname, :item_id => r.item_id,
       :item_code => r.item_code,:issue_date => r.dispensed_date, 
-      :quantity_issued => r.quantity, :issued_to => r.issued_to
+      :quantity_issued => r.quantity
       }
     end
   end
@@ -108,7 +106,7 @@ class EpicsReport < ActiveRecord::Base
       ON o.epics_order_id = epics_orders.epics_order_id
       AND epics_orders.epics_order_type_id IN(#{type.id})
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
-      AND s.created_at >= '#{start_date}' AND s.created_at <= '#{end_date}'
+      AND o.created_at >= '#{start_date}' AND o.created_at <= '#{end_date}'
       AND s.epics_products_id = #{item_id}
       INNER JOIN epics_locations l ON l.epics_location_id = s.epics_location_id
       INNER JOIN epics_locations i ON i.epics_location_id = epics_orders.epics_location_id
@@ -173,8 +171,15 @@ class EpicsReport < ActiveRecord::Base
       AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e              
       ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date <= ?
       AND e.epics_stock_id = ?",end_date,stock.id).sum(:received_quantity)
-       
+      
+    receipts = EpicsStock.joins("INNER JOIN epics_stock_details s               
+      ON s.epics_stock_id = epics_stocks.epics_stock_id                         
+      AND s.epics_products_id = #{item.id}").where("epics_stocks.grn_date <= ?
+      AND epics_stocks.epics_stock_id = ?",end_date,stock.id).sum(:received_quantity)                                         
+                                                                                
     count = [exchange.to_f , borrowed.to_f].sum
+    count = [count , (receipts.to_f - count)].sum
+ 
     if(count.to_s.split('.')[1] == '0')
       return count.to_i
     end

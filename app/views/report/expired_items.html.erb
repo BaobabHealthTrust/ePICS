@@ -1,40 +1,4 @@
-
-<script>
-  function addPrinterIcon(){
-    nav = document.getElementById('nav')
-    img = document.createElement('img')
-    img.src="/images/emblem_print.png"
-    img.id='printer'
-    img.onclick=function(){
-      printReport();
-    }
-    nav.appendChild(img)
-  }
-  window.setTimeout("addPrinterIcon();", 50)
-
-  function printReport(){
-
-    jQuery.ajax({
-      type: "POST",
-      url: "/report/print_daily_dispensation_report",
-      data: "date=<%=params[:date]%>",
-      success: function(){
-        document.location.href="/"
-      }
-
-    });
-  }
-</script>
-
 <style>
-#printer{
-  height: 60px;
-  margin-left: 80px;
-  margin-top: 10px;
-  cursor: pointer;
-  float: left;
-}
-
 .item-table {
   width: 98%;
   padding-top: 10px;
@@ -70,7 +34,7 @@ th {
   -webkit-border-radius:42px;                                                   
   border-radius:42px;                                                           
   border:1px solid #84bbf3;                                                     
-  display:inline-block;                                                         
+  /*display: inherit; */
   color:#ffffff;                                                                
   font-family:arial;                                                            
   font-size:17px;                                                               
@@ -78,8 +42,9 @@ th {
   padding:6px 24px;                                                             
   text-decoration:none;                                                         
   text-shadow:1px 1px 0px #528ecc;                                              
-  width: 50%;                                                                   
-  text-align: center;                                                           
+  text-align: center;   
+  height: 50px;
+  vertical-align: middle;
 }.btn:hover {                                                                   
   background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
   background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );      
@@ -88,37 +53,68 @@ th {
 }.btn:active {                                                                  
   position:relative;                                                            
   top:1px;                                                                      
-} 
+}
 
-.buttons {                                                                    
-  text-align: right;                                                            
-  padding: 10px;                                                                
-  font-size: 30px;                                                              
-  line-height: 70px;                                                            
-  border-style: outset;                                                         
-  border-width: 0px 0px 0px 0px;                                                
-  width: 10%;
+.btn img {
+  height: 55px;
+  width: 55px;
 }
 </style>
-
 
 <table class="item-table">
 <tr>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
-  <th class='right-align' style="text-align: center;">Quantity</th>
+  <th class='left-align'>Expiry Date</th>
+  <th class='right-align'>Current Quantity</th>
+  <th class='center-align'>&nbsp;</th>
 </tr>
-<%(@daily_dispensation || []).each do |dispenstion|%>
-  <tr>
-    <td class='left-align'><%=dispenstion[:item_code] %></td>
-    <td class='left-align'><%=dispenstion[:item_name] %></td>
-    <td class='right-align buttons' style="text-align: center;">
-      <a href="<%=drug_daily_dispensation_url(:id => dispenstion[:item_id], 
-          :date =>  dispenstion[:issue_date].to_date)%>" class='btn'><%=dispenstion[:quantity_issued] %></a>
+<%(@items || []).each do |item|%>
+  <tr id="<%=item[:stock_details_id]%>">
+    <td class='left-align'><%=item[:item_code] %></td>
+    <td class='left-align'><%=item[:item_name] %></td>
+    <td class='left-align'><%=item[:expiry_date].to_date.strftime('%d %b, %Y') %></td>
+    <td class='right-align'><%=item[:current_quantity] %></td>
+    <td class='center-align' style="text-align: center;">
+      <a href="javascript:boardOff('<%=item[:stock_details_id]%>');" class='btn'>Board Off</a>
     </td>
   </tr>
   <tr>
-    <td colspan="6"><hr /><td>
+    <td colspan="5"><hr /><td>
   </tr>
 <%end%>
 </table>
+
+<script>
+
+  function setAttributes() {
+    imgs = document.getElementsByTagName('img')
+    for(var i = 0; i < imgs.length; i++){
+      if(imgs[i].onclick) {
+        if(imgs[i].getAttribute("onclick").match(/window.location/)) {
+          imgs[i].setAttribute("onclick","javascript: history.go(-1);");
+        }
+      }
+    }
+  }
+
+  function boardOff(stock_detail_id) {
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari  
+        xmlhttp=new XMLHttpRequest();                                             
+      }else{// code for IE6, IE5                                                  
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+      }                                                                           
+      xmlhttp.onreadystatechange=function() {                                     
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+          var results = xmlhttp.responseText;                                     
+          if(results) {                                                         
+            document.getElementById(stock_detail_id).style.display = 'none';
+          }                                                                     
+        }                                                                         
+      }                                                                           
+      xmlhttp.open("GET","/stock_details/board_off?stock_detail_id=" + stock_detail_id,true);                      
+      xmlhttp.send();
+  }
+
+  setTimeout("setAttributes();",500);
+</script>

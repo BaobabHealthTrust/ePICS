@@ -4,4 +4,7 @@ class EpicsProductOrders < ActiveRecord::Base
   default_scope where('voided = 0')
   belongs_to :epics_orders, :foreign_key => :epics_order_id, :conditions => {:voided => 0}
   belongs_to :epics_stock_details, :foreign_key => :epics_stock_details_id, :conditions => {:voided => 0}
+
+  include Epics
+
 end

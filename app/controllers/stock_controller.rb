@@ -36,6 +36,8 @@ class StockController < ApplicationController
 
   def borrow
     @supplier_map =  EpicsLocationType.find(:first, :conditions => ["name = 'Facility'"]).epics_locations.collect{|x| x.name }
+    @authorizers = OpenmrsPerson.get_authorisers
+
   end
 
   def borrow_index
@@ -44,14 +46,11 @@ class StockController < ApplicationController
 
     if request.post?
       session[:borrow] = nil
-      fname = params[:authorizer].split(" ")[0].squish!
-      lname = params[:authorizer].split(" ")[1].squish!
-      person = EpicsPerson.where("fname = ? AND lname = ?",fname,lname ).first.id
       borrow_hash = Hash.new()
       borrow_hash[:borrowing_from] = params[:facility]
       borrow_hash[:supplier_id] = EpicsSupplier.find_by_name("Other").id
       borrow_hash[:grn_number] = params[:grn_number]
-      borrow_hash[:authorizer] = person
+      borrow_hash[:authorizer] = params[:authorizer]
       borrow_hash[:grn_date] = params[:borrow_date]
       borrow_hash[:return_date] = params[:return_date]
       borrow_hash[:witness_names] = params[:witness_name]
@@ -108,9 +107,10 @@ class StockController < ApplicationController
   end
 
   def get_witness_names
-    names = EpicsPerson.get_names(params[:search_string])
+    @names = EpicsWitnessNames.where("name LIKE (?)",
+                                     "%#{params[:search_string]}%").map{|witness|[[witness.name]]}
 
-    render :text => "<li></li><li>" + names.uniq.join("</li><li>") + "</li>"
+    render :text => "<li></li><li>" + @names.uniq.join("</li><li>") + "</li>"
   end
 
  def remove_product_from_borrow_cart

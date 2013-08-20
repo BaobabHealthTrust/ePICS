@@ -41,7 +41,7 @@ class HomeController < ApplicationController
       @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","default.png"]
       @administration << ["Set Supplier Types","/supplier_type/index","default.png"] << ["Set Suppliers","/supplier/index","default.png"]
       @administration << ["Set Locations","/location/index","default.png"] << ["Set Location Types","/location_type/index","default.png"]
-      @administration << ["Add New User","#","sysuser.png"] << ["Add person","person/add_person","add_user.png"]
+      @administration << ["Add New User","/user/new","sysuser.png"] << ["Add person","person/add_person","add_user.png"]
 
     end
 
@@ -50,7 +50,7 @@ class HomeController < ApplicationController
     @buttons_count = @activities.length if @activities.length > @buttons_count
     @buttons_count = @administration.length if @administration.length > @buttons_count
 
-    @alerts = EpicsLendBorrowAuthorizer.find(:all, :conditions => ["voided = ? AND authorized = ?",false,false]).blank? ? false : true
+    @reminders = EpicsLendBorrowAuthorizer.find(:all, :conditions => ["voided = ? AND authorized = ?",false,false]).blank? ? false : true
 
     ############################ alerts ######################################
     if params[:show_alerts_popup] == 'true'

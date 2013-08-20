@@ -10,14 +10,6 @@ class EpicsPerson < ActiveRecord::Base
 
   end
 
-  def self.get_authorisers(search_string)
-
-    names = EpicsPerson.where("(fname LIKE (?) OR lname LIKE (?)) AND has_authority = TRUE",
-                        "%#{search_string}%", "%#{search_string}%").map{|person|person.fname + " " + person.lname}
-
-   return "<li></li><li>" + names.uniq.join("</li><li>") + "</li>"
-
-  end
 
   def self.get_name(search_string)
     fname = EpicsPerson.where(" fname LIKE (?)","%#{search_string}%").map{|person| person.fname}

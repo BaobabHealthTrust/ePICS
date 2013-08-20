@@ -12,10 +12,9 @@ tt_cancel_destination='/'
                    {:id => "supplier_id",:field_type => 'alpha',
                     :helpText => "Borrow from"} %>
 
-    <%= text_field_tag :authorizer, nil,
+    <%= select_tag :authorizer, options_for_select(@authorizers),
                        {:id => 'authorizer',
                         :field_type => 'alpha',
-                        :ajaxURL => '/orders/get_authoriser?search_string=',
                         :allowFreeText => false,
                         :helpText => 'Who Authorised'} %>
 

@@ -1,8 +1,8 @@
 class CreateEpicsLendBorrowAuthorizers < ActiveRecord::Migration
   def self.up
-    create_table :epics_lend_borrow_authorizers, :primary_key => :authorizer_id do |t|
+    create_table :epics_lend_borrow_authorizers, :primary_key => :authorization_id do |t|
 
-      t.integer :epics_person_id
+      t.integer :authorizer
       t.integer :epics_lends_or_borrows_id
       t.boolean :authorized, :default => false
       t.boolean :voided, :default => false

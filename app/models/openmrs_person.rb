@@ -9,4 +9,13 @@ class OpenmrsPerson < ActiveRecord::Base
     self.date_created = Time.now
   end
 
+  def self.get_authorisers
+
+    name = EpicsUserRole.find(:all, :conditions => ["epics_role_id = ?", EpicsRole.find_by_role('Administrator').id])
+
+    names = name.map{|x| [x.user.openmrs_person.openmrs_person_names.last.given_name + " " + x.user.openmrs_person.openmrs_person_names.last.family_name, x.user.id]}
+
+  end
+
+
 end

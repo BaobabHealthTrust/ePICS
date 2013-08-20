@@ -5,11 +5,24 @@
     img.src="/images/emblem_print.png"
     img.id='printer'
     img.onclick=function(){
-      alert('Testing');
+      printReport();
     }
     nav.appendChild(img)
   }
   window.setTimeout("addPrinterIcon();", 50)
+
+  function printReport(){
+
+    jQuery.ajax({
+      type: "POST",
+      url: "/report/print_store_room_report",
+      data: "store_room=<%=params[:store_room]%>",
+      success: function(){
+        document.location.href="/"
+      }
+
+    });
+  }
 </script>
 
 <style>

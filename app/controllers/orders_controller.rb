@@ -79,10 +79,6 @@ class OrdersController < ApplicationController
 
           if ord_type.eql?('lend')
 
-            fname = session[:lend_details]['authorizer'].split(" ")[0].squish!
-            lname = session[:lend_details]['authorizer'].split(" ")[1].squish!
-            person = EpicsPerson.where("fname = ? AND lname = ?",fname,lname ).first.id
-
             lend = EpicsLendsOrBorrows.new
             lend.epics_orders_id = order.id
             lend.facility = session[:lend_details]['lend_to_location'].id
@@ -92,7 +88,7 @@ class OrdersController < ApplicationController
             lend.save
 
             authorizer = EpicsLendBorrowAuthorizer.new
-            authorizer.authorizer = person
+            authorizer.authorizer = session[:lend_details]['authorizer']
             authorizer.epics_lends_or_borrows_id = lend.id
             authorizer.save
 
@@ -125,13 +121,13 @@ class OrdersController < ApplicationController
 
   def get_authoriser
 
-    render :text => EpicsPerson.get_authorisers(params[:search_string])
+    render :text => OpenmrsPerson.get_authorisers
   end
 
  def lend
 
    @locations = EpicsLocationType.find(:first, :conditions => ["name = 'Facility'"]).epics_locations.collect{|x| x.name }
-
+   @authorizers = OpenmrsPerson.get_authorisers
 
  end
 
@@ -145,6 +141,8 @@ class OrdersController < ApplicationController
      session[:lend_details]['issue_date'] = params[:issue_date]
      session[:lend_details]['return_date'] = params[:return_date]
      session[:lend_details]['authorizer'] = params[:authorizer]
+     name = OpenmrsPersonName.find(:last, :conditions =>["person_id = ?", User.find(params[:authorizer]).person_id])
+     session[:lend_details]['authorizer_name'] = (name.given_name + " " + name.family_name) rescue " "
    end
    render :layout => 'custom'
  end

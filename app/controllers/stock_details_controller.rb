@@ -71,15 +71,11 @@ class StockDetailsController < ApplicationController
           @stock.epics_supplier_id = stock[:supplier_id]
           @stock.save!
 
-          fname = stock[:witness_names].split(" ")[0].squish!
-          lname = stock[:witness_names].split(" ")[1].squish!
-          person = EpicsPerson.where("fname = ? AND lname = ?",fname,lname ).first.id
 
-          @witness = EpicsStockWitness.new
+          @witness = EpicsWitnessNames.new
           @witness.epics_stock_id = @stock.epics_stock_id
-          @witness.epics_person_id = person
+          @witness.name = stock[:witness_names]
           @witness.save!
-
 
 
           if type.eql?('borrow')

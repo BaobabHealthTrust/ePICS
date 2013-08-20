@@ -6,11 +6,24 @@
     img.src="/images/emblem_print.png"
     img.id='printer'
     img.onclick=function(){
-      alert('Testing');
+      printReport();
     }
     nav.appendChild(img)
   }
   window.setTimeout("addPrinterIcon();", 50)
+
+  function printReport(){
+
+    jQuery.ajax({
+      type: "POST",
+      url: "/report/print_daily_dispensation_report",
+      data: "date=<%=params[:date]%>",
+      success: function(){
+        document.location.href="/"
+      }
+
+    });
+  }
 </script>
 
 <style>

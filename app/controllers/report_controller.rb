@@ -111,6 +111,8 @@ class ReportController < ApplicationController
   end
 
   def daily_dispensation_printable
+    @page_title = "Daily dispensation<br />#{params[:date].to_date.strftime('%d, %B, %Y')}"
+    @daily_dispensation = EpicsReport.daily_dispensation(params[:date].to_date)
     render :layout => false
   end
   
@@ -203,6 +205,29 @@ class ReportController < ApplicationController
         }
 
         file = "/tmp/output-store_room_report" + ".pdf"
+        t2 = Thread.new{
+          sleep(3)
+          print(file, current_printer)
+        }
+        render :text => "true" and return
+  end
+
+  def print_daily_dispensation_report
+      location = request.remote_ip rescue ""
+      current_printer = ""
+      date = params[:date]
+      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations.each{|ward|
+        current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
+      } rescue []
+
+        t1 = Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/daily_dispensation_printable/" +\
+            "?date=#{date}" + "\" /tmp/output-daily_dispensation_report" + ".pdf \n"
+        }
+
+        file = "/tmp/output-daily_dispensation_report" + ".pdf"
         t2 = Thread.new{
           sleep(3)
           print(file, current_printer)

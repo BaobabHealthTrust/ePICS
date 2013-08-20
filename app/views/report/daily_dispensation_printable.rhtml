@@ -1,0 +1,96 @@
+<style>
+#printer{
+  height: 60px;
+  margin-left: 80px;
+  margin-top: 10px;
+  cursor: pointer;
+  float: left;
+}
+
+.item-table {
+  width: 98%;
+  padding-top: 10px;
+}
+
+td {
+  font-size: 16px;
+}
+
+th {
+  font-size: 20;
+}
+
+.left-align {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.right-align {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.btn {
+  -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+  background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+  background-color:#79bbff;
+  -moz-border-radius:42px;
+  -webkit-border-radius:42px;
+  border-radius:42px;
+  border:1px solid #84bbf3;
+  display:inline-block;
+  color:#ffffff;
+  font-family:arial;
+  font-size:17px;
+  font-weight:bold;
+  padding:6px 24px;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #528ecc;
+  width: 50%;
+  text-align: center;
+}.btn:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+  background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+  background-color:#378de5;
+}.btn:active {
+  position:relative;
+  top:1px;
+}
+
+.buttons {
+  text-align: right;
+  padding: 10px;
+  font-size: 30px;
+  line-height: 70px;
+  border-style: outset;
+  border-width: 0px 0px 0px 0px;
+  width: 10%;
+}
+</style>
+
+<%= render :partial=>"/layouts/top" %>
+<table class="item-table">
+<tr>
+  <th class='left-align'>Item code</th>
+  <th class='left-align'>Item name</th>
+  <th class='right-align' style="text-align: center;">Quantity</th>
+</tr>
+<%(@daily_dispensation || []).each do |dispenstion|%>
+  <tr>
+    <td class='left-align'><%=dispenstion[:item_code] %></td>
+    <td class='left-align'><%=dispenstion[:item_name] %></td>
+    <td class='right-align buttons' style="text-align: center;">
+      <a href="<%=drug_daily_dispensation_url(:id => dispenstion[:item_id],
+          :date =>  dispenstion[:issue_date].to_date)%>" class='btn'><%=dispenstion[:quantity_issued] %></a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6"><hr /><td>
+  </tr>
+<%end%>
+</table>

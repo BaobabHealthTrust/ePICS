@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
 
   require 'uuidtools'
 
+  before_save :encrypt_password
+
   def self.check_authenticity(password, username)
     user = User.find_by_username(username)
     if !user.blank?
@@ -23,7 +25,7 @@ class User < ActiveRecord::Base
     new_salt = salt = Digest::SHA1.hexdigest(in_password + in_salt)
   end
 
-  def before_save
+  def encrypt_password
     self.salt = User.random_string(10)
     self.password = encrypt(self.password, self.salt)
     self.uuid = UUIDTools::UUID.random_create.to_s

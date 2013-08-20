@@ -189,8 +189,8 @@
           </td>
           <td>
 
-            <% if not @reminders.blank? %>
-                <img src="/images/alert.png" >
+            <% if @reminders > 0 %>
+                <img src="/images/alert.png" onclick="window.location= '/stock/confirmations'" >
 
             <%end%>
           </td>
@@ -212,7 +212,7 @@
 
     <% unless @alerts.blank? %>
       <script>
-        showLayer();
+        showLayer('question');
       </script>
     <%end%>
   </body>

@@ -133,6 +133,7 @@ class StockController < ApplicationController
     render :text => "<li></li><li>" + batches.join("</li><li>") + "</li>"
   end
 
+<<<<<<< HEAD
   def get_items_by_batch_number
     items = EpicsStock.joins("INNER JOIN epics_stock_details s 
       ON s.epics_stock_id = epics_stocks.epics_stock_id 
@@ -167,6 +168,37 @@ EOF
       @html += "</table></div>"
     
     render :text => @html and return
+  end
+
+  def confirmations
+    @reminders = {}
+    pending = EpicsLendBorrowAuthorizer.find(:all, :conditions => ["voided = ? AND authorized = ?",false,false])
+
+    (pending || {}).each do |x|
+
+      item = {
+          "trans_type" => x.epics_lends_or_borrows.epics_lends_or_borrows_type.name,
+          "facility" => EpicsLocation.find(x.epics_lends_or_borrows.facility).name,
+          "authorizer" => OpenmrsPersonName.find(:last, :conditions =>["person_id = ?", User.find(x.authorizer).person_id]).full_name,
+          "authorizer_id" => x.authorizer
+      }
+
+      @reminders[x.id] = item
+    end
+
+    @can_authorize = User.current.epics_user_role.name == "Administrator" ? "block" : "none"
+
+    #raise @reminders.inspect
+  end
+
+  def authorize_transaction
+    transaction = EpicsLendBorrowAuthorizer.find(params[:id])
+    transaction.authorized = true
+    if transaction.save
+      render :json => true
+    else
+      render :json => false
+    end
   end
 
 end

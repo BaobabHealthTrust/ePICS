@@ -50,7 +50,7 @@ class HomeController < ApplicationController
     @buttons_count = @activities.length if @activities.length > @buttons_count
     @buttons_count = @administration.length if @administration.length > @buttons_count
 
-    @reminders = EpicsLendBorrowAuthorizer.find(:all, :conditions => ["voided = ? AND authorized = ?",false,false]).blank? ? false : true
+    @reminders = EpicsLendBorrowAuthorizer.find(:all, :conditions => ["voided = ? AND authorized = ?",false,false]).length rescue 0
 
     ############################ alerts ######################################
     if params[:show_alerts_popup] == 'true'

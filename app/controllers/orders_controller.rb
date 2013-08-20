@@ -142,7 +142,7 @@ class OrdersController < ApplicationController
      session[:lend_details]['return_date'] = params[:return_date]
      session[:lend_details]['authorizer'] = params[:authorizer]
      name = OpenmrsPersonName.find(:last, :conditions =>["person_id = ?", User.find(params[:authorizer]).person_id])
-     session[:lend_details]['authorizer_name'] = (name.given_name + " " + name.family_name) rescue " "
+     session[:lend_details]['authorizer_name'] = name.full_name
    end
    render :layout => 'custom'
  end

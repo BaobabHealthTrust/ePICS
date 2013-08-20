@@ -100,6 +100,8 @@ class ProductController < ApplicationController
       next if detail.epics_stock_expiry_date.blank?
       @products << detail.epics_stock_expiry_date.expiry_date.to_date.strftime("%d-%b-%Y")
     end
+    @products = @products.sort
+
     render :text => "<li></li><li>" + @products.uniq.join("</li><li>") + "</li>"
   end
 

@@ -118,6 +118,29 @@ class ReportController < ApplicationController
     render :layout => 'application'
   end
 
+  def drug_daily_dispensation
+    item_name = EpicsProduct.find(params[:id]).name
+    @page_title = "#{item_name} Daily dispensation<br />#{params[:date].to_date.strftime('%d, %B, %Y')}"
+    @daily_dispensation = EpicsReport.drug_daily_dispensation(params[:id], params[:date].to_date)
+  end
+
+  def expired_items
+    @page_title = "Expired items"
+    @items = EpicsReport.expired_items
+  end
+
+  def select_date_ranges
+    render :layout => 'application'
+  end
+
+  def disposed_items
+    start_date = params[:date]['start'].to_date
+    end_date = params[:date]['end'].to_date
+    @page_title = "Board Off Items<br />From #{start_date.strftime('%d %b, %Y')}
+      to #{end_date.strftime('%d %b, %Y')}"
+    @items = EpicsReport.disposed_items(start_date, end_date)
+  end
+
   def print_drug_availability_report
       location = request.remote_ip rescue ""
       current_printer = ""

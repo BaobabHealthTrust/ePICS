@@ -4,6 +4,7 @@ class CreateEpicsLendBorrowAuthorizers < ActiveRecord::Migration
 
       t.integer :epics_person_id
       t.integer :epics_lends_or_borrows_id
+      t.boolean :authorized, :default => false
       t.boolean :voided, :default => false
       t.timestamps
     end

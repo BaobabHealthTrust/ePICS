@@ -29,6 +29,9 @@ EPICS::Application.routes.draw do
   post "user/authenticate"
   get "user/enter_workstation"
   post "user/locations"
+  get "/user/new"
+  post "user/create"
+  get "user/summary"
   ######## user end ########
 
   get "home/dispensary"
@@ -78,7 +81,7 @@ EPICS::Application.routes.draw do
   post "stock_details/return_index"
   get "stock_details/return_index"
   get "stock_details/return_item"
-
+  get "stock_details/board_off"
   ######### stock_details end ########
 
   ######### stock start ########
@@ -239,6 +242,10 @@ EPICS::Application.routes.draw do
   get "report/monthly_report_printable"
   post "report/monthly_report_printable"
   get "report/select_daily_dispensation_date"
+  match 'drug_daily_dispensation/:id/:date' => 'report#drug_daily_dispensation', :as => :drug_daily_dispensation
+  get "report/expired_items"
+  get "report/select_date_ranges"
+  post "report/disposed_items"
   post "report/print_drug_availability_report"
   post "report/print_store_room_report"
   get "report/store_room_printable"

@@ -58,4 +58,56 @@ class UserController < ApplicationController
 
   end
 
+  def new
+
+    @roles = EpicsRole.all.map{|x| [x.role, x.id]}
+
+  end
+
+  def create
+
+    if params[:password] != params[:password2]
+      flash[:notice] = 'Password Mismatch'
+      redirect_to :action => 'new'
+    elsif (!User.find_by_username(params[:username]).blank?)
+      flash[:notice] = 'Username already in use'
+      redirect_to :action => 'new'
+    else
+
+      new_person = OpenmrsPerson.new
+      new_person.creator = User.current.id
+      new_person.save!
+      new_name = OpenmrsPersonName.new
+      new_name.person_id = new_person.id
+      new_name.given_name = params[:fname]
+      new_name.family_name = params[:lname]
+      new_name.creator = User.current.id
+      new_name.save!
+      @user = User.new
+      @user.person_id = new_person.id
+      @user.username = params[:username]
+      @user.password = params[:password]
+      if @user.save
+
+          role = EpicsUserRole.new
+          role.user_id = @user.id
+          role.epics_role_id = params[:role]
+          role.save
+          flash[:notice] = 'User successfully created'
+          redirect_to :action=> 'summary', :user => @user
+      else
+        flash[:notice] = 'Failed to create new user'
+        redirect_to :action=> 'new'
+      end
+
+
+    end
+  end
+
+  def summary
+    @user = User.find(params[:user])
+
+  end
+
+
 end

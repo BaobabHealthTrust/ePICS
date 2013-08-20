@@ -89,10 +89,35 @@ class EpicsReport < ActiveRecord::Base
       INNER JOIN epics_locations i ON i.epics_location_id = epics_orders.epics_location_id
       INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
       ").select("p.name pname,l.name lname,s.created_at dispensed_date,SUM(quantity) quantity,
-        p.product_code item_code,i.name issued_to").group("s.epics_products_id,i.epics_location_id")
+        p.product_code item_code,i.name issued_to,s.epics_products_id item_id").group("s.epics_products_id")
     
     return issued.collect do |r|{
-      :item_name => r.pname, :issued_from => r.lname,
+      :item_name => r.pname, :issued_from => r.lname,:item_id => r.item_id,
+      :item_code => r.item_code,:issue_date => r.dispensed_date, 
+      :quantity_issued => r.quantity, :issued_to => r.issued_to
+      }
+    end
+  end
+
+  def self.drug_daily_dispensation(item_id, date = Date.today)
+    type = EpicsOrderTypes.where("name = ?",'Dispense')[0]
+    start_date = date.strftime('%Y-%m-%d 00:00:00')
+    end_date = date.strftime('%Y-%m-%d 23:59:59')
+
+    issued = EpicsOrders.joins("INNER JOIN epics_product_orders o
+      ON o.epics_order_id = epics_orders.epics_order_id
+      AND epics_orders.epics_order_type_id IN(#{type.id})
+      INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
+      AND s.created_at >= '#{start_date}' AND s.created_at <= '#{end_date}'
+      AND s.epics_products_id = #{item_id}
+      INNER JOIN epics_locations l ON l.epics_location_id = s.epics_location_id
+      INNER JOIN epics_locations i ON i.epics_location_id = epics_orders.epics_location_id
+      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
+      ").select("p.name pname,l.name lname,s.created_at dispensed_date,SUM(quantity) quantity,
+        p.product_code item_code,i.name issued_to,s.epics_products_id item_id").group("s.epics_products_id,i.epics_location_id")
+    
+    return issued.collect do |r|{
+      :item_name => r.pname, :issued_from => r.lname,:item_id => r.item_id,
       :item_code => r.item_code,:issue_date => r.dispensed_date, 
       :quantity_issued => r.quantity, :issued_to => r.issued_to
       }
@@ -190,4 +215,43 @@ class EpicsReport < ActiveRecord::Base
       stock.id,item.id).first.current_quantity 
   end
   ############################### stock card ends #########################################	
+
+  def self.expired_items
+    EpicsStockDetails.joins("INNER JOIN epics_products p 
+      ON p.epics_products_id = epics_stock_details.epics_products_id
+      INNER JOIN epics_stock_expiry_dates x 
+      ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
+      ").where("x.expiry_date <= CURRENT_DATE()").select("p.product_code item_code,p.name,
+      x.expiry_date,epics_stock_details.current_quantity,
+      p.epics_products_id item_id,epics_stock_details.epics_stock_details_id").map do |r|
+        {:item_code => r.item_code,:item_name => r.name,:item_id => r.item_id,
+         :current_quantity => r.current_quantity, :expiry_date => r.expiry_date,
+         :stock_details_id => r.epics_stock_details_id
+        }
+      end
+  end
+
+  def self.disposed_items(start_date, end_date)
+    start_date = start_date.strftime('%Y-%m-%d 00:00:00')
+    end_date = end_date.strftime('%Y-%m-%d 23:59:59')
+
+    EpicsStockDetails.find_by_sql("
+     SELECT p.product_code item_code,p.name,
+     x.expiry_date,s.current_quantity,
+     p.epics_products_id item_id, s.epics_stock_details_id, 
+     s.updated_at date_removed, s.void_reason,s.received_quantity
+     FROM epics_stock_details s INNER JOIN epics_products p 
+     ON p.epics_products_id = s.epics_products_id
+     INNER JOIN epics_stock_expiry_dates x 
+     ON x.epics_stock_details_id = s.epics_stock_details_id 
+     WHERE (s.voided = 1) AND (s.updated_at >= '#{start_date}' 
+     AND s.updated_at <= '#{end_date}')").map do |r|
+        {:item_code => r.item_code,:item_name => r.name,:item_id => r.item_id,
+         :current_quantity => r.current_quantity, :expiry_date => r.expiry_date,
+         :stock_details_id => r.epics_stock_details_id,:voided_at => r.date_removed,
+         :void_reason => r.void_reason,:received_quantity => r.received_quantity
+        }
+      end
+  end
+
 end

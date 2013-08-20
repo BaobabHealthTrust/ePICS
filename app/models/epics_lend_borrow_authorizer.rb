@@ -5,6 +5,8 @@ class EpicsLendBorrowAuthorizer < ActiveRecord::Base
   belongs_to :epics_lends_or_borrows, :foreign_key => :epics_lends_or_borrows_id, :conditions => {:voided => 0}
   belongs_to :epics_person, :foreign_key => :authorizer, :conditions => {:voided => 0}
 
+  include Epics
+
   before_save :set_uuid
 
   def set_uuid

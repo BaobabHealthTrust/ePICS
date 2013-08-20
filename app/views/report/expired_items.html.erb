@@ -1,0 +1,120 @@
+<style>
+.item-table {
+  width: 98%;
+  padding-top: 10px;
+}
+
+td {
+  font-size: 16px;
+}
+
+th {
+  font-size: 20;
+}
+
+.left-align {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.right-align {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.btn {                                                                          
+  -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;                                
+  -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;                             
+  box-shadow:inset 0px 1px 0px 0px #bbdaf7;                                     
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+  background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );      
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+  background-color:#79bbff;                                                     
+  -moz-border-radius:42px;                                                      
+  -webkit-border-radius:42px;                                                   
+  border-radius:42px;                                                           
+  border:1px solid #84bbf3;                                                     
+  /*display: inherit; */
+  color:#ffffff;                                                                
+  font-family:arial;                                                            
+  font-size:17px;                                                               
+  font-weight:bold;                                                             
+  padding:6px 24px;                                                             
+  text-decoration:none;                                                         
+  text-shadow:1px 1px 0px #528ecc;                                              
+  text-align: center;   
+  height: 50px;
+  vertical-align: middle;
+}.btn:hover {                                                                   
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+  background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );      
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+  background-color:#378de5;                                                     
+}.btn:active {                                                                  
+  position:relative;                                                            
+  top:1px;                                                                      
+}
+
+.btn img {
+  height: 55px;
+  width: 55px;
+}
+</style>
+
+<table class="item-table">
+<tr>
+  <th class='left-align'>Item code</th>
+  <th class='left-align'>Item name</th>
+  <th class='left-align'>Expiry Date</th>
+  <th class='right-align'>Current Quantity</th>
+  <th class='center-align'>&nbsp;</th>
+</tr>
+<%(@items || []).each do |item|%>
+  <tr id="<%=item[:stock_details_id]%>">
+    <td class='left-align'><%=item[:item_code] %></td>
+    <td class='left-align'><%=item[:item_name] %></td>
+    <td class='left-align'><%=item[:expiry_date].to_date.strftime('%d %b, %Y') %></td>
+    <td class='right-align'><%=item[:current_quantity] %></td>
+    <td class='center-align' style="text-align: center;">
+      <a href="javascript:boardOff('<%=item[:stock_details_id]%>');" class='btn'>Board Off</a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="5"><hr /><td>
+  </tr>
+<%end%>
+</table>
+
+<script>
+
+  function setAttributes() {
+    imgs = document.getElementsByTagName('img')
+    for(var i = 0; i < imgs.length; i++){
+      if(imgs[i].onclick) {
+        if(imgs[i].getAttribute("onclick").match(/window.location/)) {
+          imgs[i].setAttribute("onclick","javascript: history.go(-1);");
+        }
+      }
+    }
+  }
+
+  function boardOff(stock_detail_id) {
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari  
+        xmlhttp=new XMLHttpRequest();                                             
+      }else{// code for IE6, IE5                                                  
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+      }                                                                           
+      xmlhttp.onreadystatechange=function() {                                     
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+          var results = xmlhttp.responseText;                                     
+          if(results) {                                                         
+            document.getElementById(stock_detail_id).style.display = 'none';
+          }                                                                     
+        }                                                                         
+      }                                                                           
+      xmlhttp.open("GET","/stock_details/board_off?stock_detail_id=" + stock_detail_id,true);                      
+      xmlhttp.send();
+  }
+
+  setTimeout("setAttributes();",500);
+</script>

@@ -1,0 +1,61 @@
+<style>
+.item-table {
+  width: 98%;
+  padding-top: 10px;
+}
+
+td {
+  font-size: 16px;
+}
+
+th {
+  font-size: 20;
+}
+
+.left-align {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.right-align {
+  text-align: right;
+  padding-right: 5px;
+}
+
+</style>
+
+<table class="item-table">
+<tr>
+  <th class='left-align'>Item code</th>
+  <th class='left-align'>Item name</th>
+  <th class='left-align'>Issued from</th>
+  <th class='left-align'>Issued to</th>
+  <th class='right-align'>Quantity</th>
+</tr>
+<%(@daily_dispensation || []).each do |dispenstion|%>
+  <tr>
+    <td class='left-align'><%=dispenstion[:item_code] %></td>
+    <td class='left-align'><%=dispenstion[:item_name] %></td>
+    <td class='left-align'><%=dispenstion[:issued_from] %></td>
+    <td class='left-align'><%=dispenstion[:issued_to] %></td>
+    <td class='right-align'><%=dispenstion[:quantity_issued] %></td>
+  </tr>
+  <tr>
+    <td colspan="6"><hr /><td>
+  </tr>
+<%end%>
+</table>
+
+<script>
+
+  function setAttributes() {
+    imgs = document.getElementsByTagName('img')
+    for(var i = 0; i < imgs.length; i++){
+      if(i > 0) {
+        imgs[i].setAttribute("onclick","javascript: history.go(-1);");
+      }
+    }
+  }
+
+  setTimeout("setAttributes();",500);
+</script>

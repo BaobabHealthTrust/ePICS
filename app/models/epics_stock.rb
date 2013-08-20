@@ -6,4 +6,7 @@ class EpicsStock < ActiveRecord::Base
     :foreign_key => :epics_stock_id
   has_many :epics_witness_names
   belongs_to :epics_supplier, :foreign_key => :epics_supplier_id
+
+  include Epics
+
 end

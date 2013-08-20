@@ -8,4 +8,7 @@ class EpicsStockDetails < ActiveRecord::Base
   belongs_to :epics_location, :foreign_key => :epics_location_id, :conditions => {:voided => 0}
   has_one :epics_stock_expiry_date, :class_name => 'EpicsStockExpiryDates' ,
     :foreign_key => :epics_stock_details_id, :conditions => {:voided => 0}
+
+  include Epics
+
 end

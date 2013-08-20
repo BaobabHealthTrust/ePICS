@@ -56,6 +56,13 @@ class ReportController < ApplicationController
   end
 
   def store_room_printable
+    location = EpicsLocation.find(params[:store_room])
+    @page_title = "#{location.name}"
+
+    @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
+      ON s.epics_products_id = epics_products.epics_products_id").where("s.epics_location_id = ?",
+      location.id).select("epics_products.* , s.*").group("s.epics_products_id")
+    
     render :layout =>false
   end
   
@@ -149,7 +156,7 @@ class ReportController < ApplicationController
             "?start_date=#{start_date}" + "\" /tmp/output-monthly_report" + ".pdf \n"
         }
 
-        file = "/tmp/output-monthly_report_report" + ".pdf"
+        file = "/tmp/output-monthly_report" + ".pdf"
         t2 = Thread.new{
           sleep(3)
           print(file, current_printer)
@@ -157,6 +164,29 @@ class ReportController < ApplicationController
         render :text => "true" and return
   end
 
+  def print_store_room_report
+      location = request.remote_ip rescue ""
+      current_printer = ""
+      store_room = params[:store_room]
+      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations.each{|ward|
+        current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
+      } rescue []
+
+        t1 = Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/store_room_printable/" +\
+            "?store_room=#{store_room}" + "\" /tmp/output-store_room_report" + ".pdf \n"
+        }
+
+        file = "/tmp/output-store_room_report" + ".pdf"
+        t2 = Thread.new{
+          sleep(3)
+          print(file, current_printer)
+        }
+        render :text => "true" and return
+  end
+  
   def print(file_name, current_printer)
     sleep(3)
     if (File.exists?(file_name))

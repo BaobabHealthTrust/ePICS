@@ -240,6 +240,8 @@ EPICS::Application.routes.draw do
   post "report/monthly_report_printable"
   get "report/select_daily_dispensation_date"
   post "report/print_drug_availability_report"
+  post "report/print_store_room_report"
+  get "report/store_room_printable"
   ########### reports end #########
 
   #get "home/index"

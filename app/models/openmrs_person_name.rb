@@ -11,4 +11,8 @@ class OpenmrsPersonName < ActiveRecord::Base
     self.date_created = Time.now
   end
 
+  def full_name
+    (self.given_name + " " + self.family_name) rescue " "
+  end
+
 end

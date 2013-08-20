@@ -25,6 +25,8 @@ class HomeController < ApplicationController
       ["Audit Report","#","audit_report.png"],
       ["View Received/Issued","#","view_issued_received.png"],
       ["View Store Room","/report/select_store","first_aid_kit_icon.png"],
+      ["View expired items","report/expired_items","expired.jpeg"],
+      ["View Disposed items","/report/select_date_ranges","disposal.png"],
       ["View alerts","/report/view_alerts","alert_list.png"]
     ]
 
@@ -48,11 +50,13 @@ class HomeController < ApplicationController
     @buttons_count = @activities.length if @activities.length > @buttons_count
     @buttons_count = @administration.length if @administration.length > @buttons_count
 
-    @alerts = EpicsLendBorrowAuthorizer.find(:all, :conditions => ["voided = ? AND authorized = ?",false,false]).blank? ? false : true
+    @reminders = EpicsLendBorrowAuthorizer.find(:all, :conditions => ["voided = ? AND authorized = ?",false,false]).blank? ? false : true
 
     ############################ alerts ######################################
     if params[:show_alerts_popup] == 'true'
       @alerts = EpicsReport.alerts
+    else
+      @alerts = []
     end
     ################################ end #####################################
 

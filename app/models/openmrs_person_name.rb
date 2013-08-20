@@ -4,7 +4,9 @@ class OpenmrsPersonName < ActiveRecord::Base
   belongs_to :openmrs_person, :foreign_key => :person_id
 
   require 'uuidtools'
-  def before_save
+  before_save :set_uuid
+
+  def set_uuid
     self.uuid = UUIDTools::UUID.random_create.to_s
     self.date_created = Time.now
   end

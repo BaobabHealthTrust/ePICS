@@ -133,4 +133,40 @@ class StockController < ApplicationController
     render :text => "<li></li><li>" + batches.join("</li><li>") + "</li>"
   end
 
+  def get_items_by_batch_number
+    items = EpicsStock.joins("INNER JOIN epics_stock_details s 
+      ON s.epics_stock_id = epics_stocks.epics_stock_id 
+      AND epics_stocks.grn_number = '#{params[:number]}' INNER JOIN epics_products p 
+      ON p.epics_products_id = s.epics_products_id").select("p.product_code, 
+      p.name, s.received_quantity").map do |r|
+        {:code => r.product_code,:item_name => r.name,:quantity => r.received_quantity}
+      end
+    
+    @html = "<div id='borrowed_items_one'><div id='borrowed_items_two'>"
+    @html += "<table class='borrowed_items' style='width: 98%;'>"
+    @html += "<tr><th>Item code</th><th>Item</th><th style='text-align: right; padding-right: 10px;'>Quantity</th></tr>"
+    @html += "<tr><td colspan='3'><hr /></td></tr>"
+
+    (items || []).each do |i|
+      @html+=<<EOF
+      <tr>
+        <td>#{i[:code]}</td>
+        <td>#{i[:item_name]}</td>
+        <td style='text-align: right; padding-right: 10px';>#{i[:quantity]}</td>
+      </tr>
+      <tr>
+        <td colspan='3'><hr /></td>
+      </tr>
+EOF
+
+    end 
+      @html += "</table>"
+      @html += "</div><table style='width:100%;'>"
+      @html += "<tr><td>&nbsp;</td></tr>"
+      @html += "<tr><td><a class='buttons' href='javascript:hideLayer();'>Close</a></td></tr>"
+      @html += "</table></div>"
+    
+    render :text => @html and return
+  end
+
 end

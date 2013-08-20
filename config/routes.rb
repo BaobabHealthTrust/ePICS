@@ -247,6 +247,8 @@ EPICS::Application.routes.draw do
   get "report/select_date_ranges"
   post "report/disposed_items"
   post "report/print_drug_availability_report"
+  post "report/print_store_room_report"
+  get "report/store_room_printable"
   ########### reports end #########
 
   #get "home/index"

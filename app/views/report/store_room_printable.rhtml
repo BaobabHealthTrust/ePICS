@@ -1,0 +1,58 @@
+<style>
+#printer{
+  height: 60px;
+  margin-left: 80px;
+  margin-top: 10px;
+  cursor: pointer;
+  float: left;
+}
+
+.item-table {
+  width: 98%;
+  padding-top: 10px;
+}
+
+td {
+  font-size: 16px;
+}
+
+th {
+  font-size: 20;
+}
+
+.left-align {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.right-align {
+  text-align: right;
+  padding-right: 5px;
+}
+
+</style>
+
+<%= render :partial=>"/layouts/top" %>
+<table class="item-table">
+<tr>
+  <th class='left-align'>Item code</th>
+  <th class='left-align'>Item name</th>
+  <th class='right-align'>Item minimun stock</th>
+  <th class='right-align'>Item maximum stock</th>
+  <th class='right-align'>Item expires</th>
+  <th class='right-align'>Fast moving</th>
+</tr>
+<%(@epics_products || []).each do |product|%>
+  <tr>
+    <td class='left-align'><%=product.product_code %></td>
+    <td class='left-align'><%=product.name %></td>
+    <td class='right-align'><%=product.min_stock %></td>
+    <td class='right-align'><%=product.max_stock %></td>
+    <td class='right-align'><%=product.expire %></td>
+    <td class='right-align'><%=product.movement %></td>
+  </tr>
+  <tr>
+    <td colspan="6"><hr /><td>
+  </tr>
+<%end%>
+</table>

@@ -59,7 +59,15 @@ class EpicsProduct < ActiveRecord::Base
       ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date <= ?",
       end_date).sum(:received_quantity)
        
+    receipts = EpicsStock.joins("INNER JOIN epics_stock_details s
+      ON s.epics_stock_id = epics_stocks.epics_stock_id
+      AND s.epics_products_id = #{self.id}").where("epics_stocks.grn_date <= ?",
+      end_date).sum(:received_quantity)
+       
     count = [exchange.to_f , borrowed.to_f].sum
+    count = [count , (receipts.to_f - count)].sum
+
+
     if(count.to_s.split('.')[1] == '0')
       return count.to_i
     end

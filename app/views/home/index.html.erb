@@ -188,8 +188,8 @@
             Location : <%= session[:location_name] %>
           </td>
           <td>
-            <% if @alerts %>
-                <img src="/images/alert.png" alt="">
+            <% if @reminders.length > 0 %>
+                <img src="/images/alert.png" >
             <%end%>
           </td>
           <td>

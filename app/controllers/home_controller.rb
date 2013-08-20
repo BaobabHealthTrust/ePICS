@@ -39,7 +39,7 @@ class HomeController < ApplicationController
       @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","default.png"]
       @administration << ["Set Supplier Types","/supplier_type/index","default.png"] << ["Set Suppliers","/supplier/index","default.png"]
       @administration << ["Set Locations","/location/index","default.png"] << ["Set Location Types","/location_type/index","default.png"]
-      @administration << ["Add New User","#","sysuser.png"] << ["Add person","person/add_person","add_user.png"]
+      @administration << ["Add New User","/user/new","sysuser.png"] << ["Add person","person/add_person","add_user.png"]
 
     end
 

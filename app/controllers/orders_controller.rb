@@ -92,11 +92,8 @@ class OrdersController < ApplicationController
             lend.save
 
             authorizer = EpicsLendBorrowAuthorizer.new
-            authorizer.epics_person_id = person
+            authorizer.authorizer = person
             authorizer.epics_lends_or_borrows_id = lend.id
-            if person == User.current.id
-              authorizer.authorized = true
-            end
             authorizer.save
 
           elsif ord_type.eql?('return')

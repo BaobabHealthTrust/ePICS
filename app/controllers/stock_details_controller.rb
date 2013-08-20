@@ -93,7 +93,7 @@ class StockDetailsController < ApplicationController
             lend.save
 
             authorizer = EpicsLendBorrowAuthorizer.new
-            authorizer.epics_person_id = stock[:authorizer]
+            authorizer.authorizer = stock[:authorizer]
             authorizer.epics_lends_or_borrows_id = lend.id
             authorizer.save
 

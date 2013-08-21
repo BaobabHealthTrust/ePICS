@@ -82,6 +82,8 @@ EPICS::Application.routes.draw do
   get "stock_details/return_index"
   get "stock_details/return_item"
   get "stock_details/board_off"
+  get "stock_details/edit_stock_details"
+  post "stock_details/save_edited_stock_details"
   ######### stock_details end ########
 
   ######### stock start ########

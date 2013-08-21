@@ -21,7 +21,7 @@ class StockDetailsController < ApplicationController
   def create
     @cart = find_product_cart
     product = EpicsProduct.find_by_name(params[:stock_details][:product_name])
-    quantity = (params[:stock_details]['issue_quantity'].to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
+    quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
     location = params[:stock_details][:location_id]
     expiry_date = params[:stock_details][:expiry_date]
     @cart.add_product(product,quantity,location,expiry_date)
@@ -145,7 +145,7 @@ class StockDetailsController < ApplicationController
     if request.post?
       @borrow_cart =  (session[:borrow_cart] ||= ProductCart.new)
       product = EpicsProduct.find_by_name(params[:stock_details][:product_name])
-      quantity = params[:stock_details][:quantity].to_f
+      quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
       location = params[:stock_details][:location_id]
       expiry_date = params[:stock_details][:expiry_date]
       @borrow_cart.add_product(product,quantity,location,expiry_date)
@@ -181,7 +181,7 @@ class StockDetailsController < ApplicationController
     if request.post?
       @return_cart =  (session[:return_items] ||= ProductCart.new)
       product = EpicsProduct.find_by_name(params[:stock_details][:product_name])
-      quantity = params[:stock_details][:quantity].to_f
+      quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
       location = params[:stock_details][:location_id]
       expiry_date = params[:stock_details][:expiry_date]
       @return_cart.add_product(product,quantity,location,expiry_date)

@@ -60,12 +60,13 @@ tt_cancel_destination='/orders/lend_index'
     <%= select_tag "item[issue_quantity]", options_for_select([1000,500,100,50,10,'Other']),
                    {:id => "issue_quantity",
                     :field_type => 'alpha',
+                    :tt_onLoad => "document.getElementById('keyboard').style.display='none'",
                     :min =>1,
                     :helpText => "Select unit of issue"} %>
 
 
-    <%= text_field_tag "item[issue_quantity]", nil,
-                       {:id => 'issue_quantity',
+    <%= text_field_tag "item[issue_quan]", nil,
+                       {:id => 'issue_quan',
                         :field_type => 'number',
                         :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
                         :min => 1,
@@ -78,6 +79,7 @@ tt_cancel_destination='/orders/lend_index'
                         :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
                         :min => 1,
                         :helpText => 'Enter quantity of items'} %>
+
 
     <%= submit_tag "Finish" %>
 

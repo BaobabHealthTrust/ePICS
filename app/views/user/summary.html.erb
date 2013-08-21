@@ -1,10 +1,9 @@
-
+<%= render :partial => '/layouts/top' %>
 <style>
     h1 { padding-left:10px; }
 
     .user_info {
-        background-color: #DDDDDD;
-        height: 461px;
+
         border-bottom: 1px solid black;
         border-top: 1px solid black;
         margin-top: 1px;
@@ -13,14 +12,14 @@
 
     .userdata {
         background: none repeat scroll 0 0 white;
-        border: 1px solid black;
-        margin: 10px;
-        width: 98%;
+
+        width: 100%;
     }
 
     .userdata td, .userdata th {
         border-width: 0px;
         border-style:solid;
+        height: 65px;
     }
 
     th { text-align:left; }
@@ -40,37 +39,36 @@
         width: 235px;
     }
 </style>
+<div style="font-size: 25px;font-weight: bold">
+  <br />
+  New User Details
+  <br />
+  <br />
+  <div class = 'user_info'>
+    <table class = 'userdata'>
+      <tr>
+        <th class='blue'>Username:&nbsp;</th>
+        <td class='blue'>&nbsp;<%=@user.username%></td>
+      </tr>
+      <tr>
+        <th>Role:&nbsp;</th>
+        <td>&nbsp;<%=@user.epics_user_role.epics_role.role%></td>
+      </tr>
+      <tr>
+        <th class='blue'>First name:&nbsp;</th>
+        <td class='blue'>&nbsp;<%=@user.openmrs_person.openmrs_person_names.last.given_name%></td>
+      </tr>
+      <tr>
+        <th>Last name:&nbsp;</th>
+        <td>&nbsp;<%=@user.openmrs_person.openmrs_person_names.last.family_name%></td>
+      </tr>
+      <tr>
+        <th class='blue'>Date created:&nbsp;</th>
+        <td class='blue'>&nbsp;<%=@user.date_created.strftime('%A  %d, %B, %Y') rescue '&nbsp;'%></td>
+      </tr>
+    </table>
 
-<br />
-<h1>User information</h1>
-<br />
-<div class = 'user_info'>
-  <table class = 'userdata'>
-    <tr>
-      <th class='blue'>Username:&nbsp;</th>
-      <td class='blue'>&nbsp;<%=@user.username%></td>
-    </tr>
-    <tr>
-      <th>Role:&nbsp;</th>
-      <td>&nbsp;<%=@user.epics_user_role.epics_role.role%></td>
-    </tr>
-    <tr>
-      <th class='blue'>First name:&nbsp;</th>
-      <td class='blue'>&nbsp;<%=@user.openmrs_person.openmrs_person_names.last.given_name%></td>
-    </tr>
-    <tr>
-      <th>Last name:&nbsp;</th>
-      <td>&nbsp;<%=@user.openmrs_person.openmrs_person_names.last.family_name%></td>
-    </tr>
-    <tr>
-      <th class='blue'>Date created:&nbsp;</th>
-      <td class='blue'>&nbsp;<%=@user.date_created.strftime('%A  %d, %B, %Y') rescue '&nbsp;'%></td>
-    </tr>
-  </table>
+  </div>
 
-</div>
-
-<div id="buttons" class="buttonsDiv">
-  <button style="float: right;" class="green" onclick="window.location='/'"><span>Finish</span></button>
 
 </div>

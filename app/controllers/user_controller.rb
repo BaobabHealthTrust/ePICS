@@ -106,7 +106,7 @@ class UserController < ApplicationController
 
   def summary
     @user = User.find(params[:user])
-
+    render :layout => "custom"
   end
 
 

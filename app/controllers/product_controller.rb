@@ -98,7 +98,7 @@ class ProductController < ApplicationController
     item = EpicsProduct.where("name=?",params[:name])[0]
     @products = []
     (item.epics_stock_details ||[]).each do |detail|
-      next if detail.epics_stock_expiry_date.blank?
+      next if (detail.epics_stock_expiry_date.blank? || (detail.current_quantity == 0))
       @products << detail.epics_stock_expiry_date.expiry_date.to_date.strftime("%d-%b-%Y")
     end
     @products = @products.sort

@@ -100,8 +100,10 @@
 <table class="item-table">
 <%(@dates || {}).each do |date, order_id|%>                           
   <tr>                                                                          
-    <td><%= link_to date , "javascript:showItems(#{order_id});" , :class => 'btn' %></td>                   
-  </tr>                                                                         
+    <td><%= link_to date.to_date.strftime('%d %B, %Y') , "javascript:showItems(#{order_id});" , :class => 'btn' %></td>                   
+  </tr>
+  <tr><td>&nbsp;</td></tr>                                                                         
+  <tr><td>&nbsp;</td></tr>                                                                         
 <%end%>                                                                         
 </table>
 

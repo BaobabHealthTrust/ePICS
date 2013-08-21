@@ -85,7 +85,7 @@ class StockController < ApplicationController
       EpicsLocation.find_by_name(params[:facility]).id,
       EpicsLendsOrBorrowsType.find_by_name("Lend").id]).map{|x| [x.lend_or_borrow_date, x.epics_orders_id]}
 
-    #render :layout => "application"
+    @page_title = 'Returning facility<br />' + params[:facility]
     render :layout => "report"
   end
 

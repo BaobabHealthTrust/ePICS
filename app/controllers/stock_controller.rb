@@ -249,7 +249,9 @@ EOF
     @html += "</div><table style='width:100%;'>"
     @html += "<tr><td>&nbsp;</td></tr>"
     @html += "<tr><td style='width:50%'><a class='buttons' href='javascript:hideLayer();'>Close</a></td>"
-    @html += "<td><a class='buttons' href='javascript:authorise(#{transaction.authorizer});'>Authorise</a></td></tr>"
+    if transaction.authorizer == User.current.id
+      @html += "<td><a class='buttons' href='javascript:authorise(#{transaction.authorizer});'>Authorise</a></td></tr>"
+    end
     @html += "</table></div>"
 
     render :text => @html and return

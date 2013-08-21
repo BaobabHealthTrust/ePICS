@@ -141,7 +141,7 @@ class StockController < ApplicationController
       p.name, s.received_quantity").map do |r|
         {:code => r.product_code,:item_name => r.name,:quantity => r.received_quantity}
       end
-    
+
     @html = "<div id='borrowed_items_one'><div id='borrowed_items_two'>"
     @html += "<table class='borrowed_items' style='width: 98%;'>"
     @html += "<tr><th>Item code</th><th>Item</th><th style='text-align: right; padding-right: 10px;'>Quantity</th></tr>"
@@ -179,6 +179,7 @@ EOF
           "trans_type" => x.epics_lends_or_borrows.epics_lends_or_borrows_type.name,
           "facility" => EpicsLocation.find(x.epics_lends_or_borrows.facility).name,
           "authorizer" => OpenmrsPersonName.find(:last, :conditions =>["person_id = ?", User.find(x.authorizer).person_id]).full_name,
+          "processor" => OpenmrsPersonName.find(:last, :conditions =>["person_id = ?", User.find(x.epics_lends_or_borrows.creator).person_id]).full_name,
           "authorizer_id" => x.authorizer
       }
 
@@ -187,7 +188,7 @@ EOF
 
     @can_authorize = User.current.epics_user_role.name == "Administrator" ? "block" : "none"
 
-    #raise @reminders.inspect
+    render :layout => "custom"
   end
 
   def authorize_transaction
@@ -198,6 +199,59 @@ EOF
     else
       render :json => false
     end
+  end
+
+  def get_details_for_pending_trans
+
+    transaction = EpicsLendsOrBorrows.find(params[:loan_id])
+
+    if transaction.epics_orders_id.blank?
+
+      items = EpicsStock.joins("INNER JOIN epics_stock_details s
+      ON s.epics_stock_id = epics_stocks.epics_stock_id
+      AND epics_stocks.epics_stock_id = '#{transaction.epics_stock_id}' INNER JOIN epics_products p
+      ON p.epics_products_id = s.epics_products_id").select("p.product_code,
+      p.name, s.received_quantity").map do |r|
+        {:code => r.product_code,:item_name => r.name,:quantity => r.received_quantity}
+      end
+
+    else
+      temp = EpicsProductOrders.find_all_by_epics_order_id(transaction.epics_orders_id)
+      items = []
+      temp.each do |f|
+        items << {:code => f.epics_stock_details.epics_product.product_code,:item_name => f.epics_stock_details.epics_product.name,:quantity => f.quantity}
+      end
+
+    end
+
+
+
+    @html = "<div id='borrowed_items_one'><div id='borrowed_items_two'>"
+    @html += "<table class='borrowed_items' style='width: 98%;'>"
+    @html += "<tr><th>Item code</th><th>Item</th><th style='text-align: right; padding-right: 10px;'>Quantity</th></tr>"
+    @html += "<tr><td colspan='3'><hr /></td></tr>"
+
+    (items || []).each do |i|
+      @html+=<<EOF
+      <tr>
+        <td>#{i[:code]}</td>
+        <td>#{i[:item_name]}</td>
+        <td style='text-align: right; padding-right: 10px';>#{i[:quantity]}</td>
+      </tr>
+      <tr>
+        <td colspan='3'><hr /></td>
+      </tr>
+EOF
+
+    end
+    @html += "</table>"
+    @html += "</div><table style='width:100%;'>"
+    @html += "<tr><td>&nbsp;</td></tr>"
+    @html += "<tr><td style='width:50%'><a class='buttons' href='javascript:hideLayer();'>Close</a></td>"
+    @html += "<td><a class='buttons' href='javascript:authorise(#{transaction.authorizer});'>Authorise</a></td></tr>"
+    @html += "</table></div>"
+
+    render :text => @html and return
   end
 
 end

@@ -105,7 +105,11 @@ EPICS::Application.routes.draw do
   get "stock/get_items_by_batch_number"
   get "/stock/confirmations"
   post "/stock/authorize_transaction"
+<<<<<<< HEAD
   get "stock/get_details_for_pending_trans"
+=======
+  get 'stock/get_items_by_order_id'
+>>>>>>> c12f3459e926c86bf5b4e7340972035011edf875
   ######### stock end ########
 
   ######### location_type start ########

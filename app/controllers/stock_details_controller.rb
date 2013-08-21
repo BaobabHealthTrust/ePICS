@@ -209,6 +209,35 @@ class StockDetailsController < ApplicationController
     render :text => stock.save and return
   end
 
+  def edit_stock_details
+    stock_details = EpicsStockDetails.find(params[:stock_id])
+    session[:epics_stock_details] = stock_details
+    render :layout=> "application"
+  end
+
+  def save_edited_stock_details
+    stock_details = session[:epics_stock_details]
+    units = params[:units].delete_if{|value|value.blank? || value.match(/Other/i)}.to_s.to_i
+    quantity = params[:quantity].to_i
+    reason = params[:reason]
+    received_quantity = units * quantity
+    ActiveRecord::Base.transaction do
+        old_stock = EpicsStockDetails.find(stock_details.id)
+        old_stock.voided = 1
+        old_stock.voided_by = session[:user_id]
+        old_stock.void_reason = reason
+        old_stock.save!
+        EpicsStockDetails.create!(
+          :epics_stock_id => stock_details.epics_stock_id,
+          :epics_products_id => stock_details.epics_products_id,
+          :received_quantity => received_quantity,
+          :epics_product_units_id => stock_details.epics_product_units_id,
+          :epics_location_id => stock_details.epics_location_id
+        )
+    end
+    redirect_to :controller => "product", :action => "view", :product => session[:product]
+  end
+  
   protected
   
   def find_product_cart

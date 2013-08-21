@@ -6,6 +6,7 @@ class ProductController < ApplicationController
 
   def view
     @product = EpicsProduct.where("name = ?",params[:product])[0]
+    session[:product] = params[:product]
     render :layout => "custom"
   end
 

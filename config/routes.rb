@@ -102,7 +102,10 @@ EPICS::Application.routes.draw do
   get "stock/reimburse_index"
   get "/stock/get_lent_items"
   get "stock/get_returners_details"
-
+  get "stock/get_items_by_batch_number"
+  get "/stock/confirmations"
+  post "/stock/authorize_transaction"
+  get 'stock/get_items_by_order_id'
   ######### stock end ########
 
   ######### location_type start ########

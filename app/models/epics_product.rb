@@ -11,6 +11,7 @@ class EpicsProduct < ActiveRecord::Base
   has_one :epics_item_cost,:class_name => 'EpicsItemCost', 
     :foreign_key => :epics_products_id, :conditions => {:voided => 0}
 
+  include Epics
 
   def current_quantity(end_date = Date.today)
     EpicsStockDetails.joins("INNER JOIN epics_products p 

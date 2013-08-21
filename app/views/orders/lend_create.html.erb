@@ -57,13 +57,27 @@ tt_cancel_destination='/orders/lend_index'
                     :condition => 'showExpiryDate();',
                     :helpText => "Select batch by expiry date"} %>
 
-    <%= text_field_tag "item[quantity]", nil,
+    <%= select_tag "item[issue_quantity]", options_for_select([1000,500,100,50,10,'Other']),
+                   {:id => "issue_quantity",
+                    :field_type => 'alpha',
+                    :min =>1,
+                    :helpText => "Select unit of issue"} %>
+
+
+    <%= text_field_tag "item[issue_quantity]", nil,
+                       {:id => 'issue_quantity',
+                        :field_type => 'number',
+                        :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
+                        :min => 1,
+                        :condition => "$('issue_quantity').value =='Other'",
+                        :helpText => 'Enter unit of issue'} %>
+
+    <%= text_field_tag "item[item_quantity]", nil,
                        {:id => 'item_quantity',
                         :field_type => 'number',
                         :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
                         :min => 1,
-                        :helpText => 'Select Item Quantity'} %>
-
+                        :helpText => 'Enter quantity of items'} %>
 
     <%= submit_tag "Finish" %>
 

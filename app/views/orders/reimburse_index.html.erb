@@ -29,10 +29,6 @@
 
         });
     }
-</script>
-
-<script>
-
 
     function issueItems() {
 
@@ -137,10 +133,37 @@
 
     .tr_white td {
     }
-    .img{
+    .img {
         float:right;
     }
+
+    #borrowed_items_two {
+      background-color: InactiveCaption;
+      height: 395px;
+      overflow-x: auto;
+      border-style: outset;
+      font-size: 20px;
+      border-collapse: collapse;
+    }
+
+    .borrowed_items th{
+      text-align: left;
+      padding-left: 10px;
+    }
+
+    .borrowed_items td{
+      text-align: left;
+      padding-left: 10px;
+    }
+
+    .borrowed_items {
+      border-collapse: collapse;
+    }
+
 </style>
+
+<%= stylesheet_link_tag "alert-popup" %>                                   
+<%= javascript_include_tag "alert-popup"%>
 
 <div class="main-content">
 
@@ -220,8 +243,51 @@
         <td><%= link_to "Return Items", "javascript:issueItems();", :class => 'buttons' %></td>
       </tr>
 
+      <tr style="line-height: 50px;">
+        <td>&nbsp;</td>
+      </tr>
+
+      <tr style="line-height: 50px;">
+        <td>&nbsp;</td>
+      </tr>
+
+      <tr style="line-height: 50px;">
+        <td><%= link_to "View borrowed Items", "javascript:viewItems();", :class => 'buttons' %></td>
+      </tr>
+
     </table>
 
   </div>
 
 </div>
+
+
+<div id="shadow" class="opaqueLayer"> </div>                                
+  <div id="question" class="questionLayer" style="font-size: 0.9em;">       
+  </div>                                                                    
+</div>
+
+<script>
+
+    function viewItems() {
+      batch_num = "<%= session[:return_details][:return_batch]%>";
+      showLayer();
+      if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari  
+        xmlhttp=new XMLHttpRequest();                                             
+      }else{// code for IE6, IE5                                                  
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+      }                                                                           
+      xmlhttp.onreadystatechange=function() {                                     
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+          var results = xmlhttp.responseText;                                     
+          if(results) {                                                         
+            popup = document.getElementById('question');
+            popup.innerHTML = results;                                 
+          }                                                                     
+        }                                                                         
+      }                                                                           
+      xmlhttp.open("GET","/stock/get_items_by_batch_number?number=" + batch_num,true);                      
+      xmlhttp.send();
+    }
+
+</script>

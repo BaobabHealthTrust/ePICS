@@ -31,8 +31,10 @@
 
     <%= stylesheet_link_tag "disable_page" %>
     <%= javascript_include_tag "disable_page"%>
+    <%= javascript_include_tag "cookies"%>
     
     <script type="text/javascript">
+      setTimeout("setCookie();",300);
       <!--
        
         function __$(id){
@@ -118,11 +120,22 @@
         } 
 
       //-->
+
+      function switchToActiveTab(){
+        active_tab = readCookie('active-tab');
+        if (active_tab){
+          switchTab(active_tab)
+        }
+        else{
+          loadApplicationMenu();
+        }
+
+      }
     </script>
   </head>
-  <body onresize="adjustView()" onload="adjustView(); loadApplicationMenu();">
-    <table width="100%" cellspacing="0" cellpadding="10">
-      <tr>
+  <body onresize="adjustView()" onload="adjustView(); switchToActiveTab();">
+    <table id="parent_table" width="100%" cellspacing="0" cellpadding="10">
+      <tr id="main-menu">
         <td id="application" style="border-bottom: 5px solid #5496ef; font-size: 18px; 
             padding-top: 65px; width: 100px; cursor: pointer;" align="center"
             onclick="switchTab(this.id)">

@@ -284,7 +284,7 @@ EOF
                                                                                 
     end                                                                         
       @html += "</table>"                                                       
-      @html += "</div><table style='width:100%;'>"                              
+      @html += "</div><div class='footer'><table style='width:100%;'>"
       @html += "<tr><td><a class='buttons popbtn' href='javascript:hideLayer();'>Close</a></td>"
       @html += "<td><a class='buttons popbtn' href='javascript:selectOrder(#{params[:order_id]});'>Select</a></td></tr>"
       @html += "</table></div>"                                                 

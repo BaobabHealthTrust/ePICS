@@ -80,11 +80,13 @@ class StockController < ApplicationController
     session[:item_returns][:witness_names] = params[:witness_names]
     session[:item_returns][:supplier_id] = EpicsSupplier.find_by_name('Other').id
 
-    @dates = EpicsLendsOrBorrows.find(:all, :conditions=> ["reimbursed = false AND facility = ? AND epics_lends_or_borrows_type_id = ?",
-                                                          EpicsLocation.find_by_name(params[:facility]).id,
-                                                          EpicsLendsOrBorrowsType.find_by_name("Lend").id]).map{|x| [x.lend_or_borrow_date, x.epics_orders_id]}
+    @dates = EpicsLendsOrBorrows.find(:all, 
+      :conditions=> ["reimbursed = false AND facility = ? AND epics_lends_or_borrows_type_id = ?",
+      EpicsLocation.find_by_name(params[:facility]).id,
+      EpicsLendsOrBorrowsType.find_by_name("Lend").id]).map{|x| [x.lend_or_borrow_date, x.epics_orders_id]}
 
-    render :layout => "application"
+    #render :layout => "application"
+    render :layout => "report"
   end
 
   def get_lent_items
@@ -162,7 +164,6 @@ EOF
     end 
       @html += "</table>"
       @html += "</div><table style='width:100%;'>"
-      @html += "<tr><td>&nbsp;</td></tr>"
       @html += "<tr><td><a class='buttons' href='javascript:hideLayer();'>Close</a></td></tr>"
       @html += "</table></div>"
     
@@ -198,6 +199,40 @@ EOF
     else
       render :json => false
     end
+  end
+
+   def get_items_by_order_id 
+    product_orders = EpicsProductOrders.find_all_by_epics_order_id(params[:order_id])
+                                                                                
+    @html = "<div id='borrowed_items_one'><div id='borrowed_items_two'>"        
+    @html += "<table class='borrowed_items' style='width: 98%;'>"               
+    @html += "<tr><th>Item code</th><th>Item</th><th style='text-align: right; padding-right: 10px;'>Quantity</th></tr>"
+    @html += "<tr><td colspan='3'><hr /></td></tr>"                             
+                                                                                
+    (product_orders || []).each do |product_order|
+      code = product_order.epics_stock_details.epics_product.product_code
+      name = product_order.epics_stock_details.epics_product.name
+      quantity = product_order.quantity            
+      @html+=<<EOF                                                              
+      <tr>                                                                      
+        <td>#{code}</td>                                                    
+        <td>#{name}</td>                                               
+        <td style='text-align: right; padding-right: 10px';>#{quantity}</td>
+      </tr>                                                                     
+      <tr>                                                                      
+        <td colspan='3'><hr /></td>                                             
+      </tr>                                                                     
+EOF
+                                                                                
+                                                                                
+    end                                                                         
+      @html += "</table>"                                                       
+      @html += "</div><table style='width:100%;'>"                              
+      @html += "<tr><td><a class='buttons popbtn' href='javascript:hideLayer();'>Close</a></td>"
+      @html += "<td><a class='buttons popbtn' href='javascript:selectOrder(#{params[:order_id]});'>Select</a></td></tr>"
+      @html += "</table></div>"                                                 
+                                                                                
+    render :text => @html and return                                            
   end
 
 end

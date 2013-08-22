@@ -223,16 +223,17 @@ class StockDetailsController < ApplicationController
     received_quantity = units * quantity
     ActiveRecord::Base.transaction do
         old_stock = EpicsStockDetails.find(stock_details.id)
-        old_stock.voided = 1
-        old_stock.voided_by = session[:user_id]
-        old_stock.void_reason = reason
+        old_stock.received_quantity = received_quantity
         old_stock.save!
         EpicsStockDetails.create!(
           :epics_stock_id => stock_details.epics_stock_id,
           :epics_products_id => stock_details.epics_products_id,
-          :received_quantity => received_quantity,
+          :received_quantity => stock_details.received_quantity,
           :epics_product_units_id => stock_details.epics_product_units_id,
-          :epics_location_id => stock_details.epics_location_id
+          :epics_location_id => stock_details.epics_location_id,
+          :voided => 1,
+          :voided_by => session[:user_id],
+          :void_reason => reason
         )
     end
     redirect_to :controller => "product", :action => "view", :product => session[:product]

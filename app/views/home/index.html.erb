@@ -1,233 +1,233 @@
 <html>
-  <head>
-    <title>Home</title>
-    <style type="text/css">
+<head>
+  <title>Home</title>
+  <style type="text/css">
       body {
-        background-color: #fff;
-        margin: 20px;
-        font-family: "Nimbus Sans L", "Arial Narrow", sans-serif;
-        overflow: hidden;
-        color: #000;
-        -moz-user-select: none;
+          background-color: #fff;
+          margin: 20px;
+          font-family: "Nimbus Sans L", "Arial Narrow", sans-serif;
+          overflow: hidden;
+          color: #000;
+          -moz-user-select: none;
       }
 
       .buttons-table td {
-        text-align: center;
+          text-align: center;
       }
 
       .buttons-table img {
-        width: 128px;
-        height: 128px;
+          width: 128px;
+          height: 128px;
       }
 
       #shadow, #question {
-        -moz-user-select: none;
+          -moz-user-select: none;
       }
 
       div {
-        -moz-user-select: none;
+          -moz-user-select: none;
       }
-    </style>
+  </style>
 
-    <%= stylesheet_link_tag "disable_page" %>
-    <%= javascript_include_tag "disable_page"%>
-    <%= javascript_include_tag "cookies"%>
-    
-    <script type="text/javascript">
+  <%= stylesheet_link_tag "disable_page" %>
+  <%= javascript_include_tag "disable_page"%>
+  <%= javascript_include_tag "cookies"%>
+
+  <script type="text/javascript">
       setTimeout("setCookie();",300);
       <!--
-       
-        function __$(id){
+
+      function __$(id){
           return document.getElementById(id);
-        }
-        
-        function switchTab(tab){
+      }
+
+      function switchTab(tab){
           var tabs = ["application", "reports", "my_activities", "administration"];
-          
+
           for(var i = 0; i < tabs.length; i++){
-            __$(tabs[i]).style.borderBottom = "1px solid #5496ef";
-            __$(tabs[i]).style.paddingTop = "60px";
+              __$(tabs[i]).style.borderBottom = "1px solid #5496ef";
+              __$(tabs[i]).style.paddingTop = "60px";
           }
-          
+
           __$(tab).style.borderBottom = "5px solid #5496ef";
           __$(tab).style.paddingTop = "65px";
-          
+
           switch(tab.toLowerCase()){
-            case "application":
-              loadApplicationMenu();
-              break;
-            case "reports":
-              loadReportsMenu();
-              break;
-            case "my_activities":
-              loadActivitiesMenu();
-              break;
-            case "administration":
-              loadAdministrationMenu();
-              break;
+              case "application":
+                  loadApplicationMenu();
+                  break;
+              case "reports":
+                  loadReportsMenu();
+                  break;
+              case "my_activities":
+                  loadActivitiesMenu();
+                  break;
+              case "administration":
+                  loadAdministrationMenu();
+                  break;
           }
-        }
-      
-        function adjustView(){
-        }
-      
-        function loadAdministrationMenu(){
+      }
+
+      function adjustView(){
+      }
+
+      function loadAdministrationMenu(){
           resetButtonsTable();
-          <%
-          count = 0
-          (@administration || []).each do |name,path,image|%>
-            b = document.getElementById('button'+(<%=count+=1%>));
-            b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
-            b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';
-            b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
-          <%end%>
-        }
-      
-        function loadApplicationMenu(){
+      <%
+  count = 0
+  (@administration || []).each do |name,path,image|%>
+          b = document.getElementById('button'+(<%=count+=1%>));
+          b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
+          b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';
+          b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
+      <%end%>
+      }
+
+      function loadApplicationMenu(){
           resetButtonsTable();
-          <%
-          count = 0
-          (@application || []).each do |name,path,image|%>
-            b = document.getElementById('button'+(<%=count+=1%>));
-            b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
-            b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';                          
-            b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
-          <%end%>
-        }
-      
-        function loadReportsMenu(){
+      <%
+  count = 0
+  (@application || []).each do |name,path,image|%>
+          b = document.getElementById('button'+(<%=count+=1%>));
+          b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
+          b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';
+          b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
+      <%end%>
+      }
+
+      function loadReportsMenu(){
           resetButtonsTable();
-          <%
-          count = 0
-          (@reports || []).each do |name,path,image|%>
-            b = document.getElementById('button'+(<%=count+=1%>));
-            b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
-            b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';
-            b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
-          <%end%>
-        }
-      
-        function loadActivitiesMenu(){
+      <%
+  count = 0
+  (@reports || []).each do |name,path,image|%>
+          b = document.getElementById('button'+(<%=count+=1%>));
+          b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
+          b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';
+          b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
+      <%end%>
+      }
+
+      function loadActivitiesMenu(){
           resetButtonsTable();
-        }
-     
-        function resetButtonsTable() {
+      }
+
+      function resetButtonsTable() {
           var t = document.getElementsByClassName('buttons-table')[0];
           var tds = t.getElementsByTagName("td");
           for(var i=0;i<tds.length;i++) {
-            tds[i].innerHTML = null;
+              tds[i].innerHTML = null;
           }
-        } 
+      }
 
       //-->
 
       function switchToActiveTab(){
-        active_tab = readCookie('active-tab');
-        if (active_tab){
-          switchTab(active_tab)
-        }
-        else{
-          loadApplicationMenu();
-        }
+          active_tab = readCookie('active-tab');
+          if (active_tab){
+              switchTab(active_tab)
+          }
+          else{
+              loadApplicationMenu();
+          }
 
       }
-    </script>
-  </head>
-  <body onresize="adjustView()" onload="adjustView(); switchToActiveTab();">
-    <table id="parent_table" width="100%" cellspacing="0" cellpadding="10">
-      <tr id="main-menu">
-        <td id="application" style="border-bottom: 5px solid #5496ef; font-size: 18px; 
+  </script>
+</head>
+<body onresize="adjustView()" onload="adjustView(); switchToActiveTab();">
+<table id="parent_table" width="100%" cellspacing="0" cellpadding="10">
+  <tr id="main-menu">
+    <td id="application" style="border-bottom: 5px solid #5496ef; font-size: 18px;
             padding-top: 65px; width: 100px; cursor: pointer;" align="center"
-            onclick="switchTab(this.id)">
-          Application
-        </td>
-        <td id="reports" style="border-bottom: 1px solid #5496ef; font-size: 18px; 
+        onclick="switchTab(this.id)">
+      Application
+    </td>
+    <td id="reports" style="border-bottom: 1px solid #5496ef; font-size: 18px;
             padding-top: 60px; width: 80px; cursor: pointer;" align="center"
-            onclick="switchTab(this.id)">
-          Reports
-        </td>
-        <td id="my_activities" style="border-bottom: 1px solid #5496ef; font-size: 18px; 
+        onclick="switchTab(this.id)">
+      Reports
+    </td>
+    <td id="my_activities" style="border-bottom: 1px solid #5496ef; font-size: 18px;
             padding-top: 60px; width: 110px; cursor: pointer;" align="center"
-            onclick="switchTab(this.id)">
-          My Activities
-        </td>
-        <td id="administration" style="border-bottom: 1px solid #5496ef; font-size: 18px; 
+        onclick="switchTab(this.id)">
+      My Activities
+    </td>
+    <td id="administration" style="border-bottom: 1px solid #5496ef; font-size: 18px;
             padding-top: 60px; width: 130px; cursor: pointer;" align="center"
-            onclick="switchTab(this.id)">
-          Administration
-        </td>
-        <td style="border-bottom: 1px solid #5496ef;">
-          &nbsp;
-        </td>
-        <td style="width: 100px; border-bottom: 1px solid #5496ef;">
-          <img src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ? 
+        onclick="switchTab(this.id)">
+      Administration
+    </td>
+    <td style="border-bottom: 1px solid #5496ef;">
+      &nbsp;
+    </td>
+    <td style="width: 100px; border-bottom: 1px solid #5496ef;">
+      <img src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ?
               "app.png" : "baobab.png") %>" height="80" style="float: right;" />
-        </td>
-      </tr>
-      <tr>
-        <td colspan="6" style="padding: 0px;">
-          <div id="container" style="width: 100%; height: 540px; overflow: auto;">
-          
-            <table style="width:100%" class="buttons-table">
-            <%
-            count = 0
-            1.upto(@buttons_count).each do |number|%>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6" style="padding: 0px;">
+      <div id="container" style="width: 100%; height: 540px; overflow: auto;">
+
+        <table style="width:100%" class="buttons-table">
+          <%
+             count = 0
+             1.upto(@buttons_count).each do |number|%>
               <tr>
                 <td id='button<%=count+=1%>'></td>
                 <td id='button<%=count+=1%>'></td>
                 <td id='button<%=count+=1%>'></td>
               </tr>
-            <%end%>
-            </table> 
-            
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="6" style="border-top: 1px solid #5496ef;">
-          &nbsp;
-        </td>
-      </tr>
-    </table>
-    
-    <div id="nav" style="width: 100%; height: 90px; 
-        left: 0px; position: absolute; bottom: 0px;">
-      <table style="width: 100%" >
-        <tr>
-          <td style="font-size: 25px;font-weight: bold;color: #708090;padding-left: 20px;">
-            User : <%= User.current.username %>
-          </td>
-          <td style="font-size: 25px;font-weight: bold;color: #708090;">
-            Location : <%= session[:location_name] %>
-          </td>
-          <% if @reminders > 0 %>
-              <td onclick="window.location= '/stock/confirmations'" style="font-size: 25px;width: 75px; vertical-align: top;
-                      background-image:url('/images/alert.png');background-repeat:no-repeat;background-position: center bottom ">
-                <div style="border: 0.1em solid #000000;width: 35px; border-radius: 20px;text-align:center; color: #ffffff;background-color: #ff0000;">
-                  <%= @reminders %>
-                </div>
-              </td>
           <%end%>
-          <td>
-            <img src="/images/Log-Out-icon.png" height="65" style="margin-right: 20px;
-                    margin-top: 0px; cursor: pointer; float: right;" onclick="window.location='/logout'" />
-          </td>
+        </table>
 
-        </tr>
-      </table>
-    </div>
-  
-
-    <div id="shadow" class="opaqueLayer"> </div>                                    
-      <div id="question" class="questionLayer" style="font-size: 0.9em;">             
-          <%= render "alerts" %> 
       </div>
-    </div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6" style="border-top: 1px solid #5496ef;">
+      &nbsp;
+    </td>
+  </tr>
+</table>
 
-    <% unless @alerts.blank? %>
-      <script>
+<div id="nav" style="width: 100%; height: 90px;
+        left: 0px; position: absolute; bottom: 0px;">
+  <table style="width: 100%" >
+    <tr>
+      <td style="font-size: 25px;font-weight: bold;color: #708090;padding-left: 20px;">
+        User : <%= User.current.username %>
+      </td>
+      <td style="font-size: 25px;font-weight: bold;color: #708090;">
+        Location : <%= session[:location_name] %>
+      </td>
+      <% if @reminders > 0 %>
+          <td onclick="window.location= '/stock/confirmations'" style="font-size: 25px;width: 75px; vertical-align: top;
+                  background-image:url('/images/alert.png');background-repeat:no-repeat;background-position: center bottom ">
+            <div style="border: 0.1em solid #000000;width: 35px; border-radius: 20px;text-align:center; color: #ffffff;background-color: #ff0000;">
+              <%= @reminders %>
+            </div>
+          </td>
+      <%end%>
+      <td>
+        <img src="/images/Log-Out-icon.png" height="65" style="margin-right: 20px;
+                margin-top: 0px; cursor: pointer; float: right;" onclick="window.location='/logout'" />
+      </td>
+
+    </tr>
+  </table>
+</div>
+
+
+<div id="shadow" class="opaqueLayer"> </div>
+<div id="question" class="questionLayer" style="font-size: 0.9em;">
+  <%= render "alerts" %>
+</div>
+</div>
+
+<% unless @alerts.blank? %>
+    <script>
         showLayer('question');
-      </script>
-    <%end%>
-  </body>
+    </script>
+<%end%>
+</body>
 </html>

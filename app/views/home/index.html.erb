@@ -201,8 +201,9 @@
             Location : <%= session[:location_name] %>
           </td>
           <% if @reminders > 0 %>
-              <td onclick="window.location= '/stock/confirmations'" style="width:60px;font-size: 25px; vertical-align: top;background-image:url('/images/alert.png'); ">
-                <div style="border: 0.01em solid silver;width: 20px; border-radius: 20px;text-align:center; color: #ffffff;background-color: #ff0000;">
+              <td onclick="window.location= '/stock/confirmations'" style="font-size: 25px;width: 75px; vertical-align: top;
+                      background-image:url('/images/alert.png');background-repeat:no-repeat;background-position: center bottom ">
+                <div style="border: 0.1em solid #000000;width: 35px; border-radius: 20px;text-align:center; color: #ffffff;background-color: #ff0000;">
                   <%= @reminders %>
                 </div>
               </td>

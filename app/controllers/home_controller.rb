@@ -37,8 +37,8 @@ class HomeController < ApplicationController
     ]
 
     if User.current.epics_user_role.name == "Administrator"
-      @administration << ["Set Item Units","/product_units/index","units_icon.png"] << ["Set Item Types","/product_type/index","default.png"]
-      @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","default.png"]
+      @administration << ["Set Item Units","/product_units/index","units_icon.png"] << ["Set Item Types","/product_type/index","set_items.png"]
+      @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","order_type.png"]
       @administration << ["Set Supplier Types","/supplier_type/index","supplier_type.png"] << ["Set Suppliers","/supplier/index","suppliers.png"]
       @administration << ["Set Locations","/location/index","sysuser.png"] << ["Set Location Types","/location_type/index","workstations.png"]
       @administration << ["Add New User","/user/new","add_user.png"]

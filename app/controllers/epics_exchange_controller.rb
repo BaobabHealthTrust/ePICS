@@ -41,7 +41,7 @@ class EpicsExchangeController < ApplicationController
       @location = EpicsLocation.find_by_name(params['location'])
       @issue_cart = find_product_issue_cart
       product = EpicsProduct.where("name = ?",params[:item]['name'])[0]
-      quantity = params[:item]['quantity'].to_f
+      quantity = ((params[:item]['issue_quan'].blank? ? params[:item]['issue_quantity'] : params[:item]['issue_quan'] ).to_i * params[:item]['item_quantity'].to_i) rescue 1
       expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
       @issue_cart.add_product(product,quantity,nil,expiry_date)
       @receive_cart = find_product_receive_cart
@@ -61,7 +61,7 @@ class EpicsExchangeController < ApplicationController
     if request.post?
       @receive_cart = find_product_receive_cart
       product = EpicsProduct.find_by_name(params[:stock_details][:product_name])
-      quantity = params[:stock_details][:quantity].to_f
+      quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
       location = params[:stock_details][:location_id]
       expiry_date = params[:stock_details][:expiry_date]
       @receive_cart.add_product(product,quantity,location,expiry_date)

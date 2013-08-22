@@ -55,12 +55,29 @@ function showExpiryDate() {
                         :maxDate => (Date.today + 20.year).to_date,
                         :helpText => "Select Item Expiry Date"} %>
 
-    <%= text_field_tag "stock_details[quantity]", nil,
-                       {:id => 'product_quantity',
+    <%= select_tag "stock_details[issue_quantity]", options_for_select([1000,500,100,50,10,'Other']),
+                   {:id => 'product_quantity',
+                    :field_type => 'alpha',
+                    :tt_onLoad => "document.getElementById('keyboard').style.display='none'",
+                    :allowFreeText => false,
+                    :helpText => 'Select unit of issue'} %>
+
+    <%= text_field_tag "stock_details[issue_quan]", nil,
+                       {:id => 'product_quan',
                         :field_type => 'number',
                         :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
                         :min => 1,
-                        :helpText => 'Select Item Quantity'} %>
+                        :condition => "$('product_quantity').value =='Other'",
+                        :helpText => 'Enter unit of issue'} %>
+
+    <%= text_field_tag "stock_details[item_quantity]", nil,
+                       {:id => 'item_quantity',
+                        :field_type => 'number',
+                        :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
+                        :min => 1,
+                        :helpText => 'Enter quantity of items'} %>
+
+
 
     <%= submit_tag "Create Stock Details" %>
 

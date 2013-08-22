@@ -247,11 +247,15 @@ EOF
     end
     @html += "</table>"
     @html += "</div><table style='width:100%;'>"
-    @html += "<tr><td>&nbsp;</td></tr>"
-    @html += "<tr><td style='width:50%'><a class='buttons' href='javascript:hideLayer();'>Close</a></td>"
+    
     if transaction.authorizer == User.current.id
-      @html += "<td><a class='buttons' href='javascript:authorise(#{transaction.authorizer});'>Authorise</a></td></tr>"
+      @html += "<tr><td><a class='buttons btn' href='javascript:hideLayer();'>Close</a></td>"
+      @html += "<td><a style='float: right; padding-right: 18px;' class='buttons btn'" 
+      @html += "href='javascript:authorise(#{transaction.authorizer});'>Authorise</a></td></tr>"
+    else
+      @html += "<tr><td><a class='buttons' href='javascript:hideLayer();'>Close</a></td>"
     end
+
     @html += "</table></div>"
 
     render :text => @html and return

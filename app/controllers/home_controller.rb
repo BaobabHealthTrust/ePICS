@@ -12,7 +12,7 @@ class HomeController < ApplicationController
       ["Receive Items","stock/new","receive.png"],
       ["Exchange Items","epics_exchange/index","exchange_drugs1.png"],
       ["Lend Items","orders/lend","lend.png"],
-      ["Borrow Items","stock/borrow","default.png"],
+      ["Borrow Items","stock/borrow","borrow.png"],
       ["Receive Items Back","/stock/receive_loan_returns","default.png"],
       ["Reimburse Borrowed Items","orders/return_loans","default.png"],
       ["Search","/product/search","search.png"]
@@ -39,9 +39,11 @@ class HomeController < ApplicationController
     if User.current.epics_user_role.name == "Administrator"
       @administration << ["Set Item Units","/product_units/index","units_icon.png"] << ["Set Item Types","/product_type/index","default.png"]
       @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","default.png"]
-      @administration << ["Set Supplier Types","/supplier_type/index","default.png"] << ["Set Suppliers","/supplier/index","default.png"]
-      @administration << ["Set Locations","/location/index","default.png"] << ["Set Location Types","/location_type/index","default.png"]
-      @administration << ["Add New User","/user/new","sysuser.png"] << ["Add person","person/add_person","add_user.png"]
+      @administration << ["Set Supplier Types","/supplier_type/index","supplier_type.png"] << ["Set Suppliers","/supplier/index","suppliers.png"]
+      @administration << ["Set Locations","/location/index","sysuser.png"] << ["Set Location Types","/location_type/index","workstations.png"]
+      @administration << ["Add New User","/user/new","add_user.png"]
+
+      #<< ["Add person","person/add_person","add_user.png"]
 
     end
 

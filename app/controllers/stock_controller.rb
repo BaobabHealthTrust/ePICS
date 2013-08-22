@@ -251,7 +251,7 @@ EOF
     if transaction.authorizer == User.current.id
       @html += "<tr><td><a class='buttons btn' href='javascript:hideLayer();'>Close</a></td>"
       @html += "<td><a style='float: right; padding-right: 18px;' class='buttons btn'" 
-      @html += "href='javascript:authorise(#{transaction.authorizer});'>Authorise</a></td></tr>"
+      @html += "href='javascript:authorise(#{transaction.id});'>Authorise</a></td></tr>"
     else
       @html += "<tr><td><a class='buttons' href='javascript:hideLayer();'>Close</a></td>"
     end

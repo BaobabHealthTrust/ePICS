@@ -217,13 +217,18 @@ class StockDetailsController < ApplicationController
 
   def save_edited_stock_details
     stock_details = session[:epics_stock_details]
+    session[:epics_stock_details] = nil
     units = params[:units].delete_if{|value|value.blank? || value.match(/Other/i)}.to_s.to_i
     quantity = params[:quantity].to_i
     reason = params[:reason]
     received_quantity = units * quantity
+    prev_stock = EpicsStockDetails.find(stock_details.id)
+    prev_received_quantity = prev_stock.received_quantity
+    difference = received_quantity - prev_received_quantity
     ActiveRecord::Base.transaction do
         old_stock = EpicsStockDetails.find(stock_details.id)
         old_stock.received_quantity = received_quantity
+        old_stock.current_quantity = (old_stock.current_quantity) + difference
         old_stock.save!
         EpicsStockDetails.create!(
           :epics_stock_id => stock_details.epics_stock_id,

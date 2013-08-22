@@ -20,8 +20,24 @@ class EpicsReport < ActiveRecord::Base
     ").group('epics_stock_details.epics_stock_details_id').select("SUM(current_quantity) quantity,
       min_stock").having("quantity <= 0").length                                
                                                                                 
-    alerts['Missing items']+= 0                                                
-    alerts['Removed items']+= 0 
+    sql=<<EOF
+      SELECT count(s.epics_products_id) num_of_items FROM epics_stocks stock 
+      INNER JOIN epics_stock_details s ON s.epics_stock_id = stock.epics_stock_id
+      AND s.voided = 1 AND s.void_reason LIKE '%missing%'
+EOF
+
+    alerts['Missing items'] += EpicsStock.find_by_sql(sql).map { |r| 
+      r.num_of_items 
+    }[0].to_i rescue 0
+
+
+
+    alerts['Expired items'] += EpicsStockExpiryDates.joins("
+      INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
+      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id  
+      AND p.expire = 1").where("DATEDIFF(expiry_date,CURRENT_DATE()) <= 0         
+      AND current_quantity > 0").count(:expiry_date)                                   
+
     return alerts
   end
 

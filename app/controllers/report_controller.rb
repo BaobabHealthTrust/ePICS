@@ -27,7 +27,14 @@ class ReportController < ApplicationController
         SUM(current_quantity) quantity, min_stock,
         max_stock,expiry_date").having("quantity <= 0").order("p.product_code,p.name,MIN(expiry_date)")
       when 'Missing items'
-      when 'Removed items'
+        redirect_to :action => :missing_items
+      when 'Expired items'
+        @alerts = EpicsStockExpiryDates.joins("
+          INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
+          INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id AND p.expire = 1
+          ").where("DATEDIFF(expiry_date,CURRENT_DATE()) <= 0
+          AND current_quantity > 0").select("p.product_code code,p.name name, 
+          current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,expiry_date")
       when 'Items expiring in the next 6 months'
         @alerts = EpicsStockExpiryDates.joins("
           INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
@@ -36,6 +43,61 @@ class ReportController < ApplicationController
           BETWEEN 1 AND 183 AND current_quantity > 0").select("p.product_code code,p.name name, 
           current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,expiry_date")
     end
+  end
+
+  def missing_items
+    sql=<<EOF                                                                   
+      SELECT t1.epics_stock_details_id , t1.void_reason,
+      x.expiry_date,p.product_code code, p.name, stock.grn_number, 
+      ABS(t2.received_quantity - t1.received_quantity) went_missing, t1.updated_at updated_on
+      FROM epics_stock_details t1
+      INNER JOIN epics_stock_details t2 ON t1.epics_stock_id = t2.epics_stock_id
+      AND t2.epics_products_id = t1.epics_products_id
+      AND t2.voided = 0 AND t1.voided = 1
+      INNER JOIN epics_products p ON p.epics_products_id = t1.epics_products_id
+      INNER JOIN  epics_stock_expiry_dates x                                    
+      ON t2.epics_stock_details_id = x.epics_stock_details_id
+      INNER JOIN epics_stocks stock ON stock.epics_stock_id = t1.epics_stock_id
+      WHERE t1.void_reason LIKE '%missing%'
+EOF
+      
+    epics_stock_details_ids = [0]
+    @items = {}
+    (EpicsStock.find_by_sql(sql) || []).map do |r|            
+      @items[r.epics_stock_details_id] = {:grn_number => r.grn_number, 
+       :code => r.code, :name => r.name, :difference => r.went_missing,
+       :updated_on => r.updated_on.to_date.strftime('%d %b, %Y') , :void_reason => r.void_reason ,
+       :expiry_date => r.expiry_date.to_date.strftime('%d %b, %Y')
+      }
+      epics_stock_details_ids << r.epics_stock_details_id
+    end
+
+    sql=<<EOF                                                                   
+      SELECT p.product_code code,p.name name, current_quantity, received_quantity, 
+      expiry_date,s.epics_stock_details_id , s.void_reason ,s.epics_stock_details_id,
+      stock.grn_number, s.updated_at updated_on
+      FROM epics_stocks stock    
+      INNER JOIN epics_stock_details s ON s.epics_stock_id = stock.epics_stock_id
+      AND s.voided = 1 AND s.void_reason = 'missing'                       
+      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
+      INNER JOIN  epics_stock_expiry_dates x 
+      ON s.epics_stock_details_id = x.epics_stock_details_id
+      WHERE s.epics_stock_details_id NOT IN(#{epics_stock_details_ids.join(',')})
+EOF
+                                                                                                                                          
+    EpicsStock.find_by_sql(sql).map do |r|            
+      went_missing = r.received_quantity
+      if r.current_quantity != r.received_quantity
+        went_missing = (received_quantity - current_quantity)
+      end
+      @items[r.epics_stock_details_id] = {:grn_number => r.grn_number, 
+       :code => r.code, :name => r.name, :difference => went_missing,
+       :updated_on => r.updated_on.to_date.strftime('%d %b, %Y') , :void_reason => r.void_reason ,
+       :expiry_date => r.expiry_date.to_date.strftime('%d %b, %Y')
+      }
+    end
+
+    @page_title = "Missing Items"
   end
 
   def select_store

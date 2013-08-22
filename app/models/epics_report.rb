@@ -203,7 +203,7 @@ EOF
   end
 
   def self.negative_adjustments(stock, item, end_date = Date.today)
-    type_ids = EpicsOrderTypes.where("name IN(?)",['Lend','Exchange']).map(&:id)
+    type_ids = EpicsOrderTypes.where("name IN(?)",['Lend','Exchange','Return']).map(&:id)
 
     epics_lends = EpicsOrders.joins("INNER JOIN epics_product_orders o
       ON o.epics_order_id = epics_orders.epics_order_id

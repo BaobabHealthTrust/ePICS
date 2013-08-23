@@ -101,7 +101,7 @@ class ProductController < ApplicationController
       next if (detail.epics_stock_expiry_date.blank? || (detail.current_quantity == 0))
       @products << detail.epics_stock_expiry_date.expiry_date.to_date.strftime("%d-%b-%Y")
     end
-    @products = @products.sort
+    @products = @products.sort{|x, y| x.to_date <=> y.to_date}
     @html = "<li></li><li style='color:red;'>" + @products[0] + "</li>"
     @products.delete_at(0)
     render :text => @html +"<li>" + @products.uniq.join("</li><li>") + "</li>"

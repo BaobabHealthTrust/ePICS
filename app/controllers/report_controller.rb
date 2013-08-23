@@ -230,7 +230,7 @@ EOF
       location = request.remote_ip rescue ""
       current_printer = ""
       store_room = params[:store_room]
-      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations = EpicsGlobalProperty.find("facility.printers").property_value.split(",") rescue []
       locations.each{|ward|
         current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
       } rescue []
@@ -253,7 +253,7 @@ EOF
       location = request.remote_ip rescue ""
       current_printer = ""
       start_date = params[:start_date]
-      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations = EpicsGlobalProperty.find("facility.printers").property_value.split(",") rescue []
       locations.each{|ward|
         current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
       } rescue []
@@ -276,7 +276,7 @@ EOF
       location = request.remote_ip rescue ""
       current_printer = ""
       store_room = params[:store_room]
-      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations = EpicsGlobalProperty.find("facility.printers").property_value.split(",") rescue []
       locations.each{|ward|
         current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
       } rescue []
@@ -299,7 +299,7 @@ EOF
       location = request.remote_ip rescue ""
       current_printer = ""
       date = params[:date]
-      #wards = CoreService.get_global_property_value("facility.ward.printers").split(",") rescue []
+      locations = EpicsGlobalProperty.find("facility.printers").property_value.split(",") rescue []
       locations.each{|ward|
         current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
       } rescue []

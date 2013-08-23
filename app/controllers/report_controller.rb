@@ -1,9 +1,18 @@
 class ReportController < ApplicationController
 
-  def audit_report
+  def audit
+    start_date = params[:date]['start'].to_date
+    end_date = params[:date]['end'].to_date
+    @page_title = "Audit report:<br />" + start_date.strftime('%d %b, %Y') 
+    @page_title += " to " + end_date.strftime('%d %b, %Y') 
+    @audits = EpicsReport.audit(start_date, end_date)
   end
 
   def received_items
+    start_date = params[:date]['start'].to_date
+    end_date = params[:date]['end'].to_date
+    @page_title = "Received/Issued:<br />" + start_date.strftime('%d %b, %Y') 
+    @page_title += " to " + end_date.strftime('%d %b, %Y') 
   end
 
   def view_alerts

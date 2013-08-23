@@ -275,4 +275,49 @@ EOF
       end
   end
 
+  def self.audit(start_date, end_date)
+    start_date = start_date.strftime('%Y-%m-%d 00:00:00')
+    end_date = end_date.strftime('%Y-%m-%d 23:59:59')
+
+    sql=<<EOF
+      SELECT c.pack_size,c.billing_charge,
+      p.product_code item_code,p.name, c.unit_price, p.epics_products_id item_id,
+      sum(s.received_quantity) received,sum(o.quantity) issued, s.received_quantity 
+      FROM epics_stocks e INNER JOIN epics_stock_details s ON s.epics_stock_id = e.epics_stock_id
+      AND e.created_at >= '#{start_date}' AND e.created_at <= '#{end_date}' 
+      AND s.voided = 0 AND e.voided = 0
+      LEFT JOIN epics_product_orders o ON o.epics_stock_details_id = s.epics_stock_details_id
+      AND o.created_at >= '#{start_date}' AND o.created_at <= '#{end_date}' AND o.voided = 0
+      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
+      LEFT JOIN epics_item_costs c ON p.epics_products_id = c.epics_products_id
+      GROUP BY s.epics_products_id 
+EOF
+
+    EpicsStockDetails.find_by_sql(sql).map do |r|
+        balance = r.received_quantity
+        value_spent = 'N/A'
+        amount_in_hand = 'N/A'
+
+        if r.issued
+          balance = (r.received_quantity.to_f - r.issued.to_f)
+          balance = balance.to_i if (balance.to_s[-2..-1] =='.0')
+        else
+          r.issued = 0
+        end
+        
+        if not r.unit_price.blank? and not r.pack_size.blank?
+          item_value = (r.received_quantity.to_f/r.pack_size.to_f)* r.unit_price.to_f
+          value_spent = (r.issued.to_f/r.pack_size.to_f)* r.unit_price.to_f
+          amount_in_hand = (item_value - value_spent)
+        end
+
+        {:item_code => r.item_code,:item_name => r.name,:item_id => r.item_id,
+         :received_quantity => r.received_quantity, :issued => r.issued,
+         :billing_charge => r.billing_charge,:unit_price => r.unit_price, 
+         :balance => balance,:pack_size => r.pack_size,
+         :value_spent => value_spent, :amount_in_hand => amount_in_hand
+        }
+      end
+  end
+
 end

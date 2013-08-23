@@ -3,7 +3,17 @@
   var tt_cancel_destination="/"
 </script>
 
-<% form_tag :method => :post, :action => 'disposed_items' do %>
+<%
+if params[:name] == 'audit'
+  action = 'audit'
+elsif params[:name] == 'received_items'
+  action = 'received_items'
+else
+  action = 'disposed_items'
+end
+%>
+
+<%form_tag :method => :post, :action => "#{action}" do %>
   <%= text_field_tag "date[start]", nil,                            
     {:id => "start_date",                                                   
     :field_type => 'date',

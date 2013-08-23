@@ -3,6 +3,7 @@ class OrdersController < ApplicationController
   def index
     @location = EpicsLocation.where("name = ?", params[:location])[0]
     @cart = find_product_cart('issue')
+    @page_title = "Issuing Items"
     render :layout => 'custom'
   end
 
@@ -144,6 +145,7 @@ class OrdersController < ApplicationController
      name = OpenmrsPersonName.find(:last, :conditions =>["person_id = ?", User.find(params[:authorizer]).person_id])
      session[:lend_details]['authorizer_name'] = name.full_name
    end
+   @page_title = "Lending Out Items"
    render :layout => 'custom'
  end
 
@@ -212,7 +214,7 @@ class OrdersController < ApplicationController
       session[:return_details][:return_to] = params["facility"]
       session[:return_details][:return_batch] = params["batch"]
     end
-
+    @page_title = "Returning Borrowed Items"
     render :layout => "custom"
   end
 

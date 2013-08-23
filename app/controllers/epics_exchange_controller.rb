@@ -21,7 +21,7 @@ class EpicsExchangeController < ApplicationController
   def new
     @issue_cart = find_product_issue_cart
     @receive_cart = find_product_receive_cart
-    
+    @page_title = "Exchange Items"
     render :layout => 'custom'
   end
 
@@ -167,6 +167,7 @@ class EpicsExchangeController < ApplicationController
     @received_cart = session[:receive_copy]
     @issued_cart = session[:issue_copy]
     @exchange_details = params[:exchange_details]
+    @page_title = "Exchange Items Summary"
     render :layout => 'custom'
   end
   

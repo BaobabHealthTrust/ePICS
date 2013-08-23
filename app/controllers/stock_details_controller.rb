@@ -3,6 +3,7 @@ class StockDetailsController < ApplicationController
 
   def index
     @cart = find_product_cart
+    @page_title = "Receiving Items"
     render :layout => "custom"
   end
 
@@ -158,6 +159,7 @@ class StockDetailsController < ApplicationController
   def summary
     @stock = EpicsStock.find(params[:stock_id])
     @stock_details = EpicsStockDetails.find_all_by_epics_stock_id(params[:stock_id])
+    @page_title = "Receiving Items Summary"
     render :layout => "custom"
   end
 
@@ -186,7 +188,7 @@ class StockDetailsController < ApplicationController
       expiry_date = params[:stock_details][:expiry_date]
       @return_cart.add_product(product,quantity,location,expiry_date)
     end
-
+    @page_title = "Returning Borrowed Items"
     render :layout => "custom"
   end
 

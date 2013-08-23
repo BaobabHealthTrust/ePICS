@@ -36,18 +36,26 @@
 
 .monthly {
   width: 100%;
-  border-collapse: collapse;
+ /* border-collapse: collapse;*/
   margin-top: 10px;
 }
 
 th {
   border-style: solid;
-  border-width: 1px;
+  border-width: thin;
 }
 
 .item_category {
   background-color: lightslategrey;
 }
+
+.monthly td {
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-spacing: 1px;
+}
+
 </style>
 
 
@@ -110,7 +118,7 @@ th {
     (categories).sort_by {|x,y|x}.each do |category, items|
   %>
   <tr class="item_category">
-    <td><%=category%></td>
+    <td style="text-align:left; padding-left: 10px;"><%=category%></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -123,9 +131,11 @@ th {
   </tr>
   <% @monthly_report[date][category].sort_by {|x,y|y[:item_code]}.each do |item_id , values|%>
   <tr>
-    <td><%=values[:item_code]%></td>
-    <td><%=values[:item]%></td>
-    <td><%=values[:unit_of_issue]%></td>
+    <td style="text-align:left;padding-left: 10px;">
+      <%=values[:item_code]%>
+    </td>
+    <td style="text-align:left;padding-left: 10px;"><%=values[:item]%></td>
+    <td style="text-align: center;"><%=values[:unit_of_issue]%></td>
     <td style="text-align:right;padding-right: 10px;">
       <%=values[:current_quantity]%>
     </td>

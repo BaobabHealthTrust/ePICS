@@ -4,8 +4,10 @@ class HomeController < ApplicationController
       next if name == 'location_name'
       next if name == 'location_id'
       next if name == 'user_id'
+      next if name == 'flash'
+      next if name == '_csrf_token'
       session[name] = nil
-    end
+    end 
 
     @application = [
       ["Issue Items","orders/new","dispense.png"],

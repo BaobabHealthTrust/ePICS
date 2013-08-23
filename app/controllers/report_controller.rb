@@ -132,22 +132,34 @@ EOF
     location = EpicsLocation.find(params[:store_room])
     @page_title = "#{location.name}<br />Drug availability"
 
-    @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
-      ON s.epics_products_id = epics_products.epics_products_id
+    @items = EpicsStockDetails.joins("INNER JOIN epics_products p
+      ON p.epics_products_id = epics_stock_details.epics_products_id
       LEFT JOIN epics_stock_expiry_dates x 
-      ON x.epics_stock_details_id = s.epics_stock_details_id 
-      ").where("s.epics_location_id = ?",location.id).select("epics_products.* , s.*, x.*")
+      ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id 
+      ").where("epics_stock_details.epics_location_id = ?",location.id).select("p.* , 
+      epics_stock_details.*, x.*").group('epics_stock_details.epics_stock_details_id').map do |r|
+        {:item_code => r.product_code,:item_name => r.name, :min_stock => r.min_stock,
+         :max_stock => r.max_stock, :current_quantity => r.current_quantity,
+         :expiry_date => r.expiry_date 
+        }
+      end
   end
 
   def drug_availability_printable
     location = EpicsLocation.find(params[:store_room])
     @page_title = "#{location.name}<br />Drug availability"
 
-    @epics_products = EpicsProduct.joins("INNER JOIN epics_stock_details s
-      ON s.epics_products_id = epics_products.epics_products_id
-      LEFT JOIN epics_stock_expiry_dates x
-      ON x.epics_stock_details_id = s.epics_stock_details_id
-      ").where("s.epics_location_id = ?",location.id).select("epics_products.* , s.*, x.*")
+    @items = EpicsStockDetails.joins("INNER JOIN epics_products p
+      ON p.epics_products_id = epics_stock_details.epics_products_id
+      LEFT JOIN epics_stock_expiry_dates x 
+      ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id 
+      ").where("epics_stock_details.epics_location_id = ?",location.id).select("p.* , 
+      epics_stock_details.*, x.*").group('epics_stock_details.epics_stock_details_id').map do |r|
+        {:item_code => r.product_code,:item_name => r.name, :min_stock => r.min_stock,
+         :max_stock => r.max_stock, :current_quantity => r.current_quantity,
+         :expiry_date => r.expiry_date 
+        }
+      end
 
     render :layout => false
   end

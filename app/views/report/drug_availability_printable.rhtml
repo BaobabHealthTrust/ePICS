@@ -1,3 +1,31 @@
+<script>
+  function addPrinterIcon(){
+    nav = document.getElementById('nav')
+    img = document.createElement('img')
+    img.src="/images/emblem_print.png"
+    img.id='printer'
+    img.onclick=function(){
+      printReport();
+      //alert('Testing');
+      //window.location='/report/drug_availability_printable?store_room=<%= params[:store_room] %>'
+    }
+    nav.appendChild(img)
+  }
+  window.setTimeout("addPrinterIcon();", 50)
+
+  function printReport(){
+
+    jQuery.ajax({
+      type: "POST",
+      url: "/report/print_drug_availability_report",
+      data: "store_room=<%=params[:store_room]%>",
+      success: function(){
+        document.location.href="/"
+      }
+
+    });
+  }
+</script>
 <style>
 #printer{
 height: 60px;
@@ -30,7 +58,7 @@ th {
 }
 
 </style>
-<%= render :partial=>"/layouts/top" %>
+
 <table class="item-table">
 <tr>
   <th class='left-align'>Item code</th>
@@ -40,14 +68,14 @@ th {
   <th class='right-align'>Current quantity</th>
   <th class='right-align'>Item expires</th>
 </tr>
-<%(@epics_products || []).each do |product|%>
+<%(@items || []).each do |item|%>
   <tr>
-    <td class='left-align'><%=product.product_code %></td>
-    <td class='left-align'><%=product.name %></td>
-    <td class='right-align'><%=product.min_stock %></td>
-    <td class='right-align'><%=product.max_stock %></td>
-    <td class='right-align'><%=product.current_quantity%></td>
-    <td class='right-align'><%=product.expiry_date.to_date.strftime("%B %Y") rescue 'N/A' %></td>
+    <td class='left-align'><%=item[:item_code] %></td>
+    <td class='left-align'><%=item[:item_name] %></td>
+    <td class='right-align'><%=item[:min_stock] %></td>
+    <td class='right-align'><%=item[:max_stock] %></td>
+    <td class='right-align'><%=item[:current_quantity]%></td>
+    <td class='right-align'><%=item[:expiry_date].to_date.strftime("%B %Y") rescue 'N/A' %></td>
   </tr>
   <tr>
     <td colspan="6"><hr /><td>

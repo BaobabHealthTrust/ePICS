@@ -68,14 +68,14 @@ th {
   <th class='right-align'>Current quantity</th>
   <th class='right-align'>Item expires</th>
 </tr>
-<%(@epics_products || []).each do |product|%>
+<%(@items || []).each do |item|%>
   <tr>
-    <td class='left-align'><%=product.product_code %></td>
-    <td class='left-align'><%=product.name %></td>
-    <td class='right-align'><%=product.min_stock %></td>
-    <td class='right-align'><%=product.max_stock %></td>
-    <td class='right-align'><%=product.current_quantity%></td>
-    <td class='right-align'><%=product.expiry_date.to_date.strftime("%B %Y") rescue 'N/A' %></td>
+    <td class='left-align'><%=item[:item_code] %></td>
+    <td class='left-align'><%=item[:item_name] %></td>
+    <td class='right-align'><%=item[:min_stock] %></td>
+    <td class='right-align'><%=item[:max_stock] %></td>
+    <td class='right-align'><%=item[:current_quantity]%></td>
+    <td class='right-align'><%=item[:expiry_date].to_date.strftime("%B %Y") rescue 'N/A' %></td>
   </tr>
   <tr>
     <td colspan="6"><hr /><td>

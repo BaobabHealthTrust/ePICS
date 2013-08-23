@@ -94,7 +94,7 @@ class UserController < ApplicationController
           role.epics_role_id = params[:role]
           role.save
           flash[:notice] = 'User successfully created'
-          redirect_to :action=> 'summary', :user => @user
+          redirect_to :action=> 'summary', :user => @user.id
       else
         flash[:notice] = 'Failed to create new user'
         redirect_to :action=> 'new'

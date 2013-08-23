@@ -43,7 +43,7 @@ class StockController < ApplicationController
   def borrow_index
 
     @borrow_cart =  (session[:borrow_cart] ||= ProductCart.new)
-
+    @page_title = "Borrowing Items"
     if request.post?
       session[:borrow] = nil
       borrow_hash = Hash.new()
@@ -85,7 +85,7 @@ class StockController < ApplicationController
       EpicsLocation.find_by_name(params[:facility]).id,
       EpicsLendsOrBorrowsType.find_by_name("Lend").id]).map{|x| [x.lend_or_borrow_date, x.epics_orders_id]}
 
-    @page_title = 'Returning facility<br />' + params[:facility]
+    @page_title = 'Facility Returning Items<br />' + params[:facility]
     render :layout => "report"
   end
 

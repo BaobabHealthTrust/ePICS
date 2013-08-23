@@ -28,6 +28,7 @@ tt_cancel_destination='/'
     <%= text_field_tag :username, nil,
                        {:id => 'username',
                         :field_type => 'alpha',
+                        :textCase => "lower",
                         :allowFreeText => true,
                         :helpText => 'Enter user name'} %>
 

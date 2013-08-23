@@ -102,8 +102,9 @@ class ProductController < ApplicationController
       @products << detail.epics_stock_expiry_date.expiry_date.to_date.strftime("%d-%b-%Y")
     end
     @products = @products.sort
-
-    render :text => "<li></li><li>" + @products.uniq.join("</li><li>") + "</li>"
+    @html = "<li></li><li style='color:red;'>" + @products[0] + "</li>"
+    @products.delete_at(0)
+    render :text => @html +"<li>" + @products.uniq.join("</li><li>") + "</li>"
   end
 
   def edit_product

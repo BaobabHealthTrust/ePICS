@@ -12,7 +12,8 @@ class ReportController < ApplicationController
     start_date = params[:date]['start'].to_date
     end_date = params[:date]['end'].to_date
     @page_title = "Received/Issued:<br />" + start_date.strftime('%d %b, %Y') 
-    @page_title += " to " + end_date.strftime('%d %b, %Y') 
+    @page_title += " to " + end_date.strftime('%d %b, %Y')
+    @received_items = EpicsReport.received_items(start_date,end_date) 
   end
 
   def view_alerts

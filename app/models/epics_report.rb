@@ -320,4 +320,25 @@ EOF
       end
   end
 
+  def self.received_items(start_date, end_date)
+
+    sql=<<EOF
+      SELECT p.product_code item_code,p.name item_name,
+      s.epics_products_id,SUM(s.received_quantity) received, SUM(o.quantity) issued
+      FROM epics_development.epics_stock_details s
+      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
+      INNER JOIN epics_stocks e ON e.epics_stock_id = s.epics_stock_id AND s.voided = 0 
+      LEFT JOIN epics_product_orders o ON o.epics_stock_details_id = s.epics_stock_details_id
+      AND o.voided = 0 WHERE e.grn_date BETWEEN '#{start_date}' AND '#{end_date}'
+      GROUP BY s.epics_products_id
+EOF
+
+    EpicsStockDetails.find_by_sql(sql).map do |r|
+        {:item_code => r.item_code,:item_name => r.item_name,
+         :received => r.received, :issued => r.issued
+        }
+    end
+
+  end
+
 end

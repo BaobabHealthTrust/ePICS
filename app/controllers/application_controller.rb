@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   #protect_from_forgery
   before_filter :perform_basic_auth, :except => ['login','logout','authenticate',
     'store_room_printable','drug_availability_printable','monthly_report_printable',
-    'daily_dispensation_printable'
+    'daily_dispensation_printable','disposed_items_printable'
   ]
 
   protected                                                                     

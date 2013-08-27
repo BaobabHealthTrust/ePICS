@@ -259,6 +259,8 @@ EPICS::Application.routes.draw do
   post "report/print_daily_dispensation_report"
   get "report/daily_dispensation_printable"
   get 'report/missing_items'
+  post 'report/print_disposed_items_report'
+  get 'report/disposed_items_printable'
   ########### reports end #########
 
   #get "home/index"

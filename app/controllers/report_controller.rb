@@ -317,5 +317,40 @@ EOF
       print(file_name)
     end
   end
+
+  def disposed_items_printable
+    start_date = params[:start_date].to_date
+    end_date = params[:end_date].to_date
+    @page_title = "Board Off Items<br />From #{start_date.strftime('%d %b, %Y')}
+      to #{end_date.strftime('%d %b, %Y')}"
+    @items = EpicsReport.disposed_items(start_date, end_date)
+    render :layout => false
+  end
   
+  def print_disposed_items_report
+    start_date = params[:start_date].to_date
+    end_date = params[:end_date].to_date
+    ##############################
+      location = request.remote_ip rescue ""
+      current_printer = ""
+      date = params[:date]
+      locations = EpicsGlobalProperty.find("facility.printers").property_value.split(",") rescue []
+      locations.each{|ward|
+        current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
+      } rescue []
+
+        t1 = Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/disposed_items_printable/" +\
+            "?start_date=#{start_date}&end_date=#{end_date}" + "\" /tmp/output-disposed_items_report" + ".pdf \n"
+        }
+
+        file = "/tmp/output-disposed_items_report" + ".pdf"
+        t2 = Thread.new{
+          sleep(3)
+          print(file, current_printer)
+        }
+        render :text => "true" and return
+    ###############################
+  end
 end

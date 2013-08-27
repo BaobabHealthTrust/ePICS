@@ -1,20 +1,46 @@
-
 <style>
+.item-table {
+  width: 98%;
+  padding-top: 10px;
+}
 
-  #Unknown{
-    display: none;
-  }
+td {
+  font-size: 16px;
+}
+
+th {
+  font-size: 20;
+}
+
+.left-align {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.right-align {
+  text-align: right;
+  padding-right: 5px;
+}
 
 </style>
 
-<form method='post' action="" >
-  <%= text_field_tag "start_date", nil, {
-          :helpText => 'Select Start Date',
-          :field_type => 'date',
-          :id => 'start_date'}  %>
+<table class="item-table">
+<tr>
+  <th class='left-align'>Item code</th>
+  <th class='left-align'>Item name</th>
+  <th class='right-align'>Received quantity</th>
+  <th class='right-align'>Issued quantity</th>
+</tr>
+<%(@received_items || []).each do |item|%>
+  <tr>
+    <td class='left-align'><%=item[:item_code] %></td>
+    <td class='left-align'><%=item[:item_name] %></td>
+    <td class='right-align'><%=item[:received] %></td>
+    <td class='right-align'><%=item[:issued] || 0 %></td>
+  </tr>
+  <tr>
+    <td colspan="4"><hr /><td>
+  </tr>
+<%end%>
+</table>
 
-  <%= text_field_tag "end_date", nil, {
-          :helpText => 'Select End Time',
-          :field_type => 'date',
-          :id => 'end_date'}  %>
-</form>

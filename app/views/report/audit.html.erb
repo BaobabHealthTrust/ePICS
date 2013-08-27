@@ -1,0 +1,66 @@
+<style>
+
+div {
+ -moz-user-select: none; 
+}
+
+.item-table {
+  width: 98%;
+  padding-top: 10px;
+}
+
+td {
+  font-size: 16px;
+}
+
+th {
+  font-size: 20;
+}
+
+.left-align {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.right-align {
+  text-align: right;
+  padding-right: 5px;
+}
+
+</style>
+
+<table class="item-table">
+<tr>
+  <th class='left-align'>Item code</th>
+  <th class='left-align'>Item name</th>
+  <th class='right-align'>Item pack size</th>
+  <th class='right-align'>Item billing charge</th>
+  <th class='right-align'>Item unit price</th>
+  <th class='right-align'>Quantity received</th>
+  <th class='right-align'>Quantity issued</th>
+  <th class='right-align'>Balance</th>
+  <th class='right-align'>Amount in hand</th>
+  <th class='right-align'>Amount spent</th>
+</tr>
+<tr>
+  <td colspan="10"><hr /><td>
+</tr>
+<%(@audits || []).each do |audit|%>
+  <tr>
+    <td class='left-align'><%=audit[:item_code] %></td>
+    <td class='left-align'><%=audit[:item_name] %></td>
+    <td class='right-align'><%=audit[:pack_size] %></td>
+    <td class='right-align'><%=audit[:billing_charge] %></td>
+    <td class='right-align'><%=audit[:unit_price] %></td>
+    <td class='right-align'><%=audit[:received_quantity] %></td>
+    <td class='right-align'><%=audit[:issued] %></td>
+    <td class='right-align'><%=audit[:balance] %></td>
+    <td class='right-align'><%=audit[:amount_in_hand] %></td>
+    <td class='right-align'><%=audit[:value_spent] %></td>
+  </tr>
+  <tr>
+    <td colspan="10"><hr /><td>
+  </tr>
+<%end%>
+</table>
+

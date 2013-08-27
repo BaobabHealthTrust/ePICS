@@ -13,7 +13,7 @@ tt_cancel_destination='/'
   }
 
   function set_ajaxURL_for_stock_details(name) {                             
-    url = "/get_batch?name=" + name + "&search_str=";
+    url = "/get_batch?name=" + encodeURIComponent(name) + "&search_str=";
     $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', url);    
     listSuggestions(tstCurrentPage);                                      
   }

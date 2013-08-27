@@ -363,4 +363,34 @@ EOF
         render :text => "true" and return
     ###############################
   end
+
+  def expired_items_printable    
+    @page_title = "Expired items"
+    @items = EpicsReport.expired_items
+    render :layout => false
+  end
+  
+  def print_expired_items_report
+      location = request.remote_ip rescue ""
+      current_printer = ""
+      locations = EpicsGlobalProperty.find("facility.printers").property_value.split(",") rescue []
+      locations.each{|ward|
+        current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
+      } rescue []
+
+        t1 = Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/expired_items_printable/" +\
+             "\" /tmp/output-expired_items_report" + ".pdf \n"
+        }
+
+        file = "/tmp/output-expired_items_report" + ".pdf"
+        t2 = Thread.new{
+          sleep(3)
+          print(file, current_printer)
+        }
+        render :text => "true" and return
+    ###############################
+  end
+  
 end

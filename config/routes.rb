@@ -261,6 +261,8 @@ EPICS::Application.routes.draw do
   get 'report/disposed_items_printable'
   post "report/audit"
   post "report/received_items"
+  post "report/print_expired_items_report"
+  get "report/expired_items_printable"
   ########### reports end #########
 
   #get "home/index"

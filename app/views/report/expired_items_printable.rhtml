@@ -1,38 +1,4 @@
-<script>
-  function addPrinterIcon(){
-    nav = document.getElementById('nav')
-    img = document.createElement('img')
-    img.src="/images/emblem_print.png"
-    img.id='printer'
-    img.onclick=function(){
-      printReport();
-    }
-    nav.appendChild(img)
-  }
-  window.setTimeout("addPrinterIcon();", 50)
-
-  function printReport(){
-    jQuery.ajax({
-      type: "POST",
-      url: "/report/print_expired_items_report",
-      data: "",
-      success: function(){
-        document.location.href="/"
-      }
-
-    });
-  }
-</script>
-
 <style>
-#printer{
-  height: 60px;
-  margin-left: 81%;
-  margin-top: 10px;
-  cursor: pointer;
-  float: left;
-}
-
 .item-table {
   width: 98%;
   padding-top: 10px;
@@ -94,7 +60,7 @@ th {
   width: 55px;
 }
 </style>
-
+<%= render :partial=>"/layouts/top" %>
 <table class="item-table">
 <tr>
   <th class='left-align'>Item code</th>
@@ -152,3 +118,4 @@ th {
 
   setTimeout("setAttributes();",500);
 </script>
+

@@ -2,7 +2,46 @@
 <html>
   <head>
     <title>Home</title>
+    <script>
+      function addPrinterIcon(){
+        nav = document.getElementById('custom')
+        img = document.createElement('img')
+        img.src="/images/emblem_print.png"
+        img.id='printer'
+        img.onclick=function(){
+          <% if params[:type] == 'borrow' %>
+            window.location="/stock_details/print_borrowed_items_from_view?stock_id=<%=params[:stock_id]%>"
+          <%  elsif params[:type] == 'return'%>
+            window.location="/stock_details/print_received_back_items_from_view?stock_id=<%=params[:stock_id]%>"
+          <% else %>
+            window.location="/stock_details/print_received_items_from_view?stock_id=<%=params[:stock_id]%>"
+          <% end  %>
+          }
+        nav.appendChild(img)
+      }
+      window.setTimeout("addPrinterIcon();", 50)
+
+      function printLabel(){
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/stock_details/receive_items_label",
+          data: "stock_id=<%=  params[:stock_id] %>",
+          success: function(){
+       
+          }
+
+        });
+      }
+    </script>
     <style type="text/css">
+      #printer{
+        height: 60px;
+        margin-left: 75%;
+        cursor: pointer;
+        float: left;
+      }
+
       body {
         background-color: #fff;
         margin: 20px;
@@ -116,4 +155,5 @@
     </table>
   </body>
 </html>
+
 

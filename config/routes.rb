@@ -84,6 +84,19 @@ EPICS::Application.routes.draw do
   get "stock_details/board_off"
   get "stock_details/edit_stock_details"
   post "stock_details/save_edited_stock_details"
+  get "stock_details/print_received_items_label"
+  get "stock_details/receive_items_data"
+  get "stock_details/receive_items_label"
+  post "stock_details/receive_items_label"
+  get "stock_details/print_received_items_from_view"
+  get "stock_details/print_borrowed_items_label"
+  get "stock_details/print_borrowed_items_label"
+  get "stock_details/borrow_items_data"
+  get "stock_details/print_borrowed_items_from_view"
+  get "stock_details/print_received_back_items_label"
+  get "stock_details/print_received_back_items_from_view"
+  get "stock_details/receive_back_items_label"
+  get "stock_details/receive_back_items_data"
   ######### stock_details end ########
 
   ######### stock start ########

@@ -127,8 +127,10 @@ class StockDetailsController < ApplicationController
             session[:item_returns] = session[:return_items] = nil
           else
             session[:cart] = session[:stock] = nil
+            print_received_items_label(@stock.epics_stock_id)
           end
-          redirect_to :action => :summary, :stock_id => @stock.epics_stock_id
+          #print_received_items_label(@stock.epics_stock_id)#print and redirect inside
+          redirect_to :action => :summary, :stock_id => @stock.epics_stock_id, :type => type
         end
       end
     end
@@ -244,6 +246,124 @@ class StockDetailsController < ApplicationController
         )
     end
     redirect_to :controller => "product", :action => "view", :product => session[:product]
+  end
+#********************************************************************************
+  def print_received_items_label(stock_id)
+    print_and_redirect("/stock_details/receive_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  end
+
+  def print_received_items_from_view
+    stock_id = params[:stock_id]
+    print_and_redirect("/stock_details/receive_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  end
+  
+  def receive_items_label
+    stock_id = params[:stock_id]
+    print_string = receive_items_data(stock_id)
+    send_data(print_string,:type=>"application/label; charset=utf-8", :stream=> false, :filename=>"#{Time.now.to_i}.lbl", :disposition => "inline")
+  end
+  
+  def receive_items_data(stock_id)
+      label = ZebraPrinter::StandardLabel.new
+      label.font_size = 3
+      label.font_horizontal_multiplier = 1
+      label.font_vertical_multiplier = 1
+      label.left_margin = 50
+      stock = EpicsStock.find(stock_id)
+      stock_details = EpicsStockDetails.find_all_by_epics_stock_id(stock_id)
+      label.draw_multi_text("Received Items: Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
+      label.draw_multi_text("Supplier Name: #{stock.epics_supplier.name}", :font_reverse => false)
+      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Stock Details", :font_reverse => true)
+      stock_details.each do |stock_detail|
+        label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +
+          ' ' + stock_detail.epics_product.epics_product_units.name}",
+          :font_reverse => false)
+      end
+      user_name = User.current.openmrs_person.openmrs_person_names[0]
+      user_name = user_name.given_name.first.capitalize + '.' + user_name.family_name
+      label.draw_multi_text("Processed By: #{user_name}", :font_reverse => true)
+      label.print(1)
+  end
+#*******************************************************************************
+  def print_borrowed_items_label(stock_id)
+    print_and_redirect("/stock_details/borrow_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  end
+
+  def print_borrowed_items_from_view
+    stock_id = params[:stock_id]
+    print_and_redirect("/stock_details/borrow_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  end
+  
+  def borrow_items_label
+    stock_id = params[:stock_id]
+    print_string = borrow_items_data(stock_id)
+    send_data(print_string,:type=>"application/label; charset=utf-8", :stream=> false, :filename=>"#{Time.now.to_i}.lbl", :disposition => "inline")
+  end
+  
+  def borrow_items_data(stock_id)
+      label = ZebraPrinter::StandardLabel.new
+      label.font_size = 3
+      label.font_horizontal_multiplier = 1
+      label.font_vertical_multiplier = 1
+      label.left_margin = 50
+      stock = EpicsStock.find(stock_id)
+      stock_details = EpicsStockDetails.find_all_by_epics_stock_id(stock_id)
+      label.draw_multi_text("Borrowed Items: Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
+      label.draw_multi_text("Supplier Name: #{stock.epics_supplier.name}", :font_reverse => false)
+      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Stock Details", :font_reverse => true)
+      stock_details.each do |stock_detail|
+        label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +
+          ' ' + stock_detail.epics_product.epics_product_units.name}",
+          :font_reverse => false)
+      end
+      user_name = User.current.openmrs_person.openmrs_person_names[0]
+      user_name = user_name.given_name.first.capitalize + '.' + user_name.family_name
+      label.draw_multi_text("Processed By: #{user_name}", :font_reverse => true)
+      label.print(1)
+  end
+#*******************************************************************************
+  def print_received_back_items_label(stock_id)
+    print_and_redirect("/stock_details/receive_back_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  end
+
+  def print_received_back_items_from_view
+    stock_id = params[:stock_id]
+    print_and_redirect("/stock_details/receive_back_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  end
+
+  def receive_back_items_label
+    stock_id = params[:stock_id]
+    print_string = receive_back_items_data(stock_id)
+    send_data(print_string,:type=>"application/label; charset=utf-8", :stream=> false, :filename=>"#{Time.now.to_i}.lbl", :disposition => "inline")
+  end
+
+  def receive_back_items_data(stock_id)
+      label = ZebraPrinter::StandardLabel.new
+      label.font_size = 3
+      label.font_horizontal_multiplier = 1
+      label.font_vertical_multiplier = 1
+      label.left_margin = 50
+      stock = EpicsStock.find(stock_id)
+      stock_details = EpicsStockDetails.find_all_by_epics_stock_id(stock_id)
+      label.draw_multi_text("Received Back Items: Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
+      label.draw_multi_text("Supplier Name: #{stock.epics_supplier.name}", :font_reverse => false)
+      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Stock Details", :font_reverse => true)
+      stock_details.each do |stock_detail|
+        label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +
+          ' ' + stock_detail.epics_product.epics_product_units.name}",
+          :font_reverse => false)
+      end
+      user_name = User.current.openmrs_person.openmrs_person_names[0]
+      user_name = user_name.given_name.first.capitalize + '.' + user_name.family_name
+      label.draw_multi_text("Processed By: #{user_name}", :font_reverse => true)
+      label.print(1)
+  end
+#*******************************************************************************
+  def exchange_items_label()
+
   end
   
   protected

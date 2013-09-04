@@ -123,14 +123,16 @@ class StockDetailsController < ApplicationController
 
           if type.eql?('borrow')
             session[:borrow] = session[:borrow_cart] = nil
+            print_borrowed_items_label(@stock.epics_stock_id, type)
           elsif type.eql?('return')
             session[:item_returns] = session[:return_items] = nil
+            print_received_back_items_label(@stock.epics_stock_id, type)
           else
             session[:cart] = session[:stock] = nil
-            print_received_items_label(@stock.epics_stock_id)
+            print_received_items_label(@stock.epics_stock_id, type)
           end
           #print_received_items_label(@stock.epics_stock_id)#print and redirect inside
-          redirect_to :action => :summary, :stock_id => @stock.epics_stock_id, :type => type
+          #redirect_to :action => :summary, :stock_id => @stock.epics_stock_id, :type => type
         end
       end
     end
@@ -248,13 +250,14 @@ class StockDetailsController < ApplicationController
     redirect_to :controller => "product", :action => "view", :product => session[:product]
   end
 #********************************************************************************
-  def print_received_items_label(stock_id)
-    print_and_redirect("/stock_details/receive_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  def print_received_items_label(stock_id, type)
+    print_and_redirect("/stock_details/receive_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}&type=#{type}")
   end
 
   def print_received_items_from_view
     stock_id = params[:stock_id]
-    print_and_redirect("/stock_details/receive_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+    type = params[:type]
+    print_and_redirect("/stock_details/receive_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}&type=#{type}")
   end
   
   def receive_items_label
@@ -286,13 +289,14 @@ class StockDetailsController < ApplicationController
       label.print(1)
   end
 #*******************************************************************************
-  def print_borrowed_items_label(stock_id)
-    print_and_redirect("/stock_details/borrow_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  def print_borrowed_items_label(stock_id, type)
+    print_and_redirect("/stock_details/borrow_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}&type=#{type}")
   end
 
   def print_borrowed_items_from_view
     stock_id = params[:stock_id]
-    print_and_redirect("/stock_details/borrow_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+    type = params[:type]
+    print_and_redirect("/stock_details/borrow_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}&type=#{type}")
   end
   
   def borrow_items_label
@@ -324,13 +328,14 @@ class StockDetailsController < ApplicationController
       label.print(1)
   end
 #*******************************************************************************
-  def print_received_back_items_label(stock_id)
-    print_and_redirect("/stock_details/receive_back_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+  def print_received_back_items_label(stock_id, type)
+    print_and_redirect("/stock_details/receive_back_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}&type=#{type}")
   end
 
   def print_received_back_items_from_view
     stock_id = params[:stock_id]
-    print_and_redirect("/stock_details/receive_back_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}")
+    type = params[:type]
+    print_and_redirect("/stock_details/receive_back_items_label?stock_id=#{stock_id}", "/stock_details/summary?stock_id=#{stock_id}&type=#{type}")
   end
 
   def receive_back_items_label

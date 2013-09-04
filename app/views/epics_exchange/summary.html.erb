@@ -2,7 +2,29 @@
 <html>
   <head>
     <title>Home</title>
+    <script>
+      function addPrinterIcon(){
+        nav = document.getElementById('custom')
+        img = document.createElement('img')
+        img.src="/images/emblem_print.png"
+        img.id='printer'
+        img.onclick=function(){
+            window.location="/epics_exchange/print_exchanged_items_from_view?stock_id=<%= EpicsStock.last.id %>&exchange_details=<%=params[:exchange_details]%>"
+          }
+        nav.appendChild(img)
+      }
+      window.setTimeout("addPrinterIcon();", 50)
+
+
+    </script>
     <style type="text/css">
+      #printer{
+        height: 60px;
+        margin-left: 75%;
+        cursor: pointer;
+        float: left;
+      }
+      
       body {
         background-color: #fff;
         margin: 20px;

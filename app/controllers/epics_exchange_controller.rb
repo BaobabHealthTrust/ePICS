@@ -122,6 +122,7 @@ class EpicsExchangeController < ApplicationController
 
       session[:receive_copy] = session[:receive]
       session[:issue_copy] = session[:issue]
+      session[:exchange_details_copy] = session[:exchange]
       exchanging = EpicsExchange.new()
       exchanging.epics_stock_id = @stock.epics_stock_id
       exchanging.epics_order_id = @order.id
@@ -133,7 +134,9 @@ class EpicsExchangeController < ApplicationController
       session[:receive] = nil
       session[:issue ] = nil
       session[:exchange] = nil
-      redirect_to :action => :summary,:exchange_details => @exchange_details
+      stock_id = EpicsStock.last.id
+      print_exchanged_items_label(stock_id, session[:exchange_details_copy])
+      #redirect_to :action => :summary,:exchange_details => @exchange_details
        #redirect_to summary({:received_items => @received_items.items,:issued_items => @issued_items.items,:exchange_details => @exchange_details})
     end
 
@@ -166,7 +169,7 @@ class EpicsExchangeController < ApplicationController
     #raise session[:receive_copy].to_yaml
     @received_cart = session[:receive_copy]
     @issued_cart = session[:issue_copy]
-    @exchange_details = params[:exchange_details]
+    @exchange_details = session[:exchange_details_copy] #params[:exchange_details]
     @page_title = "Exchange Items Summary"
     render :layout => 'custom'
   end
@@ -202,5 +205,46 @@ class EpicsExchangeController < ApplicationController
     cart.remove_product(product)
     render :text => "true"
   end
- 
+
+  def print_exchanged_items_label(stock_id, exchange_details)
+    print_and_redirect("/epics_exchange/exchange_items_label?stock_id=#{stock_id}", "/epics_exchange/summary?exchange_details=#{exchange_details}")
+  end
+
+  def print_exchanged_items_from_view
+    stock_id = params[:stock_id]
+    exchange_details = params[:exchange_details]
+    print_and_redirect("/epics_exchange/exchange_items_label?stock_id=#{stock_id}", "/epics_exchange/summary?exchange_details=#{exchange_details}")
+  end
+
+  def exchange_items_label
+    stock_id = params[:stock_id]
+    print_string = exchange_items_data(stock_id)
+    send_data(print_string,:type=>"application/label; charset=utf-8", :stream=> false, :filename=>"#{Time.now.to_i}.lbl", :disposition => "inline")
+  end
+
+  def exchange_items_data(stock_id)
+      label = ZebraPrinter::StandardLabel.new
+      label.font_size = 3
+      label.font_horizontal_multiplier = 1
+      label.font_vertical_multiplier = 1
+      label.left_margin = 50
+      stock = EpicsStock.find(stock_id)
+      stock_details = EpicsStockDetails.find_all_by_epics_stock_id(stock_id)
+      exchange_location_id = EpicsExchange.last(:conditions => ["epics_stock_id =?",
+          stock_id]).epics_location_id
+      facility_name = EpicsLocation.find(exchange_location_id).name
+      label.draw_multi_text("Exchanged Items(Received): Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
+      label.draw_multi_text("Facility Name: #{facility_name}", :font_reverse => false)
+      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Stock Details", :font_reverse => true)
+      stock_details.each do |stock_detail|
+        label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +
+          ' ' + stock_detail.epics_product.epics_product_units.name}",
+          :font_reverse => false)
+      end
+      user_name = User.current.openmrs_person.openmrs_person_names[0]
+      user_name = user_name.given_name.first.capitalize + '.' + user_name.family_name
+      label.draw_multi_text("Processed By: #{user_name}", :font_reverse => true)
+      label.print(1)
+  end
 end

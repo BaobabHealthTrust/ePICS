@@ -21,6 +21,10 @@ EPICS::Application.routes.draw do
   get "epics_exchange/summary"
   post "epics_exchange/remove_product_from_issue_cart"
   post "epics_exchange/remove_product_from_receive_cart"
+  get "epics_exchange/print_exchanged_items_label"
+  get "epics_exchange/print_exchanged_items_from_view"
+  get "epics_exchange/exchange_items_label"
+  get "epics_exchange/exchange_items_data"
   ######## exchange ########
 
   ######## user ########
@@ -91,6 +95,7 @@ EPICS::Application.routes.draw do
   get "stock_details/print_received_items_from_view"
   get "stock_details/print_borrowed_items_label"
   get "stock_details/print_borrowed_items_label"
+  get "stock_details/borrow_items_label"
   get "stock_details/borrow_items_data"
   get "stock_details/print_borrowed_items_from_view"
   get "stock_details/print_received_back_items_label"

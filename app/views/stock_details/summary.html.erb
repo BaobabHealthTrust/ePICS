@@ -10,11 +10,11 @@
         img.id='printer'
         img.onclick=function(){
           <% if params[:type] == 'borrow' %>
-            window.location="/stock_details/print_borrowed_items_from_view?stock_id=<%=params[:stock_id]%>"
+            window.location="/stock_details/print_borrowed_items_from_view?stock_id=<%=params[:stock_id]%>&type=<%=params[:type]%>"
           <%  elsif params[:type] == 'return'%>
-            window.location="/stock_details/print_received_back_items_from_view?stock_id=<%=params[:stock_id]%>"
+            window.location="/stock_details/print_received_back_items_from_view?stock_id=<%=params[:stock_id]%>&type=<%=params[:type]%>"
           <% else %>
-            window.location="/stock_details/print_received_items_from_view?stock_id=<%=params[:stock_id]%>"
+            window.location="/stock_details/print_received_items_from_view?stock_id=<%=params[:stock_id]%>&type=<%=params[:type]%>"
           <% end  %>
           }
         nav.appendChild(img)

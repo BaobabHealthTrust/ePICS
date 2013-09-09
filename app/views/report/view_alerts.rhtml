@@ -53,7 +53,14 @@
   top:1px;
 }
 
+.report-div {                                                                   
+  overflow: auto;                                                               
+  height: 550px;                                                                
+}  
+
 </style>
+
+<div class="report-div">
 
 <table class="alerts">
   <%(@alerts || {}).each do |name , count|%>
@@ -68,3 +75,4 @@
   <%end%>
 </table>
 
+</div>

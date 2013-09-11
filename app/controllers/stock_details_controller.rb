@@ -193,7 +193,8 @@ class StockDetailsController < ApplicationController
       quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
       location = params[:stock_details][:location_id]
       expiry_date = params[:stock_details][:expiry_date]
-      @return_cart.add_product(product,quantity,location,expiry_date)
+      batch_number = params[:stock_details][:batch_number]
+      @return_cart.add_product(product,batch_number,quantity,location,expiry_date)
     end
     @page_title = "Returning Borrowed Items"
     render :layout => "custom"
@@ -279,7 +280,7 @@ class StockDetailsController < ApplicationController
       stock_details = EpicsStockDetails.find_all_by_epics_stock_id(stock_id)
       label.draw_multi_text("Received Items: Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
       label.draw_multi_text("Supplier Name: #{stock.epics_supplier.name}", :font_reverse => false)
-      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Invoice Number: #{stock.invoice_number}", :font_reverse => false)
       label.draw_multi_text("Stock Details", :font_reverse => true)
       stock_details.each do |stock_detail|
         label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +
@@ -318,7 +319,7 @@ class StockDetailsController < ApplicationController
       stock_details = EpicsStockDetails.find_all_by_epics_stock_id(stock_id)
       label.draw_multi_text("Borrowed Items: Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
       label.draw_multi_text("Supplier Name: #{stock.epics_supplier.name}", :font_reverse => false)
-      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Invoice Number: #{stock.invoice_number}", :font_reverse => false)
       label.draw_multi_text("Stock Details", :font_reverse => true)
       stock_details.each do |stock_detail|
         label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +
@@ -357,7 +358,7 @@ class StockDetailsController < ApplicationController
       stock_details = EpicsStockDetails.find_all_by_epics_stock_id(stock_id)
       label.draw_multi_text("Received Back Items: Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
       label.draw_multi_text("Supplier Name: #{stock.epics_supplier.name}", :font_reverse => false)
-      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Invoice Number: #{stock.invoice_number}", :font_reverse => false)
       label.draw_multi_text("Stock Details", :font_reverse => true)
       stock_details.each do |stock_detail|
         label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +

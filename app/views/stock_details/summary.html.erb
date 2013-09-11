@@ -124,10 +124,11 @@
             <table class="table-products" style="width: 98% !important;">
               <thead> 
               <tr>
-                <th style="width: 5%;background-color: silver;">Item Name</th>
-                <th style="width: 5%;background-color: silver;">Item Code</th>
-                <th style="width: 5%;background-color: silver;">Item Quantity</th>
-                <th style="width: 5%;background-color: silver;">Expiry Date</th>
+                <th style="width: 20%;background-color: silver;">Item Name</th>
+                <th style="width: 20%;background-color: silver;">Item Code</th>
+                <th style="width: 20%;background-color: silver;">Batch Number</th>
+                <th style="width: 20%;background-color: silver;">Item Quantity</th>
+                <th style="background-color: silver;">Expiry Date</th>
               </tr>
               </thead> 
               <tbody>
@@ -138,6 +139,7 @@
                 <tr class="tr_<%=tr_class%>">
                   <td><%=  stock_detail.epics_product.name %></td>
                   <td><%=  stock_detail.epics_product.product_code rescue "Code not found"  %></td>
+                  <td><%=  stock_detail.batch_number rescue "Code not found"  %></td>
                   <td><%=  pluralize(stock_detail.received_quantity.to_s,stock_detail.epics_product.epics_product_units.name) %></td>
                   <td><%=  stock_detail.epics_stock_expiry_date.expiry_date.strftime("%d - %b - %Y") rescue "does not expire" %></td>
                 </tr>

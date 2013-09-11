@@ -6,7 +6,7 @@ class EpicsExchangeController < ApplicationController
     exchange_hash = Hash.new()
     exchange_hash[:exchange_facility] = params[:facility]
     exchange_hash[:exchange_date] = params[:exchange_date]
-    exchange_hash[:exchange_batch_id] = params[:batch_number]
+    exchange_hash[:exchange_invoice_number] = params[:invoice_number]
     session[:exchange] = exchange_hash
 
     unless session[:exchange].nil?
@@ -43,7 +43,7 @@ class EpicsExchangeController < ApplicationController
       product = EpicsProduct.where("name = ?",params[:item]['name'])[0]
       quantity = ((params[:item]['issue_quan'].blank? ? params[:item]['issue_quantity'] : params[:item]['issue_quan'] ).to_i * params[:item]['item_quantity'].to_i) rescue 1
       expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
-      @issue_cart.add_product(product,quantity,nil,expiry_date)
+      @issue_cart.add_product(product,nil,quantity,nil,expiry_date)
       @receive_cart = find_product_receive_cart
      # session[:issuing_location_id] = @location.id
       redirect_to :action => "new"
@@ -64,7 +64,8 @@ class EpicsExchangeController < ApplicationController
       quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
       location = params[:stock_details][:location_id]
       expiry_date = params[:stock_details][:expiry_date]
-      @receive_cart.add_product(product,quantity,location,expiry_date)
+      batch_number = params[:stock_details][:batch_number]
+      @receive_cart.add_product(product,batch_number,quantity,location,expiry_date)
       @issue_cart = find_product_issue_cart
       redirect_to :action => "new"
     end
@@ -78,10 +79,9 @@ class EpicsExchangeController < ApplicationController
 
     order_type = EpicsOrderTypes.find_by_name('Exchange')
     EpicsExchange.transaction do
-
       @stock = EpicsStock.new()
       @stock.grn_date = @exchange_details[:exchange_date]
-      @stock.grn_number = @exchange_details[:exchange_batch_id]
+      @stock.invoice_number = @exchange_details[:exchange_invoice_number]
       @stock.epics_supplier_id = EpicsSupplier.find_by_name('Other')
       @stock.save!
 
@@ -92,6 +92,7 @@ class EpicsExchangeController < ApplicationController
         @stock_detail.epics_location_id = params[:issue_to]
         @stock_detail.received_quantity = item.quantity
         @stock_detail.current_quantity = item.quantity
+        @stock_detail.batch_number = item.batch_number
         @stock_detail.epics_product_units_id = item.product.epics_product_units_id
         @stock_detail.save!
 

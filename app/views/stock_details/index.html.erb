@@ -157,11 +157,12 @@
     </th>
   </tr>
   <tr>
-    <th style="text-align: left; width: 10%;">Item Name</th>
-    <th style="text-align: left; width: 10%;">Item Code</th>
-    <th style="text-align: left; width: 10%;">Item Quantity</th>
-    <th style="text-align: left; width: 10%;">Expiry Date</th>
-    <th style="text-align: left; width: 10%;">&nbsp;</th>
+    <th style="text-align: left; width: 18%;">Item Name</th>
+    <th style="text-align: left; width: 18%;">Item Code</th>
+    <th style="text-align: left; width: 18%;">Batch Number</th>
+    <th style="text-align: left; width: 18%;">Item Quantity</th>
+    <th style="text-align: left; width: 18%;">Expiry Date</th>
+    <th style="text-align: left; ">&nbsp;</th>
   </tr>
 </table>
  <div style="height: 200px; overflow: auto;">
@@ -171,11 +172,12 @@
           tr_class = cycle("blue", "white")
      %>
          <tr class ="tr_<%= tr_class %>" product_id="<%= item.product.id %>">
-           <td style="text-align: left; width: 10%;"><%=  item.name %></td>
-           <td style="text-align: left; width: 10%;"><%=  item.product.product_code rescue "Code not found"  %></td>
-           <td style="text-align: left; width: 10%;"><%=  item.quantity %></td>
-           <td style="text-align: left; width: 10%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
-           <td style="width: 10%;"><%= image_tag("close.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
+           <td style="text-align: left; width: 18%;"><%=  item.name %></td>
+           <td style="text-align: left; width: 18%;"><%=  item.product.product_code rescue "Code not found"  %></td>
+           <td style="text-align: left; width: 18%;"><%=  item.batch_number %></td>
+           <td style="text-align: left; width: 18%;"><%=  item.quantity %></td>
+           <td style="text-align: left; width: 18%;"><%=  item.expiry_date.to_date.strftime("%d - %b - %Y") rescue "Does not expire" %></td>
+           <td ><%= image_tag("close.png",:id => item.product.id, :class=>"img", :onclick=>"removeFromCart(this)") %></td>
          </tr>
      <% end %>
    </table>

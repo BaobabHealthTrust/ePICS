@@ -106,27 +106,29 @@
 
       <%
       color = 'white'
-      (@trail || {}).sort_by {|x,y| x }.each do |grn_number , attributes| 
-          (attributes).each do |date , data|
-            if color == 'white'
-              color = 'blue'
-            else
-              color = 'white'
-            end
+      (@trail || {}).sort_by {|x,y| x }.each do |transaction , attributes| 
+          (attributes).each do |remark , values|
+            (values).each do |date , data|
+              if color == 'white'
+                color = 'blue'
+              else
+                color = 'white'
+              end
       %>
       <tr class="tbody-data row_<%=color%>">
         <td><%=date.strftime("%d-%b-%Y")%></td>
-        <td><%=grn_number%></td>
+        <td><%=data[:invoice_number]%></td>
         <td><%=data[:received_quantity]%></td>
         <td><%=data[:quantity_issued]%></td>
         <td><%=data[:losses]%></td>
         <td><%=data[:positive_adjustments]%></td>
         <td><%=data[:negative_adjustments]%></td>
         <td><%=data[:current_quantity]%></td>
-        <td>&nbsp;</td>
+        <td><%=data[:remark]%></td>
       </tr>
       
-      <%end
+          <%end
+        end
       end %>
       </tbody>
     </table>

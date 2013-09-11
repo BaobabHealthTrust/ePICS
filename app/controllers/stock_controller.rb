@@ -49,7 +49,7 @@ class StockController < ApplicationController
       borrow_hash = Hash.new()
       borrow_hash[:borrowing_from] = params[:facility]
       borrow_hash[:supplier_id] = EpicsSupplier.find_by_name("Other").id
-      borrow_hash[:grn_number] = params[:grn_number]
+      borrow_hash[:invoice_number] = params[:invoice_number]
       borrow_hash[:authorizer] = params[:authorizer]
       borrow_hash[:grn_date] = params[:borrow_date]
       borrow_hash[:return_date] = params[:return_date]

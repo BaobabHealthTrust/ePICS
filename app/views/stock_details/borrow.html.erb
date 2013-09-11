@@ -40,6 +40,10 @@ function showExpiryDate() {
                      :field_type => 'alpha',
                      :helpText => "Select Item Category"} %>
 
+    <%= text_field_tag "stock_details[batch_number]", nil,
+                       {:id => 'batch_number', :field_type => 'alpha',
+                        :helpText => 'Batch Number'} %>
+
     <%= select_tag "stock_details[product_name]", nil,
                    {:id => "product_name",
                     :field_type => 'alpha',

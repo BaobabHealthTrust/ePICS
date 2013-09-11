@@ -20,9 +20,9 @@ function set_ajaxURL_for_batch(value) {
                      :field_type => 'alpha',
                      :helpText => "Select facility returning items"} %>
 
-    <%= text_field_tag :grn_number, nil,
-                       {:id => 'grn_number', :field_type => 'alpha',
-                        :helpText => 'Enter GRN/Batch Number'} %>
+    <%= text_field_tag :invoice_number, nil,
+                       {:id => 'invoice_number', :field_type => 'alpha',
+                        :helpText => 'Enter Invoice Number'} %>
 
     <%= text_field_tag :grn_date, nil,
                        {:id => 'grn_date', :field_type => 'date',

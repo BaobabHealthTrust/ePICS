@@ -130,7 +130,7 @@ class StockController < ApplicationController
                                       EpicsLendsOrBorrowsType.find_by_name(params[:type]).id,
                                       EpicsLocation.find_by_name(params[:facility]).id])
 
-    batches = EpicsStock.find(:all, :conditions => ["epics_stock_id IN (?)", loans.collect{|c| c.epics_stock_id}]).collect{|x| x.grn_number}
+    batches = EpicsStock.find(:all, :conditions => ["epics_stock_id IN (?)", loans.collect{|c| c.epics_stock_id}]).collect{|x| x.invoice_number}
 
     render :text => "<li></li><li>" + batches.join("</li><li>") + "</li>"
   end
@@ -138,7 +138,7 @@ class StockController < ApplicationController
   def get_items_by_batch_number
     items = EpicsStock.joins("INNER JOIN epics_stock_details s 
       ON s.epics_stock_id = epics_stocks.epics_stock_id 
-      AND epics_stocks.grn_number = '#{params[:number]}' INNER JOIN epics_products p 
+      AND epics_stocks.invoice_number = '#{params[:number]}' INNER JOIN epics_products p
       ON p.epics_products_id = s.epics_products_id").select("p.product_code, 
       p.name, s.received_quantity").map do |r|
         {:code => r.product_code,:item_name => r.name,:quantity => r.received_quantity}

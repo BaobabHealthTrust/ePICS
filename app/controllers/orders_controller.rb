@@ -95,7 +95,7 @@ class OrdersController < ApplicationController
 
           elsif ord_type.eql?('return')
             lend = EpicsLendsOrBorrows.find(:first, :conditions => ["epics_stock_id = ?",
-                                                                    EpicsStock.find_by_grn_number(session[:return_details][:return_batch]).id ])
+                                                                    EpicsStock.find_by_invoice_number(session[:return_details][:return_batch]).id ])
             lend.epics_orders_id = order.id
             lend.reimbursed = true
             lend.save

@@ -193,7 +193,8 @@ class StockDetailsController < ApplicationController
       quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
       location = params[:stock_details][:location_id]
       expiry_date = params[:stock_details][:expiry_date]
-      @return_cart.add_product(product,quantity,location,expiry_date)
+      batch_number = params[:stock_details][:batch_number]
+      @return_cart.add_product(product,batch_number,quantity,location,expiry_date)
     end
     @page_title = "Returning Borrowed Items"
     render :layout => "custom"

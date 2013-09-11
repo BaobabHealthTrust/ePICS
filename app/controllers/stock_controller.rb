@@ -75,7 +75,7 @@ class StockController < ApplicationController
 
     session[:item_returns] = {}
     session[:item_returns][:lent_to] = params[:facility]
-    session[:item_returns][:grn_number] = params[:grn_number]
+    session[:item_returns][:invoice_number] = params[:invoice_number]
     session[:item_returns][:grn_date] = params[:grn_date]
     session[:item_returns][:witness_names] = params[:witness_names]
     session[:item_returns][:supplier_id] = EpicsSupplier.find_by_name('Other').id

@@ -1,7 +1,7 @@
 class CreateEpicsStocks < ActiveRecord::Migration
   def self.up
     create_table :epics_stocks, :primary_key => :epics_stock_id do |t|
-			t.string :grn_number
+			t.string :invoice_number, :unique => true, :null => false
 			t.integer :epics_supplier_id
 			t.date :grn_date
 			t.boolean :voided, :default => false

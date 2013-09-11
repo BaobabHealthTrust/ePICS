@@ -1,6 +1,7 @@
 class CreateEpicsStockDetails < ActiveRecord::Migration
   def self.up
     create_table :epics_stock_details, :primary_key => :epics_stock_details_id do |t|
+			t.string :batch_number
 			t.integer :epics_stock_id
 			t.integer :epics_products_id
 			t.integer :received_quantity

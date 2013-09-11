@@ -187,4 +187,66 @@ class ProductController < ApplicationController
     @cost = EpicsItemCost.find_by_epics_products_id(params[:id])
   end
 
+  def stock_card_printable
+    stocks = EpicsStock.joins(:epics_stock_details).where("epics_products_id =?", params[:id])
+    @item = EpicsProduct.find(params[:id])
+    @page_title = "#{@item.name}<br />Stock Card"
+    @trail = {}
+
+    (stocks || []).each do |stock|
+      date = stock.grn_date.to_date
+      grn_number = stock.grn_number
+
+      if @trail[grn_number].blank?
+        @trail[grn_number] = {}
+        @trail[grn_number][date] = {}
+      elsif not @trail[grn_number].blank? and @trail[grn_number][date].blank?
+        @trail[grn_number][date] = {}
+      end
+
+      @trail[grn_number][date] = {
+        :received_quantity => EpicsReport.received_quantity(stock, @item, date),
+        :quantity_issued => EpicsReport.issued(stock, @item, date),
+        :losses => EpicsReport.losses_quantity(stock, @item, date),
+        :positive_adjustments => EpicsReport.positive_adjustments(stock, @item, date),
+        :negative_adjustments => EpicsReport.negative_adjustments(stock, @item, date),
+        :current_quantity => EpicsReport.current_quantity(stock,@item)
+      }
+
+    end
+    render :layout => false
+  end
+
+  def print_stock_card
+    location = request.remote_ip rescue ""
+    current_printer = ""
+    id = params[:id]
+    locations = EpicsGlobalProperty.find("facility.printers").property_value.split(",") rescue []
+    locations.each{|ward|
+      current_printer = ward.split(":")[1] if ward.split(":")[0].upcase == location
+    } rescue []
+
+      t1 = Thread.new{
+        Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+          request.env["HTTP_HOST"] + "\"/product/stock_card_printable/" +\
+          "?id=#{id}" + "\" /tmp/output-stock_card" + ".pdf \n"
+      }
+
+      file = "/tmp/output-stock_card" + ".pdf"
+      t2 = Thread.new{
+        sleep(3)
+        print(file, current_printer)
+      }
+      render :text => "true" and return
+  end
+
+  def print(file_name, current_printer)
+    sleep(3)
+    if (File.exists?(file_name))
+     Kernel.system "lp -o sides=two-sided-long-edge -o fitplot #{(!current_printer.blank? ? '-d ' + current_printer.to_s : "")} #{file_name}"
+    else
+      print(file_name)
+    end
+  end
+  
 end

@@ -1,40 +1,8 @@
 <html>
   <head>
-    <script>
-      function addPrinterIcon(){
-        nav = document.getElementById('nav')
-        img = document.createElement('img')
-        img.src="/images/emblem_print.png"
-        img.id='printer'
-        img.onclick=function(){
-          printStockCard();
-        }
-        nav.appendChild(img)
-      }
-      window.setTimeout("addPrinterIcon();", 50)
-
-      function printStockCard(){
-
-        jQuery.ajax({
-          type: "POST",
-          url: "/product/print_stock_card",
-          data: "id=<%=  params[:id] %>",
-          success: function(){
-            alert('done');
-          }
-
-        });
-      }
-    </script>
     <style>
-     #printer{
-        height: 65px;
-        margin-left: 75%;
-        cursor: pointer;
-        float: left;
-      }
      .tbody-header tr, td {
-     /*   border-right: solid 1px black; 
+     /*   border-right: solid 1px black;
         border-bottom: solid 1px black;
         border-left: solid 1px black;
         border-top: solid 1px black; */
@@ -42,8 +10,8 @@
       }
 
       .stock_card {
-        width: 100%;                                                                  
-        border-collapse: collapse;                                                    
+        width: 100%;
+        border-collapse: collapse;
         margin-top: 10px;
       }
 
@@ -61,10 +29,18 @@
       .row_blue td {
         background-color: lightgrey;
       }
-
+      .logo{
+        margin-left: 40%;
+      }
     </style>
   </head>
   <body>
+    <div class="header">
+      <%= image_tag("mw.gif", :class => "logo") %><br />
+      <b style="font-size:18pt; margin-left: 35%;">REPUBLIC OF MALAWI</b><br />
+      <b style="font-size: large; margin-left: 38%;">MINISTRY OF HEALTH</b><br /><br />
+      <b style="font-size:14pt; margin-left: 42%;">Stock Card</b>
+    </div>
     <table class="stock_card">
       <thead>
         <tr class="tbody-header">
@@ -79,7 +55,7 @@
           <td colspan="6" style="padding-left: 10px;font-weight: normal;"><%=@item.epics_product_units.name%></td>
         </tr>
         <tr class="tbody-header">
-          <td>DATE<br />(A)</td>
+          <td style="width: 13%">DATE<br />(A)</td>
           <td>Voucher To/From<br />(B)</td>
           <td>Quantity Received<br />(C)</td>
           <td>Quantity Issued<br />(D)</td>
@@ -87,7 +63,7 @@
           <td>+Adjust<br />(F)</td>
           <td>-Adjust<br />(G)</td>
           <td>Quantity on Hand<br />(H)</td>
-          <td>Remarks<br />(I)</td>
+          <td style="width: 20%;">Remarks<br />(I)</td>
         </tr>
       </thead>
       <tbody>
@@ -106,7 +82,7 @@
 
       <%
       color = 'white'
-      (@trail || {}).sort_by {|x,y| x }.each do |grn_number , attributes| 
+      (@trail || {}).sort_by {|x,y| x }.each do |grn_number , attributes|
           (attributes).each do |date , data|
             if color == 'white'
               color = 'blue'
@@ -125,7 +101,7 @@
         <td><%=data[:current_quantity]%></td>
         <td>&nbsp;</td>
       </tr>
-      
+
       <%end
       end %>
       </tbody>

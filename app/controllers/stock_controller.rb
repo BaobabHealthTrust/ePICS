@@ -13,7 +13,7 @@ class StockController < ApplicationController
     session[:stock] = nil
     stock_hash = Hash.new()
     stock_hash[:supplier_id] = params[:stock][:supplier_id]
-    stock_hash[:grn_number] = params[:stock][:grn_number]
+    stock_hash[:invoice_number] = params[:stock][:invoice_number]
     stock_hash[:grn_date] = params[:stock][:grn_date]
     stock_hash[:witness_names] = params[:stock][:witness_names]
     session[:stock] = stock_hash

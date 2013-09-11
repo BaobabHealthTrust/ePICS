@@ -25,7 +25,8 @@ class StockDetailsController < ApplicationController
     quantity = ((params[:stock_details]['issue_quan'].blank? ? params[:stock_details]['issue_quantity'] : params[:stock_details]['issue_quan'] ).to_i * params[:stock_details]['item_quantity'].to_i) rescue 1
     location = params[:stock_details][:location_id]
     expiry_date = params[:stock_details][:expiry_date]
-    @cart.add_product(product,quantity,location,expiry_date)
+    batch_number = params[:stock_details][:batch_number]
+    @cart.add_product(product,batch_number,quantity,location,expiry_date)
 
     redirect_to :action => :index
   end
@@ -68,7 +69,7 @@ class StockDetailsController < ApplicationController
           
           @stock = EpicsStock.new()
           @stock.grn_date = stock[:grn_date]
-          @stock.grn_number = stock[:grn_number]
+          @stock.invoice_number = stock[:invoice_number]
           @stock.epics_supplier_id = stock[:supplier_id]
           @stock.save!
 
@@ -110,6 +111,7 @@ class StockDetailsController < ApplicationController
             @stock_detail.epics_location_id = item.location
             @stock_detail.received_quantity = item.quantity
             @stock_detail.current_quantity = item.quantity
+            @stock_detail.batch_number = item.batch_number
             @stock_detail.epics_product_units_id = item.product.epics_product_units_id
             @stock_detail.save!
 

@@ -12,9 +12,9 @@
     {:id => "supplier_id",:field_type => 'alpha',
     :helpText => "Select Items Provider"} %>
 
-  <%= text_field_tag "stock[grn_number]", nil,
+  <%= text_field_tag "stock[invoice_number]", nil,
        {:id => 'grn_number', :field_type => 'alpha',
-        :helpText => 'Enter GRN/Batch Number'} %>
+        :helpText => 'Invoice Number'} %>
 
   <%= text_field_tag "stock[grn_date]", nil,
        {:id => 'grn_date', :field_type => 'date',

@@ -128,9 +128,9 @@
     <td><%= EpicsSupplier.find(session[:stock][:supplier_id]).name rescue "Supplier Not Known"   %></td>
   </tr>
   <tr>
-    <td style="text-align: left; width: 20%;">Batch Number:</td>
+    <td style="text-align: left; width: 20%;">Invoice Number:</td>
     <td>&nbsp;</td>
-    <td><%= session[:stock][:grn_number] %></td>
+    <td><%= session[:stock][:invoice_number] %></td>
   </tr>
   <tr>
     <td style="text-align: left; width: 20%;">Delivered Date:</td>

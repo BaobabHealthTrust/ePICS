@@ -6,12 +6,12 @@ class ProductCart
       @items = []
   end
 
-def add_product(product, quantity, location = nil, expiry_date = nil)
-  current_item = @items.find {|item| item.product == product}
+def add_product(product, batch_number, quantity, location = nil, expiry_date = nil)
+  current_item = @items.find {|item| item.product == product && item.batch_number == batch_number }
   unless current_item.blank?
     current_item.increment_quantity(quantity)
   else
-    @items << ProductCartItem.new(product, quantity, location, expiry_date)
+    @items << ProductCartItem.new(product, quantity, location, expiry_date, batch_number)
   end
 end
 

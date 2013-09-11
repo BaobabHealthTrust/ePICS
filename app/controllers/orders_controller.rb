@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
     product = EpicsProduct.where("name = ?",params[:item]['name'])[0]
     quantity = ((params[:item]['issue_quan'].blank? ? params[:item]['issue_quantity'] : params[:item]['issue_quan'] ).to_i * params[:item]['item_quantity'].to_i) rescue 1
     expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
-    @cart.add_product(product,quantity,nil,expiry_date)
+    @cart.add_product(product,nil,quantity,nil,expiry_date)
     redirect_to :action => :index, :location => EpicsLocation.find(session[:issuing_location_id]).name
   end
 
@@ -164,7 +164,7 @@ class OrdersController < ApplicationController
      product = EpicsProduct.where("name = ?",params[:item]['name'])[0]
      quantity = ((params[:item]['issue_quan'].blank? ? params[:item]['issue_quantity'] : params[:item]['issue_quan'] ).to_i * params[:item]['item_quantity'].to_i) rescue 1
      expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
-     @cart.add_product(product,quantity,nil,expiry_date)
+     @cart.add_product(product,nil,quantity,nil,expiry_date)
     redirect_to :action => :lend_index, :location => session[:lend_details]['lend_to_location'].id
    end
 
@@ -227,7 +227,7 @@ class OrdersController < ApplicationController
       product = EpicsProduct.find_by_name(params[:item][:name])
       quantity = ((params[:item]['issue_quan'].blank? ? params[:item]['issue_quantity'] : params[:item]['issue_quan'] ).to_i * params[:item]['item_quantity'].to_i) rescue 1
       expiry_date = params[:item][:expiry_date]
-      @return_cart.add_product(product,quantity,location,expiry_date)
+      @return_cart.add_product(product,nil,quantity,location,expiry_date)
 
       redirect_to :action => :reimburse_index
 

@@ -133,7 +133,8 @@ class ProductController < ApplicationController
   end
 
   def stock_card
-    stocks = EpicsStock.joins(:epics_stock_details).where("epics_products_id =?", params[:id])
+    stocks = EpicsStock.joins(:epics_stock_details).where("epics_products_id =?
+    AND epics_stock_details.voided = 0", params[:id])
     @item = EpicsProduct.find(params[:id])
     @page_title = "#{@item.name}<br />Stock Card"
     @trail = {}

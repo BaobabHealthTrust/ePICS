@@ -1,5 +1,17 @@
 EPICS::Application.routes.draw do
 
+  get "contact/index"
+
+  get "contact/new"
+
+  get "contact/create"
+
+  get "contact/edit"
+
+  get "contact/update"
+
+  get "contact/delete"
+
   ######## person #########
 
   get "person/add_person"

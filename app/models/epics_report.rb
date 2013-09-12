@@ -351,7 +351,7 @@ EOF
     ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
     e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
     epics_orders.created_at dispensed_date, s.batch_number").map do |r|
-      dispensed_date = r.dispensed_date.to_date
+      dispensed_date = r.dispensed_date
       issued_to = EpicsLocation.find(r.location_id).name 
 
       if results[dispensed_date].blank?
@@ -394,29 +394,29 @@ EOF
     AND epics_stock_details.voided = 0 
     AND epics_stock_details.epics_stock_id NOT IN(?)",
     item.id,stock_ids_which_are_not_receipts.compact).select("epics_stocks.*,
-    epics_stock_details.*").map do |r|
+    epics_stock_details.*,epics_stocks.created_at created_at").map do |r|
       received_from = EpicsSupplier.find(r.epics_supplier_id).name
-
-      if results[r.grn_date].blank?
-        results[r.grn_date] = {}
+      grn_date = "#{r.grn_date} #{r.created_at.to_time.strftime('%H:%M:%S')}".to_time
+      if results[grn_date].blank?
+        results[grn_date] = {}
       end
 
-      if results[r.grn_date][r.invoice_number].blank?
-        results[r.grn_date][r.invoice_number] = {}
+      if results[grn_date][r.invoice_number].blank?
+        results[grn_date][r.invoice_number] = {}
       end
 
-      if results[r.grn_date][r.invoice_number][r.batch_number].blank?
-        results[r.grn_date][r.invoice_number][r.batch_number] = {}
+      if results[grn_date][r.invoice_number][r.batch_number].blank?
+        results[grn_date][r.invoice_number][r.batch_number] = {}
       end
 
-      if results[r.grn_date][r.invoice_number][r.batch_number][received_from].blank?
-        results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
+      if results[grn_date][r.invoice_number][r.batch_number][received_from].blank?
+        results[grn_date][r.invoice_number][r.batch_number][received_from] = {
           :received_quantity => nil , 
           :current_quantity => nil
         }
       end
 
-      results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
+      results[grn_date][r.invoice_number][r.batch_number][received_from] = {
         :received_quantity => r.received_quantity , 
         :current_quantity => r.current_quantity
       }
@@ -442,35 +442,36 @@ EOF
     LEFT JOIN epics_exchanges x ON x.epics_stock_id = s.epics_stock_id
     AND x.voided = 0 LEFT JOIN epics_lends_or_borrows b 
     ON b.epics_stock_id = s.epics_stock_id AND b.voided = 0").select("epics_stocks.*, 
-    s.*, x.epics_location_id exchange_location_id, b.facility borrow_location_id").map do |r|
+    s.*, x.epics_location_id exchange_location_id, 
+    b.facility borrow_location_id, epics_stocks.created_at created_at").map do |r|
+      grn_date = "#{r.grn_date} #{r.created_at.to_time.strftime('%H:%M:%S')}".to_time
+
       if not r.exchange_location_id.blank?
         received_from = EpicsLocation.find(r.exchange_location_id).name 
       elsif not r.borrow_location_id.blank?
         received_from = EpicsLocation.find(r.borrow_location_id).name 
       end
 
-      if results[r.grn_date].blank?
-        results[r.grn_date] = {}
+      if results[grn_date].blank?
+        results[grn_date] = {}
       end
 
-      if results[r.grn_date][r.invoice_number].blank?
-        results[r.grn_date][r.invoice_number] = {}
+      if results[grn_date][r.invoice_number].blank?
+        results[grn_date][r.invoice_number] = {}
       end
 
-      if results[r.grn_date][r.invoice_number][r.batch_number].blank?
-        results[r.grn_date][r.invoice_number][r.batch_number] = {}
+      if results[grn_date][r.invoice_number][r.batch_number].blank?
+        results[grn_date][r.invoice_number][r.batch_number] = {}
       end
 
-      if results[r.grn_date][r.invoice_number][r.batch_number][received_from].blank?
-        results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
-          :quantity_received => nil , 
-          :current_quantity => nil
+      if results[grn_date][r.invoice_number][r.batch_number][received_from].blank?
+        results[grn_date][r.invoice_number][r.batch_number][received_from] = {
+          :quantity_received => nil 
         }
       end
 
-      results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
-        :quantity_received => r.received_quantity , 
-        :current_quantity => r.current_quantity
+      results[grn_date][r.invoice_number][r.batch_number][received_from] = {
+        :quantity_received => r.received_quantity 
       }
     end
 
@@ -489,7 +490,7 @@ EOF
     ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
     e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
     epics_orders.created_at dispensed_date, s.batch_number").map do |r|
-      dispensed_date = r.dispensed_date.to_date
+      dispensed_date = r.dispensed_date
       issued_to = EpicsLocation.find(r.location_id).name 
 
       if results[dispensed_date].blank?

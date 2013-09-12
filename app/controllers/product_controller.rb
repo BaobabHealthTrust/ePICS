@@ -141,19 +141,7 @@ class ProductController < ApplicationController
     EpicsReport.issues(@item, @trail) 
     EpicsReport.negative_adjustments(@item, @trail) 
     EpicsReport.positive_adjustments(@item, @trail) 
-    raise @trail.to_yaml
 
-=begin
-          @trail[invoice_number][batch_number] = {
-            :received_quantity => EpicsReport.received_quantity(stock, @item, date),
-            :quantity_issued => EpicsReport.issued(stock, @item, date),
-            :losses => EpicsReport.losses_quantity(stock, @item, date),
-            :positive_adjustments => EpicsReport.positive_adjustments(stock, @item, date),
-            :negative_adjustments => EpicsReport.negative_adjustments(stock, @item, date),
-            :current_quantity => EpicsReport.current_quantity(stock,@item),
-            :transaction_date => date
-          }
-=end
     render :layout => "report"
   end
 

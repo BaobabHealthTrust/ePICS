@@ -520,6 +520,44 @@ EOF
   end
 
   def self.losses(item)
+    order_type = EpicsOrderTypes.find_by_name('Board Off')
+
+    EpicsOrders.joins("INNER JOIN epics_product_orders p 
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0
+    AND epics_orders.epics_order_type_id = #{order_type.id}
+    INNER JOIN epics_stock_details s 
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0
+    AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e
+    ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
+    e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
+    epics_orders.created_at dispensed_date, s.batch_number").map do |r|
+      dispensed_date = r.dispensed_date
+      issued_to = EpicsLocation.find(r.location_id).name 
+
+      if results[dispensed_date].blank?
+        results[dispensed_date] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number].blank?
+        results[dispensed_date][r.invoice_number] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number][r.batch_number].blank?
+        results[dispensed_date][r.invoice_number][r.batch_number] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number][r.batch_number][issued_to].blank?
+        results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
+          :issued => nil 
+        }
+      end
+
+      results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
+        :losses => r.quantity 
+      }
+    end
+
+    return results
   end
 
   #<<<<<<<<<<<<<<<<<<<<<<<< SD end >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#

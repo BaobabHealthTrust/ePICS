@@ -31,7 +31,7 @@
     current_reason = node.getAttribute('reason');
     jQuery.ajax({
       type: "POST",
-      url: "/stock_details/void",
+      url: "/stock_details/board_off_stock",
       data: "stock_id=" + current_stock_id + '&reason=' + current_reason,
       success: function(){
         elements = document.getElementsByTagName("tr")

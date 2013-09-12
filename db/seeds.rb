@@ -10,7 +10,8 @@
 location_types = [
   ["Facility","Other health centers"],
   ["Store room","Pharmacy store rooms"],
-  ["Departments","Facility departments"]
+  ["Departments","Facility departments"],
+  ["Medication Disposal","Pharmacy medication disposal"]
 ]
 
 (location_types).each do |name , description|
@@ -31,6 +32,11 @@ epics_location_type_id = EpicsLocationType.where("name = ?", location_types[1][0
   type.save
 end
 
+epics_location = EpicsLocation.new
+epics_location.epics_location_type_id = EpicsLocationType.find_by_name('Medication Disposal').id
+epics_location.name = 'Incinerator'
+epics_location.save!
+
 epics_lends_or_borrows_types = ["Borrow","Lend"]
 
 (epics_lends_or_borrows_types).each do |name|
@@ -40,7 +46,7 @@ epics_lends_or_borrows_types = ["Borrow","Lend"]
   type.save
 end
 
-order_types = ["Dispense","Exchange","Lend", "Return"]
+order_types = ["Dispense","Exchange","Lend", "Return", "Board off"]
 
 (order_types).each do |name|
   type = EpicsOrderTypes.new()
@@ -81,7 +87,6 @@ item_types = ["Drugs" , "Sundries"]
   type.description = "When: #{name} products"
   type.save
 end
-
 
 categories = [
   ['Class A','Tablets and Capsules'],

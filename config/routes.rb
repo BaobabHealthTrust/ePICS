@@ -77,6 +77,7 @@ EPICS::Application.routes.draw do
   post "stock_details/update"
   get "stock_details/void"
   post "stock_details/void"
+  post "stock_details/board_off_stock"
   get "stock_details/borrow"
   post "stock_details/borrow"
   post "stock_details/remove_product_from_cart"

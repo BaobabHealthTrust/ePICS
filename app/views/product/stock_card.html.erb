@@ -106,27 +106,46 @@
 
       <%
       color = 'white'
-      (@trail || {}).sort_by {|x,y| x }.each do |grn_number , attributes| 
-          (attributes).each do |date , data|
-            if color == 'white'
-              color = 'blue'
-            else
-              color = 'white'
-            end
+      total_positives = 0
+      total_negatives = 0
+      (@trail || {}).sort_by {|x , y| x.to_time }.each do |date , attributes| 
+          (attributes).each do |invoice_number , values|
+            (values).each do |batch_number , data|
+              (data).each do |remark , d|
+                if color == 'white'
+                  color = 'blue'
+                else
+                  color = 'white'
+                end
+
+                total_positives += d[:received_quantity].to_f if d[:received_quantity]
+                total_positives += d[:quantity_received].to_f if d[:quantity_received]
+
+                total_negatives += d[:issued].to_f if d[:issued]
+                total_negatives += d[:losses].to_f if d[:losses]
+                total_negatives += d[:quantity_given_out].to_f if d[:quantity_given_out]
+
+                current_quantity = (total_positives - total_negatives)
+
+                if(current_quantity.to_s[-2..-1] == '.0')
+                  current_quantity = current_quantity.to_i
+                end
       %>
       <tr class="tbody-data row_<%=color%>">
-        <td><%=date.strftime("%d-%b-%Y")%></td>
-        <td><%=grn_number%></td>
-        <td><%=data[:received_quantity]%></td>
-        <td><%=data[:quantity_issued]%></td>
-        <td><%=data[:losses]%></td>
-        <td><%=data[:positive_adjustments]%></td>
-        <td><%=data[:negative_adjustments]%></td>
-        <td><%=data[:current_quantity]%></td>
-        <td>&nbsp;</td>
+        <td><%=date.to_date.strftime("%d-%b-%Y")%></td>
+        <td><%=invoice_number%></td>
+        <td><%=d[:received_quantity]%></td>
+        <td><%=d[:issued]%></td>
+        <td><%=d[:losses]%></td>
+        <td><%=d[:quantity_received]%></td>
+        <td><%=d[:quantity_given_out]%></td>
+        <td><%=current_quantity%></td>
+        <td><%=remark%></td>
       </tr>
       
-      <%end
+          <%end
+          end
+        end
       end %>
       </tbody>
     </table>

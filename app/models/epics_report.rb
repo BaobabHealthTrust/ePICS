@@ -323,14 +323,11 @@ EOF
   def self.received_items(start_date, end_date)
 
     sql=<<EOF
-      SELECT p.product_code item_code,p.name item_name,
-      s.epics_products_id,SUM(s.received_quantity) received, SUM(o.quantity) issued
-      FROM epics_stock_details s
-      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
-      INNER JOIN epics_stocks e ON e.epics_stock_id = s.epics_stock_id AND s.voided = 0 
-      LEFT JOIN epics_product_orders o ON o.epics_stock_details_id = s.epics_stock_details_id
-      AND o.voided = 0 WHERE e.grn_date BETWEEN '#{start_date}' AND '#{end_date}'
-      GROUP BY s.epics_products_id
+    SELECT p.product_code item_code,p.name item_name,
+      sum(s.received_quantity) as received, sum(s.received_quantity - s.current_quantity) as issued
+      FROM epics_stock_details s INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
+      INNER JOIN epics_stocks e ON e.epics_stock_id = s.epics_stock_id AND s.voided = 0
+      WHERE e.grn_date BETWEEN '#{start_date}' AND '#{end_date}' group by p.epics_products_id
 EOF
 
     EpicsStockDetails.find_by_sql(sql).map do |r|

@@ -1,46 +1,24 @@
 class ContactController < ApplicationController
   def index
-    @products = EpicsProduct.all
+    @contacts = EpicsContact.all
     render :layout => "custom"
   end
 
-  def view
-    @product = EpicsProduct.where("name = ?",params[:product])[0]
-    session[:product] = params[:product]
-    render :layout => "custom"
-  end
-
-  def search
-  end
-
-  def find_by_name_or_code
-    @products = EpicsProduct.where("(product_code LIKE(?) OR
-      name LIKE (?))", "%#{params[:search_str]}%",
-      "%#{params[:search_str]}%").limit(100).map{|product|[[product.name]]}
-
-    render :text => "<li></li><li>" + @products.join("</li><li>") + "</li>"
-  end
+ 
 
   def new
-    @product = EpicsProduct.new
-    @product_type_map = EpicsProductType.all.map{|product_type|[product_type.name,product_type.epics_product_type_id]}
-    @product_unit_map = EpicsProductUnits.all.map{|product_unit|[product_unit.name,product_unit.epics_product_units_id]}
-    @product_category_map = EpicsProductCategory.all.map{|product_category|[product_category.name,product_category.epics_product_category_id]}
+    @contacts = EpicsContact.new
   end
 
   def create
-    @product = EpicsProduct.new
-    @product.name = params[:product][:name]
-    @product.product_code = params[:product][:product_code]
-    @product.epics_product_units_id = params[:product][:product_unit_id]
-    @product.epics_product_type_id = params[:product][:product_type_id]
-    @product.epics_product_category_id = params[:product][:product_category_id]
-    @product.expire = params[:product][:expire]
-    @product.min_stock = params[:product][:min_stock]
-    @product.max_stock = params[:product][:max_stock]
-    @product.movement = params[:product][:movement]
-
-    if @product.save
+    @contact = EpicsContact.new
+    @contact.title = params[:contact][:title]
+    @contact.first_name = params[:contact][:first_name]
+    @contact.last_name = params[:contact][:last_name]
+    @contact.phone_number = params[:contact][:phone_number]
+    @contact.email_address = params[:contact][:email_address]
+    
+    if @contact.save
       redirect_to :action => :index
     else
       redirect_to :action => :new
@@ -48,35 +26,29 @@ class ContactController < ApplicationController
   end
 
   def edit
-    @product = EpicsProduct.find(params[:product])
-    @product_type_map = EpicsProductType.all.map{|product_type|[product_type.name,product_type.epics_product_type_id]}
-    @product_unit_map = EpicsProductUnits.all.map{|product_unit|[product_unit.name,product_unit.epics_product_units_id]}
-    @product_category_map = EpicsProductCategory.all.map{|product_category|[product_category.name,product_category.epics_product_category_id]}
+    @product = EpicsContact.find(params[:contact])
+   
   end
 
   def update
-    @product = EpicsProduct.find(params[:product][:product_id])
-    @product.name = params[:product][:name]
-    @product.product_code = params[:product][:product_code]
-    @product.epics_product_units_id = params[:product][:product_unit_id]
-    @product.epics_product_type_id = params[:product][:product_type_id]
-    @product.epics_product_category_id = params[:product][:product_category_id]
-    @product.expire = params[:product][:expire]
-    @product.min_stock = params[:product][:min_stock]
-    @product.max_stock = params[:product][:max_stock]
-    @product.movement = params[:product][:movement]
+    @contact = EpicsProduct.find(params[:contact][:contact_id])
+    @contact.title = params[:contact][:title]
+    @contact.first_name = params[:contact][:first_name]
+    @contact.last_name = params[:contact][:last_name]
+    @contact.phone_number = params[:contact][:phone_number]
+    @contact.email_address = params[:contact][:email_address]
 
-    if @product.save
+    if @contact.save
        redirect_to :action => :index
     else
-       redirect_to :action => :edit, :product_id => params[:product][:product_id]
+       redirect_to :action => :edit, :product_id => params[:contact][:contact_id]
     end
   end
 
   def void
-    @product = EpicsProduct.find(params[:product_id])
-    @product.voided = 1
-    @product.save!
+    @contact = EpicsContact.find(params[:contact_id])
+    @contact.voided = 1
+    @contact.save!
 		render :text => 'showMsg("Record Deleted!")'
   end
 

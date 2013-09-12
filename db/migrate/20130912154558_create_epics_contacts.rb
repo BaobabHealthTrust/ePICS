@@ -1,6 +1,6 @@
-	class CreateContacts < ActiveRecord::Migration
+class CreateEpicsContacts < ActiveRecord::Migration
   def self.up
-    create_table :contacts do |t|
+    create_table :epics_contacts do |t|
       t.string :title
       t.string :first_name
       t.string :last_name
@@ -12,6 +12,6 @@
   end
 
   def self.down
-    drop_table :contacts
+    drop_table :epics_contacts
   end
 end

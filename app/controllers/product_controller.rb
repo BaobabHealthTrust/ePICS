@@ -141,6 +141,7 @@ class ProductController < ApplicationController
     EpicsReport.issues(@item, @trail) 
     EpicsReport.negative_adjustments(@item, @trail) 
     EpicsReport.positive_adjustments(@item, @trail) 
+    EpicsReport.losses(@item, @trail) 
 
     render :layout => "report"
   end

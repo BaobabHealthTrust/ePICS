@@ -519,7 +519,7 @@ EOF
     return results
   end
 
-  def self.losses(item)
+  def self.losses(item, results = {})
     order_type = EpicsOrderTypes.find_by_name('Board Off')
 
     EpicsOrders.joins("INNER JOIN epics_product_orders p 

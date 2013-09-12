@@ -67,6 +67,9 @@ class StockDetailsController < ApplicationController
       product_order.epics_stock_details_id = stock.id
       product_order.quantity = stock.current_quantity
       product_order.save!
+
+      stock.current_quantity = 0
+      stock.save
     end
     render :text => "done"
   end

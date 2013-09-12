@@ -236,7 +236,7 @@ class EpicsExchangeController < ApplicationController
       facility_name = EpicsLocation.find(exchange_location_id).name
       label.draw_multi_text("Exchanged Items(Received): Delivered on #{stock.grn_date.to_date.strftime('%d-%b-%Y')}", :font_reverse => true)
       label.draw_multi_text("Facility Name: #{facility_name}", :font_reverse => false)
-      label.draw_multi_text("Batch Number: #{stock.grn_number}", :font_reverse => false)
+      label.draw_multi_text("Invoice Number: #{stock.invoice_number}", :font_reverse => false)
       label.draw_multi_text("Stock Details", :font_reverse => true)
       stock_details.each do |stock_detail|
         label.draw_multi_text("#{stock_detail.epics_product.name + ' ' + stock_detail.received_quantity.to_s +

@@ -1,2 +1,41 @@
-<h1>Contact#edit</h1>
-<p>Find me in app/views/contact/edit.html.erb</p>
+
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/product/index'
+	tt_cancel_destination='/product/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'update', :method => :post  do %>
+
+
+
+
+<%= select_tag "contact[title]", options_for_select(@contact_title_map,@contact.title),
+    {:id => "contact_title",:field_type => 'alpha',
+    :helpText => "Select Contact Title"} %>
+
+
+  <%= text_field_tag "contact[first_name]", @contact.first_name,
+         {:id => 'contact_first_name', :field_type => 'alpha',
+          :helpText => 'Enter First Name'} %>
+
+ <%= text_field_tag "contact[last_name]", @contact.last_name,
+         {:id => 'contact_last_name', :field_type => 'alpha',
+          :helpText => 'Enter Last Name'} %>
+
+<%= text_field_tag "contact[phone_number]", @contact.phone_number,
+         {:id => 'contact_phone_number', :field_type => 'number',
+          :helpText => 'Enter Phone Number'} %>
+
+<%= text_field_tag "contact[email_address]", @contact.email_address,
+         {:id => 'contact_email_address', :field_type => 'alpha',
+          :helpText => 'Enter Email Address'} %>
+
+<%= hidden_field_tag("contact[contact_id]", @contact.epics_contact_id) %>
+
+<%= submit_tag "Update Contact" %>
+
+
+<% end %>

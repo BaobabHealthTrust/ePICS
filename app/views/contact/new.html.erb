@@ -1,2 +1,38 @@
-<h1>Contact#new</h1>
-<p>Find me in app/views/contact/new.html.erb</p>
+<script type='text/javascript'><!--
+
+	tt_cancel_show='/contact/index'
+	tt_cancel_destination='/contact/index'
+
+//-->
+</script>
+
+<%= form_tag :action => 'create', :method => :post  do %>
+
+  <%= select_tag "contact[title]", options_for_select(@contact_title_map),
+    {:id => "contact_title",:field_type => 'alpha',
+    :helpText => "Select Contact Title"} %>
+
+
+  <%= text_field_tag "contact[first_name]", nil,
+         {:id => 'contact_first_name', :field_type => 'alpha',
+          :helpText => 'Enter First Name'} %>
+
+ <%= text_field_tag "contact[last_name]", nil,
+         {:id => 'contact_last_name', :field_type => 'alpha',
+          :helpText => 'Enter Last Name'} %>
+
+<%= text_field_tag "contact[phone_number]", nil,
+         {:id => 'contact_phone_number', :field_type => 'number',
+          :helpText => 'Enter Phone Number'} %>
+
+<%= text_field_tag "contact[email_address]", nil,
+         {:id => 'contact_email_address', :field_type => 'alpha',
+          :helpText => 'Enter Email Address'} %>
+
+ 
+ 
+
+  <%= submit_tag "Create Contact" %>
+
+
+<% end %>

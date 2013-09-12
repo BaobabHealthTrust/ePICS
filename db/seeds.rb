@@ -6,7 +6,7 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
-
+puts 'loading location types'
 location_types = [
   ["Facility","Other health centers"],
   ["Store room","Pharmacy store rooms"],
@@ -21,7 +21,7 @@ location_types = [
   type.save
 end
 
-
+puts 'loading locations'
 locations = ["Tablets Stores","Injectable Stores","Surgical Stores"]
 epics_location_type_id = EpicsLocationType.where("name = ?", location_types[1][0]).first.id
 (locations).each do |name|
@@ -37,6 +37,7 @@ epics_location.epics_location_type_id = EpicsLocationType.find_by_name('Medicati
 epics_location.name = 'Incinerator'
 epics_location.save!
 
+puts 'loading lends or borrows types'
 epics_lends_or_borrows_types = ["Borrow","Lend"]
 
 (epics_lends_or_borrows_types).each do |name|
@@ -46,6 +47,7 @@ epics_lends_or_borrows_types = ["Borrow","Lend"]
   type.save
 end
 
+puts 'loading order types'
 order_types = ["Dispense","Exchange","Lend", "Return", "Board off"]
 
 (order_types).each do |name|
@@ -55,6 +57,7 @@ order_types = ["Dispense","Exchange","Lend", "Return", "Board off"]
   type.save
 end
 
+puts 'loading supplier types'
 supplier_types = ["Government", "Donor", "Borrowed", "Private","Other"]
 
 (supplier_types).each do |name|
@@ -64,7 +67,7 @@ supplier_types = ["Government", "Donor", "Borrowed", "Private","Other"]
   type.save
 end
 
-
+puts 'loading suppliers'
 suppliers = [
   ["Central Medical Stores", supplier_types[0]],
   ["Other", supplier_types[4]]
@@ -78,7 +81,7 @@ suppliers = [
   type.description = "#{name}: provides pharmaceutical products"
   type.save
 end
-
+puts 'loading item types'
 item_types = ["Drugs" , "Sundries"]
 
 (item_types).each do |name|
@@ -87,7 +90,7 @@ item_types = ["Drugs" , "Sundries"]
   type.description = "When: #{name} products"
   type.save
 end
-
+puts 'loading item categories'
 categories = [
   ['Class A','Tablets and Capsules'],
   ['Class B', 'Injectables'],
@@ -117,6 +120,7 @@ categories = [
   type.save
 end
 
+puts 'loading item units'
 product_units = ["Each" , "Tablet","mg","KG","cm","Ltr","mL","Other"]
 
 (product_units).each do |name|
@@ -126,6 +130,7 @@ product_units = ["Each" , "Tablet","mg","KG","cm","Ltr","mL","Other"]
   type.save
 end
 
+puts 'loading roles'
 roles = [["Administrator","overseer of all activities"], ["Pharmacist", "receiver and issuer of items"]]
 
 (roles || []).each do |role, description|
@@ -135,6 +140,8 @@ roles = [["Administrator","overseer of all activities"], ["Pharmacist", "receive
   new_role.save
 end
 
+puts 'loading items'
 `rails runner #{Rails.root}/script/load_epics_products.rb`
+puts 'loading facilities'
 `rails runner #{Rails.root}/script/load_epics_facilities.rb`
 puts "Your new application is almost ready: make sure you configure your database.yml to point to your openmrs database for user management"

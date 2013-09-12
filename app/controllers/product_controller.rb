@@ -141,85 +141,11 @@ class ProductController < ApplicationController
     (transactions).each do |action|
       case action
         when 'Receive'
-          stocks = EpicsStock.joins(:epics_stock_details).where("epics_products_id =?
-          AND epics_stock_details.voided = 0", params[:id])
-          (stocks || []).each do |stock|
-            (stock.epics_stock_details || []).each do |batch|
-              location_name = EpicsSupplier.find(stock.epics_supplier_id).name
-              if @trail[action].blank?
-                @trail[action] = {}
-                if @trail[action][location_name].blank?
-                  @trail[action][location_name] = {} 
-                  if @trail[action][location_name][stock.grn_date.to_date].blank?
-                    @trail[action][location_name][stock.grn_date.to_date] = {}
-                  end
-                end
-              end
-              @trail[action][location_name][stock.grn_date.to_date] = {
-                :received_quantity => batch.received_quantity,
-                :invoice_number => stock.invoice_number
-              } 
-            end
-          end
-        when 'Issue'
-          orders = EpicsOrders.joins("INNER JOIN epics_product_orders e
-          ON e.epics_order_id = epics_orders.epics_order_id AND e.voided = 0
-          AND epics_orders.epics_order_type_id = 1
-          INNER JOIN epics_stock_details s 
-          ON s.epics_stock_details_id = e.epics_stock_details_id AND
-          s.voided = 0 AND s.epics_products_id = #{@item.id}")
-          
-          (orders || []).each do |order|
-            (order.epics_product_orders || []).each do |batch|
-              location_name = EpicsLocation.find(order.epics_location_id).name
-              if @trail[action].blank?
-                @trail[action] = {}
-                if @trail[action][location_name].blank?
-                  @trail[action][location_name] = {} 
-                  if @trail[action][location_name][order.created_at.to_date].blank?
-                    @trail[action][location_name][order.created_at.to_date] = {}
-                  end
-                end
-              end
-              @trail[action][location_name][order.created_at.to_date] = {
-                :quantity_issued => batch.quantity,
-                :invoice_number => batch.epics_stock_details.epics_stock.invoice_number
-              } 
-            end
-          end
-        when 'Lend'
-          orders = EpicsOrders.joins("INNER JOIN epics_product_orders e
-          ON e.epics_order_id = epics_orders.epics_order_id AND e.voided = 0
-          AND epics_orders.epics_order_type_id = 3
-          INNER JOIN epics_stock_details s 
-          ON s.epics_stock_details_id = e.epics_stock_details_id AND
-          s.voided = 0 AND s.epics_products_id = #{@item.id}")
-          
-          (orders || []).each do |order|
-            (order.epics_product_orders || []).each do |batch|
-              location_name = EpicsLocation.find(order.epics_location_id).name
-              if @trail[action].blank?
-                @trail[action] = {}
-                if @trail[action][location_name].blank?
-                  @trail[action][location_name] = {} 
-                  if @trail[action][location_name][order.created_at.to_date].blank?
-                    @trail[action][location_name][order.created_at.to_date] = {}
-                  end
-                end
-              end
-              @trail[action][location_name][order.created_at.to_date] = {
-                :quantity_issued => batch.quantity,
-                :invoice_number => batch.epics_stock_details.epics_stock.invoice_number
-              } 
-            end
-          end
-      end   
-      
+          @trail[action] = EpicsReport.receipts(@item) 
+      end
     end
 
-    #raise @trail.to_yaml
-    render :layout => "report"
-  end
+    raise @trail.to_yaml
 
 =begin
           @trail[invoice_number][batch_number] = {
@@ -232,6 +158,8 @@ class ProductController < ApplicationController
             :transaction_date => date
           }
 =end
+    render :layout => "report"
+  end
 
   def edit_cost
     if request.post?

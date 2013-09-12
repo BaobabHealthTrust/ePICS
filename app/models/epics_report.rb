@@ -341,4 +341,183 @@ EOF
 
   end
 
+  #<<<<<<<<<<<<<<<<<<<<<<<< SD start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+  def self.reimburse(item)
+  end
+
+  def self.issues(item)
+    order_type = EpicsOrderTypes.find_by_name('Dispense')
+
+    results = {}
+
+    EpicsOrders.joins("INNER JOIN epics_product_orders p 
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0
+    AND epics_orders.epics_order_type_id = #{order_type.id}
+    INNER JOIN epics_stock_details s 
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0
+    AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e
+    ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
+    e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
+    epics_orders.created_at dispensed_date, s.batch_number").map do |r|
+      dispensed_date = r.dispensed_date.to_date
+      issued_to = EpicsLocation.find(r.location_id).name 
+
+      if results[dispensed_date].blank?
+        results[dispensed_date] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number].blank?
+        results[dispensed_date][r.invoice_number] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number][r.batch_number].blank?
+        results[dispensed_date][r.invoice_number][r.batch_number] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number][r.batch_number][issued_to].blank?
+        results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
+          :issued => nil 
+        }
+      end
+
+      results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
+        :issued => r.quantity 
+      }
+    end
+
+    return results
+  end
+
+  def self.receipts(item)
+    stock_ids_which_are_not_receipts = [0]
+    (EpicsExchange.all || []).map do |e|
+      stock_ids_which_are_not_receipts << e.epics_stock_id
+    end    
+
+    (EpicsLendsOrBorrows.all || []).map do |l|
+      stock_ids_which_are_not_receipts << l.epics_stock_id
+    end    
+
+    results = {}
+
+    EpicsStock.joins(:epics_stock_details).where("epics_products_id = ? 
+    AND epics_stock_details.voided = 0 
+    AND epics_stock_details.epics_stock_id NOT IN(?)",
+    item.id,stock_ids_which_are_not_receipts).select("epics_stocks.*,
+    epics_stock_details.*").map do |r|
+      if results[r.grn_date].blank?
+        results[r.grn_date] = {}
+      end
+
+      if results[r.grn_date][r.invoice_number].blank?
+        results[r.grn_date][r.invoice_number] = {}
+      end
+
+      if results[r.grn_date][r.invoice_number][r.batch_number].blank?
+        results[r.grn_date][r.invoice_number][r.batch_number] = {
+          :received_quantity => nil , :current_quantity => nil,
+          :received_from => nil
+        }
+      end
+
+      results[r.grn_date][r.invoice_number][r.batch_number] = {
+        :received_quantity => r.received_quantity , 
+        :current_quantity => r.current_quantity,
+        :received_from => EpicsSupplier.find(r.epics_supplier_id).name
+      }
+    end
+
+    return results
+  end
+
+  def self.losses(item)
+  end
+
+  def self.positive_adjustments(item)
+    stock_ids_which_are_not_receipts = [0]
+    (EpicsExchange.all || []).map do |e|
+      stock_ids_which_are_not_receipts << e.epics_stock_id
+    end    
+
+    (EpicsLendsOrBorrows.all || []).map do |l|
+      stock_ids_which_are_not_receipts << l.epics_stock_id
+    end    
+
+    results = {}
+
+    EpicsStock.joins(:epics_stock_details).where("epics_products_id = ? 
+    AND epics_stock_details.voided = 0
+    AND epics_stock_details.epics_stock_id IN(?)",
+    item.id,stock_ids_which_are_not_receipts).select("epics_stocks.*,
+    epics_stock_details.*").map do |r|
+      if results[r.grn_date].blank?
+        results[r.grn_date] = {}
+      end
+
+      if results[r.grn_date][r.invoice_number].blank?
+        results[r.grn_date][r.invoice_number] = {}
+      end
+
+      if results[r.grn_date][r.invoice_number][r.batch_number].blank?
+        results[r.grn_date][r.invoice_number][r.batch_number] = {
+          :received_quantity => nil , :current_quantity => nil,
+          :received_from => nil
+        }
+      end
+
+      results[r.grn_date][r.invoice_number][r.batch_number] = {
+        :received_quantity => r.received_quantity , 
+        :current_quantity => r.current_quantity,
+        :received_from => EpicsSupplier.find(r.epics_supplier_id).name
+      }
+    end
+
+    return results
+  end
+
+  def self.negative_adjustments(item)
+    order_type = EpicsOrderTypes.where("name IN('Lend','Exchange')").map(&:epics_order_type_id)
+
+    results = {}
+
+    EpicsOrders.joins("INNER JOIN epics_product_orders p 
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0
+    AND epics_orders.epics_order_type_id IN(#{order_type.join(',')})
+    INNER JOIN epics_stock_details s 
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0
+    AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e
+    ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
+    e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
+    epics_orders.created_at dispensed_date, s.batch_number").map do |r|
+      dispensed_date = r.dispensed_date.to_date
+      issued_to = EpicsLocation.find(r.location_id).name 
+
+      if results[dispensed_date].blank?
+        results[dispensed_date] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number].blank?
+        results[dispensed_date][r.invoice_number] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number][r.batch_number].blank?
+        results[dispensed_date][r.invoice_number][r.batch_number] = {}
+      end
+
+      if results[dispensed_date][r.invoice_number][r.batch_number][issued_to].blank?
+        results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
+          :issued => nil 
+        }
+      end
+
+      results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
+        :issued => r.quantity 
+      }
+    end
+
+    return results
+  end
+
+  #<<<<<<<<<<<<<<<<<<<<<<<< SD end >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+
 end

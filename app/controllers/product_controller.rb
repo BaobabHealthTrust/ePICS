@@ -137,14 +137,10 @@ class ProductController < ApplicationController
     @page_title = "#{@item.name}<br />Stock Card"
     @trail = {}
 
-    transactions = ["Receive","Issue","Exchange","Borrow","Lend","Receive back","Reimburse"]
-    (transactions).each do |action|
-      case action
-        when 'Receive'
-          @trail[action] = EpicsReport.receipts(@item) 
-      end
-    end
-
+    EpicsReport.receipts(@item, @trail) 
+    EpicsReport.issues(@item, @trail) 
+    EpicsReport.negative_adjustments(@item, @trail) 
+    EpicsReport.positive_adjustments(@item, @trail) 
     raise @trail.to_yaml
 
 =begin

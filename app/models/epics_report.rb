@@ -339,13 +339,8 @@ EOF
   end
 
   #<<<<<<<<<<<<<<<<<<<<<<<< SD start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
-  def self.reimburse(item)
-  end
-
-  def self.issues(item)
+  def self.issues(item, results = {})
     order_type = EpicsOrderTypes.find_by_name('Dispense')
-
-    results = {}
 
     EpicsOrders.joins("INNER JOIN epics_product_orders p 
     ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0
@@ -385,7 +380,7 @@ EOF
     return results
   end
 
-  def self.receipts(item)
+  def self.receipts(item, results = {})
     stock_ids_which_are_not_receipts = [0]
     (EpicsExchange.all || []).map do |e|
       stock_ids_which_are_not_receipts << e.epics_stock_id
@@ -394,14 +389,14 @@ EOF
     (EpicsLendsOrBorrows.all || []).map do |l|
       stock_ids_which_are_not_receipts << l.epics_stock_id
     end    
-
-    results = {}
 
     EpicsStock.joins(:epics_stock_details).where("epics_products_id = ? 
     AND epics_stock_details.voided = 0 
     AND epics_stock_details.epics_stock_id NOT IN(?)",
-    item.id,stock_ids_which_are_not_receipts).select("epics_stocks.*,
+    item.id,stock_ids_which_are_not_receipts.compact).select("epics_stocks.*,
     epics_stock_details.*").map do |r|
+      received_from = EpicsSupplier.find(r.epics_supplier_id).name
+
       if results[r.grn_date].blank?
         results[r.grn_date] = {}
       end
@@ -411,26 +406,26 @@ EOF
       end
 
       if results[r.grn_date][r.invoice_number][r.batch_number].blank?
-        results[r.grn_date][r.invoice_number][r.batch_number] = {
-          :received_quantity => nil , :current_quantity => nil,
-          :received_from => nil
+        results[r.grn_date][r.invoice_number][r.batch_number] = {}
+      end
+
+      if results[r.grn_date][r.invoice_number][r.batch_number][received_from].blank?
+        results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
+          :received_quantity => nil , 
+          :current_quantity => nil
         }
       end
 
-      results[r.grn_date][r.invoice_number][r.batch_number] = {
+      results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
         :received_quantity => r.received_quantity , 
-        :current_quantity => r.current_quantity,
-        :received_from => EpicsSupplier.find(r.epics_supplier_id).name
+        :current_quantity => r.current_quantity
       }
     end
 
     return results
   end
 
-  def self.losses(item)
-  end
-
-  def self.positive_adjustments(item)
+  def self.positive_adjustments(item, results = {})
     stock_ids_which_are_not_receipts = [0]
     (EpicsExchange.all || []).map do |e|
       stock_ids_which_are_not_receipts << e.epics_stock_id
@@ -440,13 +435,20 @@ EOF
       stock_ids_which_are_not_receipts << l.epics_stock_id
     end    
 
-    results = {}
+    EpicsStock.joins("INNER JOIN epics_stock_details s 
+    ON s.epics_stock_id = epics_stocks.epics_stock_id AND s.voided = 0
+    AND s.epics_products_id = #{item.id} 
+    AND s.epics_stock_id IN(#{stock_ids_which_are_not_receipts.compact.join(',')})
+    LEFT JOIN epics_exchanges x ON x.epics_stock_id = s.epics_stock_id
+    AND x.voided = 0 LEFT JOIN epics_lends_or_borrows b 
+    ON b.epics_stock_id = s.epics_stock_id AND b.voided = 0").select("epics_stocks.*, 
+    s.*, x.epics_location_id exchange_location_id, b.facility borrow_location_id").map do |r|
+      if not r.exchange_location_id.blank?
+        received_from = EpicsLocation.find(r.exchange_location_id).name 
+      elsif not r.borrow_location_id.blank?
+        received_from = EpicsLocation.find(r.borrow_location_id).name 
+      end
 
-    EpicsStock.joins(:epics_stock_details).where("epics_products_id = ? 
-    AND epics_stock_details.voided = 0
-    AND epics_stock_details.epics_stock_id IN(?)",
-    item.id,stock_ids_which_are_not_receipts).select("epics_stocks.*,
-    epics_stock_details.*").map do |r|
       if results[r.grn_date].blank?
         results[r.grn_date] = {}
       end
@@ -456,26 +458,27 @@ EOF
       end
 
       if results[r.grn_date][r.invoice_number][r.batch_number].blank?
-        results[r.grn_date][r.invoice_number][r.batch_number] = {
-          :received_quantity => nil , :current_quantity => nil,
-          :received_from => nil
+        results[r.grn_date][r.invoice_number][r.batch_number] = {}
+      end
+
+      if results[r.grn_date][r.invoice_number][r.batch_number][received_from].blank?
+        results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
+          :quantity_received => nil , 
+          :current_quantity => nil
         }
       end
 
-      results[r.grn_date][r.invoice_number][r.batch_number] = {
-        :received_quantity => r.received_quantity , 
-        :current_quantity => r.current_quantity,
-        :received_from => EpicsSupplier.find(r.epics_supplier_id).name
+      results[r.grn_date][r.invoice_number][r.batch_number][received_from] = {
+        :quantity_received => r.received_quantity , 
+        :current_quantity => r.current_quantity
       }
     end
 
     return results
   end
 
-  def self.negative_adjustments(item)
+  def self.negative_adjustments(item , results = {})
     order_type = EpicsOrderTypes.where("name IN('Lend','Exchange')").map(&:epics_order_type_id)
-
-    results = {}
 
     EpicsOrders.joins("INNER JOIN epics_product_orders p 
     ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0
@@ -503,16 +506,19 @@ EOF
 
       if results[dispensed_date][r.invoice_number][r.batch_number][issued_to].blank?
         results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-          :issued => nil 
+          :quantity_given_out => nil 
         }
       end
 
       results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-        :issued => r.quantity 
+        :quantity_given_out => r.quantity 
       }
     end
 
     return results
+  end
+
+  def self.losses(item)
   end
 
   #<<<<<<<<<<<<<<<<<<<<<<<< SD end >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#

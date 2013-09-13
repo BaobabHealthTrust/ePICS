@@ -33,6 +33,7 @@ th {
 
 <table class="item-table">
 <tr>
+  <th class='left-align'>Batch number</th>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
   <th class='right-align'>Item minimun stock</th>
@@ -42,6 +43,7 @@ th {
 </tr>
 <%(@alerts || []).each do |alert|%>
   <tr>
+    <td class='left-align'><%=alert.batch_number%></td>
     <td class='left-align'><%=alert.code %></td>
     <td class='left-align'><%=alert.name %></td>
     <td class='right-align'><%=alert.min_stock %></td>
@@ -50,7 +52,7 @@ th {
     <td class='right-align'><%=alert.expiry_date.to_date.strftime('%B %Y') rescue 'N/A' %></td>
   </tr>
   <tr>
-    <td colspan="6"><hr /><td>
+    <td colspan="7"><hr /><td>
   </tr>
 <%end%>
 </table>

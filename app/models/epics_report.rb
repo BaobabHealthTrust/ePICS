@@ -19,18 +19,16 @@ class EpicsReport < ActiveRecord::Base
       INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
     ").group('epics_stock_details.epics_stock_details_id').select("SUM(current_quantity) quantity,
       min_stock").having("quantity <= 0").length                                
-                                                                                
-    sql=<<EOF
-      SELECT count(s.epics_products_id) num_of_items FROM epics_stocks stock 
-      INNER JOIN epics_stock_details s ON s.epics_stock_id = stock.epics_stock_id
-      AND s.voided = 1 AND s.void_reason LIKE '%missing%'
-EOF
-
-    alerts['Missing items'] += EpicsStock.find_by_sql(sql).map { |r| 
-      r.num_of_items 
-    }[0].to_i rescue 0
-
-
+                                             
+    order_type = EpicsOrderTypes.find_by_name('Board Off')
+                                   
+    alerts['Missing items'] += EpicsOrders.joins("INNER JOIN epics_product_orders p                        
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0          
+    AND epics_orders.epics_order_type_id = #{order_type.id}                     
+    INNER JOIN epics_stock_details s                                            
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0     
+    INNER JOIN epics_stocks e ON e.epics_stock_id = s.epics_stock_id 
+    AND e.voided = 0 AND instructions = 'missing'").length 
 
     alerts['Expired items'] += EpicsStockExpiryDates.joins("
       INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
@@ -242,12 +240,13 @@ EOF
       ON p.epics_products_id = epics_stock_details.epics_products_id
       INNER JOIN epics_stock_expiry_dates x 
       ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
-      ").where("x.expiry_date <= CURRENT_DATE()").select("p.product_code item_code,p.name,
-      x.expiry_date,epics_stock_details.current_quantity,
+      ").where("x.expiry_date <= CURRENT_DATE() 
+      AND epics_stock_details.current_quantity > 0").select("p.product_code item_code,p.name,
+      x.expiry_date,epics_stock_details.current_quantity,epics_stock_details.batch_number,
       p.epics_products_id item_id,epics_stock_details.epics_stock_details_id").map do |r|
         {:item_code => r.item_code,:item_name => r.name,:item_id => r.item_id,
          :current_quantity => r.current_quantity, :expiry_date => r.expiry_date,
-         :stock_details_id => r.epics_stock_details_id
+         :stock_details_id => r.epics_stock_details_id,:batch_number => r.batch_number
         }
       end
   end

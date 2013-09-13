@@ -27,14 +27,14 @@ class ReportController < ApplicationController
           INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
           LEFT JOIN epics_stock_expiry_dates x ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
         ").group('epics_stock_details.epics_products_id').select("p.product_code code,p.name name, 
-        SUM(current_quantity) quantity, min_stock,
+        SUM(current_quantity) quantity, min_stock,epics_stock_details.batch_number batch_number,
         max_stock,expiry_date").having("quantity > 0 AND quantity < min_stock").order("p.product_code,p.name,MIN(expiry_date)")
       when 'Out of stock items'
         @alerts = EpicsStockDetails.joins("
           INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
           LEFT JOIN epics_stock_expiry_dates x ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
         ").group('epics_stock_details.epics_stock_details_id').select("p.product_code code,p.name name, 
-        SUM(current_quantity) quantity, min_stock,
+        SUM(current_quantity) quantity, min_stock,epics_stock_details.batch_number batch_number,
         max_stock,expiry_date").having("quantity <= 0").order("p.product_code,p.name,MIN(expiry_date)")
       when 'Missing items'
         redirect_to :action => :missing_items
@@ -43,7 +43,7 @@ class ReportController < ApplicationController
           INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
           INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id AND p.expire = 1
           ").where("DATEDIFF(expiry_date,CURRENT_DATE()) <= 0
-          AND current_quantity > 0").select("p.product_code code,p.name name, 
+          AND current_quantity > 0").select("p.product_code code,p.name name, s.batch_number batch_number,
           current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,expiry_date")
       when 'Items expiring in the next 6 months'
         @alerts = EpicsStockExpiryDates.joins("
@@ -51,59 +51,33 @@ class ReportController < ApplicationController
           INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id AND p.expire = 1
           ").where("DATEDIFF(expiry_date,CURRENT_DATE())
           BETWEEN 1 AND 183 AND current_quantity > 0").select("p.product_code code,p.name name, 
-          current_quantity quantity, min_stock, max_stock, expiry_date").order("p.product_code,p.name,expiry_date")
+          current_quantity quantity, min_stock, s.batch_number batch_number,
+          max_stock, expiry_date").order("p.product_code,p.name,expiry_date")
     end
   end
 
   def missing_items
-    sql=<<EOF                                                                   
-      SELECT t1.epics_stock_details_id , t1.void_reason,
-      x.expiry_date,p.product_code code, p.name, stock.grn_number, 
-      ABS(t2.received_quantity - t1.received_quantity) went_missing, t1.updated_at updated_on
-      FROM epics_stock_details t1
-      INNER JOIN epics_stock_details t2 ON t1.epics_stock_id = t2.epics_stock_id
-      AND t2.epics_products_id = t1.epics_products_id
-      AND t2.voided = 0 AND t1.voided = 1
-      INNER JOIN epics_products p ON p.epics_products_id = t1.epics_products_id
-      INNER JOIN  epics_stock_expiry_dates x                                    
-      ON t2.epics_stock_details_id = x.epics_stock_details_id
-      INNER JOIN epics_stocks stock ON stock.epics_stock_id = t1.epics_stock_id
-      WHERE t1.void_reason LIKE '%missing%'
-EOF
-      
-    epics_stock_details_ids = [0]
+    order_type = EpicsOrderTypes.find_by_name('Board Off')
     @items = {}
-    (EpicsStock.find_by_sql(sql) || []).map do |r|            
-      @items[r.epics_stock_details_id] = {:grn_number => r.grn_number, 
+        
+    EpicsOrders.joins("INNER JOIN epics_product_orders p                        
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0          
+    AND epics_orders.epics_order_type_id = #{order_type.id}                     
+    INNER JOIN epics_stock_details s                                            
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0     
+    INNER JOIN epics_stocks e ON e.epics_stock_id = s.epics_stock_id            
+    AND e.voided = 0 AND instructions = 'missing' INNER JOIN epics_products ep 
+    ON ep.epics_products_id = s.epics_products_id
+    LEFT JOIN epics_stock_expiry_dates x 
+    ON x.epics_stock_details_id = s.epics_stock_details_id").select("s.epics_stock_details_id,
+    ep.product_code code,ep.name,s.batch_number,s.updated_at,s.received_quantity,
+    epics_orders.instructions, p.quantity went_missing,x.expiry_date").map do |r|            
+      expiry_date = r.expiry_date.to_date.strftime('%d %b, %Y') rescue 'N/A'
+      @items[r.epics_stock_details_id] = {:batch_number => r.batch_number, 
        :code => r.code, :name => r.name, :difference => r.went_missing,
-       :updated_on => r.updated_on.to_date.strftime('%d %b, %Y') , :void_reason => r.void_reason ,
-       :expiry_date => r.expiry_date.to_date.strftime('%d %b, %Y')
-      }
-      epics_stock_details_ids << r.epics_stock_details_id
-    end
-
-    sql=<<EOF                                                                   
-      SELECT p.product_code code,p.name name, current_quantity, received_quantity, 
-      expiry_date,s.epics_stock_details_id , s.void_reason ,s.epics_stock_details_id,
-      stock.grn_number, s.updated_at updated_on
-      FROM epics_stocks stock    
-      INNER JOIN epics_stock_details s ON s.epics_stock_id = stock.epics_stock_id
-      AND s.voided = 1 AND s.void_reason = 'missing'                       
-      INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
-      INNER JOIN  epics_stock_expiry_dates x 
-      ON s.epics_stock_details_id = x.epics_stock_details_id
-      WHERE s.epics_stock_details_id NOT IN(#{epics_stock_details_ids.join(',')})
-EOF
-                                                                                                                                          
-    EpicsStock.find_by_sql(sql).map do |r|            
-      went_missing = r.received_quantity
-      if r.current_quantity != r.received_quantity
-        went_missing = (received_quantity - current_quantity)
-      end
-      @items[r.epics_stock_details_id] = {:grn_number => r.grn_number, 
-       :code => r.code, :name => r.name, :difference => went_missing,
-       :updated_on => r.updated_on.to_date.strftime('%d %b, %Y') , :void_reason => r.void_reason ,
-       :expiry_date => r.expiry_date.to_date.strftime('%d %b, %Y')
+       :updated_on => r.updated_at.to_date.strftime('%d %b, %Y') , 
+       :instruction => r.instructions , 
+       :received_quantity => r.received_quantity, :expiry_date => expiry_date
       }
     end
 

@@ -105,6 +105,7 @@ th {
 
 <table class="item-table">
 <tr>
+  <th class='left-align'>Batch number</th>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
   <th class='left-align'>Expiry Date</th>
@@ -113,6 +114,7 @@ th {
 </tr>
 <%(@items || []).each do |item|%>
   <tr id="<%=item[:stock_details_id]%>">
+    <td class='left-align'><%=item[:batch_number] %></td>
     <td class='left-align'><%=item[:item_code] %></td>
     <td class='left-align'><%=item[:item_name] %></td>
     <td class='left-align'><%=item[:expiry_date].to_date.strftime('%d %b, %Y') %></td>
@@ -122,7 +124,7 @@ th {
     </td>
   </tr>
   <tr>
-    <td colspan="5"><hr /><td>
+    <td colspan="6"><hr /><td>
   </tr>
 <%end%>
 </table>
@@ -156,7 +158,7 @@ th {
           }                                                                     
         }                                                                         
       }                                                                           
-      xmlhttp.open("GET","/stock_details/board_off?stock_detail_id=" + stock_detail_id,true);                      
+      xmlhttp.open("POST","/stock_details/board_off_stock?stock_id=" + stock_detail_id + "&reason=Expired",true);                      
       xmlhttp.send();
   }
 

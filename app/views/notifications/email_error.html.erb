@@ -1,11 +1,10 @@
-<!DOCTYPE html>
 <html>
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1>Report from ePICS</h1>
-    <p><%= @email_body.html_safe %></p>
+    <h2>Epics Email Error</h2>
+    <p><%= "Unable to send email because attachment was not found." %></p>
     <p>Sent at <%= Time.now %></p>
   </body>
 </html>

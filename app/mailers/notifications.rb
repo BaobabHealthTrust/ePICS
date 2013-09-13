@@ -15,6 +15,8 @@ class Notifications < ActionMailer::Base
   end
 
   def email_error(subject)
+    sendgrid_category "Email Error"
+	  sendgrid_unique_args :key2 => Time.now, :key3 => Time.now
     @subject = subject
     mail(:to => "epics@baobabhealth.org", :subject => @subject)
   end

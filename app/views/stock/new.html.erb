@@ -13,7 +13,7 @@
     :helpText => "Select Items Provider"} %>
 
   <%= text_field_tag "stock[invoice_number]", nil,
-       {:id => 'grn_number', :field_type => 'alpha',
+       {:id => 'grn_number', :field_type => 'alpha',:textCase => 'upper',
         :helpText => 'Invoice Number'} %>
 
   <%= text_field_tag "stock[grn_date]", nil,

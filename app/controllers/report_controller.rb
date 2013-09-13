@@ -141,18 +141,31 @@ EOF
   def drug_availability
     location = EpicsLocation.find(params[:store_room])
     @page_title = "#{location.name}<br />Drug availability"
-
-    @items = EpicsStockDetails.joins("INNER JOIN epics_products p
+    @items = {}
+    
+    EpicsStockDetails.joins("INNER JOIN epics_products p
       ON p.epics_products_id = epics_stock_details.epics_products_id
       LEFT JOIN epics_stock_expiry_dates x 
       ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id 
       ").where("epics_stock_details.epics_location_id = ?",location.id).select("p.* , 
       epics_stock_details.*, x.*").group('epics_stock_details.epics_stock_details_id').map do |r|
-        {:item_code => r.product_code,:item_name => r.name, :min_stock => r.min_stock,
-         :max_stock => r.max_stock, :current_quantity => r.current_quantity,
-         :expiry_date => r.expiry_date 
+      if @items[r.name].blank?
+        @items[r.name] = {}
+      end
+      
+      if @items[r.name][r.epics_stock_details_id].blank?
+        @items[r.name][r.epics_stock_details_id] = {
+         :item_code => nil , :min_stock => nil,:max_stock => nil, 
+         :current_quantity => nil, :expiry_date => nil
         }
       end
+
+      @items[r.name][r.epics_stock_details_id] = {
+       :item_code => r.product_code, :min_stock => r.min_stock,
+       :max_stock => r.max_stock, :current_quantity => r.current_quantity,
+       :expiry_date => r.expiry_date, :batch_number => r.batch_number
+      }
+    end
   end
 
   def drug_availability_printable

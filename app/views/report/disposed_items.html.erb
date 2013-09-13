@@ -67,26 +67,28 @@ th {
 
 <table class="item-table">
 <tr>
+  <th class='left-align'>Batch number</th>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
   <th class='left-align'>Expired at</th>
   <th class='right-align'>Received quantity</th>
-  <th class='right-align'>Quantity</th>
+  <th class='right-align'>Disposed Quantity</th>
   <th class='left-align'>Date board off</th>
   <th class='left-align'>Reason</th>
 </tr>
 <%(@items || []).each do |item|%>
   <tr>
+    <td class='left-align' style='width:10%;'><%=item[:batch_number] %></td>
     <td class='left-align' style='width:10%;'><%=item[:item_code] %></td>
     <td class='left-align' style='width:30%;'><%=item[:item_name] %></td>
-    <td class='left-align' style='width:10%;'><%=item[:expiry_date].to_date.strftime('%d %b, %Y') %></td>
+    <td class='left-align' style='width:10%;'><%=item[:expiry_date].to_date.strftime('%d %b, %Y') rescue 'N/A' %></td>
     <td class='right-align' style='width:10%;'><%=item[:received_quantity] %></td>
-    <td class='right-align' style='width:10%;'><%=item[:current_quantity] %></td>
+    <td class='right-align' style='width:10%;'><%=item[:disposed_quantity] %></td>
     <td class='left-align' style='width:10%;'><%=item[:voided_at].to_date.strftime('%d %b, %Y') %></td>
     <td class='left-align'><%=item[:void_reason] %></td>
   </tr>
   <tr>
-    <td colspan="7"><hr /><td>
+    <td colspan="8"><hr /><td>
   </tr>
 <%end%>
 </table>

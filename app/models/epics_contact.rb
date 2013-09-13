@@ -4,7 +4,7 @@ class EpicsContact < ActiveRecord::Base
   default_scope where("#{table_name}.voided = 0")
 
   def self.send_email
-    file_name = 'medical_records1.pdf'
+    file_name = 'current_report.pdf'
     if File.exist?("/tmp/#{file_name}")
       EpicsContact.where(:voided => false).each do |contact|
         subject = "Epics Report"

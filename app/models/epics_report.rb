@@ -17,7 +17,7 @@ class EpicsReport < ActiveRecord::Base
                                                                                 
     alerts['Out of stock items'] += EpicsStockDetails.joins("                  
       INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
-    ").group('epics_stock_details.epics_stock_details_id').select("SUM(current_quantity) quantity,
+    ").group('p.epics_products_id').select("SUM(current_quantity) quantity,
       min_stock").having("quantity <= 0").length                                
                                              
     order_type = EpicsOrderTypes.find_by_name('Board Off')

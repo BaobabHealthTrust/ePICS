@@ -180,7 +180,9 @@ function issueItems() {
     <th colspan="3" style="text-align: left;"><h2>Issuing to:<br /><%=@location.name%></h2></th>
   </tr>
   <tr>
-    <th colspan="3" style="text-align: left;">&nbsp;</th>
+    <th colspan="3" style="text-align: left;">
+      <h2>Issuing date:&nbsp;<%=session[:issue_date].strftime('%d %B, %Y')%></h2>
+    </th>
   </tr>
 </table>
 

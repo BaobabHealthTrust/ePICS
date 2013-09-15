@@ -43,7 +43,7 @@ th {
 </tr>
 <%(@alerts || []).each do |alert|%>
   <tr>
-    <td class='left-align'><%=alert.batch_number%></td>
+    <td class='left-align'><%=alert.batch_number rescue 'N/A'%></td>
     <td class='left-align'><%=alert.code %></td>
     <td class='left-align'><%=alert.name %></td>
     <td class='right-align'><%=alert.min_stock %></td>

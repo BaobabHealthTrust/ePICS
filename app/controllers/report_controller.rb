@@ -33,8 +33,7 @@ class ReportController < ApplicationController
         @alerts = EpicsStockDetails.joins("
           INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
         ").group('p.epics_products_id').select("p.product_code code,p.name name, 
-        SUM(current_quantity) quantity, min_stock,epics_stock_details.batch_number batch_number,
-        max_stock").having("quantity <= 0").order("p.product_code,p.name")
+        SUM(current_quantity) quantity, min_stock,max_stock").having("quantity <= 0").order("p.product_code,p.name")
       when 'Missing items'
         redirect_to :action => :missing_items
       when 'Expired items'

@@ -100,7 +100,7 @@ class EpicsReport < ActiveRecord::Base
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
       AND o.created_at >= '#{start_date}' AND o.created_at <= '#{end_date}'
       INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
-      ").select("p.name pname,s.created_at dispensed_date,SUM(quantity) quantity,
+      ").select("p.name pname,o.created_at dispensed_date,SUM(quantity) quantity,
         p.product_code item_code,s.epics_products_id item_id").group("s.epics_products_id")
     
     return issued.collect do |r|{

@@ -17,20 +17,18 @@ class EpicsReport < ActiveRecord::Base
                                                                                 
     alerts['Out of stock items'] += EpicsStockDetails.joins("                  
       INNER JOIN epics_products p ON p.epics_products_id = epics_stock_details.epics_products_id
-    ").group('epics_stock_details.epics_stock_details_id').select("SUM(current_quantity) quantity,
+    ").group('p.epics_products_id').select("SUM(current_quantity) quantity,
       min_stock").having("quantity <= 0").length                                
-                                                                                
-    sql=<<EOF
-      SELECT count(s.epics_products_id) num_of_items FROM epics_stocks stock 
-      INNER JOIN epics_stock_details s ON s.epics_stock_id = stock.epics_stock_id
-      AND s.voided = 1 AND s.void_reason LIKE '%missing%'
-EOF
-
-    alerts['Missing items'] += EpicsStock.find_by_sql(sql).map { |r| 
-      r.num_of_items 
-    }[0].to_i rescue 0
-
-
+                                             
+    order_type = EpicsOrderTypes.find_by_name('Board Off')
+                                   
+    alerts['Missing items'] += EpicsOrders.joins("INNER JOIN epics_product_orders p                        
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0          
+    AND epics_orders.epics_order_type_id = #{order_type.id}                     
+    INNER JOIN epics_stock_details s                                            
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0     
+    INNER JOIN epics_stocks e ON e.epics_stock_id = s.epics_stock_id 
+    AND e.voided = 0 AND instructions = 'missing'").length 
 
     alerts['Expired items'] += EpicsStockExpiryDates.joins("
       INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
@@ -102,7 +100,7 @@ EOF
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
       AND o.created_at >= '#{start_date}' AND o.created_at <= '#{end_date}'
       INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
-      ").select("p.name pname,s.created_at dispensed_date,SUM(quantity) quantity,
+      ").select("p.name pname,o.created_at dispensed_date,SUM(quantity) quantity,
         p.product_code item_code,s.epics_products_id item_id").group("s.epics_products_id")
     
     return issued.collect do |r|{
@@ -242,37 +240,44 @@ EOF
       ON p.epics_products_id = epics_stock_details.epics_products_id
       INNER JOIN epics_stock_expiry_dates x 
       ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
-      ").where("x.expiry_date <= CURRENT_DATE()").select("p.product_code item_code,p.name,
-      x.expiry_date,epics_stock_details.current_quantity,
+      ").where("x.expiry_date <= CURRENT_DATE() 
+      AND epics_stock_details.current_quantity > 0").select("p.product_code item_code,p.name,
+      x.expiry_date,epics_stock_details.current_quantity,epics_stock_details.batch_number,
       p.epics_products_id item_id,epics_stock_details.epics_stock_details_id").map do |r|
         {:item_code => r.item_code,:item_name => r.name,:item_id => r.item_id,
          :current_quantity => r.current_quantity, :expiry_date => r.expiry_date,
-         :stock_details_id => r.epics_stock_details_id
+         :stock_details_id => r.epics_stock_details_id,:batch_number => r.batch_number
         }
       end
   end
 
   def self.disposed_items(start_date, end_date)
+    order_type = EpicsOrderTypes.find_by_name('Board Off')
     start_date = start_date.strftime('%Y-%m-%d 00:00:00')
     end_date = end_date.strftime('%Y-%m-%d 23:59:59')
 
-    EpicsStockDetails.find_by_sql("
-     SELECT p.product_code item_code,p.name,
-     x.expiry_date,s.current_quantity,
-     p.epics_products_id item_id, s.epics_stock_details_id, 
-     s.updated_at date_removed, s.void_reason,s.received_quantity
-     FROM epics_stock_details s INNER JOIN epics_products p 
-     ON p.epics_products_id = s.epics_products_id
-     INNER JOIN epics_stock_expiry_dates x 
-     ON x.epics_stock_details_id = s.epics_stock_details_id 
-     WHERE (s.voided = 1) AND (s.updated_at >= '#{start_date}' 
-     AND s.updated_at <= '#{end_date}')").map do |r|
-        {:item_code => r.item_code,:item_name => r.name,:item_id => r.item_id,
-         :current_quantity => r.current_quantity, :expiry_date => r.expiry_date,
-         :stock_details_id => r.epics_stock_details_id,:voided_at => r.date_removed,
-         :void_reason => r.void_reason,:received_quantity => r.received_quantity
-        }
-      end
+    EpicsOrders.joins("INNER JOIN epics_product_orders p                        
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0          
+    AND epics_orders.epics_order_type_id = #{order_type.id}                     
+    INNER JOIN epics_stock_details s                                            
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0     
+    LEFT JOIN epics_stock_expiry_dates x 
+    ON s.epics_stock_details_id = x.epics_stock_details_id AND x.voided = 0
+    INNER JOIN epics_products ep ON ep.epics_products_id = s.epics_products_id 
+    INNER JOIN epics_stocks e ON e.epics_stock_id = s.epics_stock_id 
+    AND e.voided = 0").select("e.grn_date,e.invoice_number,p.quantity, 
+    epics_orders.epics_location_id location_id, s.updated_at date_updated,                                                  
+    s.batch_number,epics_orders.instructions void_reason, ep.epics_products_id,
+    s.updated_at date_removed,ep.product_code,ep.name,
+    s.received_quantity, p.quantity disposed_quantity ,x.expiry_date, 
+    s.epics_stock_details_id").where("s.updated_at >= ? 
+    AND s.updated_at <= ?",start_date, end_date).map do |r|
+      {:item_code => r.product_code,:item_name => r.name,:item_id => r.epics_products_id,
+       :disposed_quantity => r.quantity, :expiry_date => r.expiry_date,:batch_number => r.batch_number,
+       :stock_details_id => r.epics_stock_details_id,:voided_at => r.date_removed,
+       :void_reason => r.void_reason,:received_quantity => r.received_quantity
+      }
+    end
   end
 
   def self.audit(start_date, end_date)
@@ -530,9 +535,9 @@ EOF
     AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e
     ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
     e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
-    epics_orders.created_at dispensed_date,
+    s.updated_at date_updated,
     s.batch_number,epics_orders.instructions").map do |r|
-      dispensed_date = r.dispensed_date
+      dispensed_date = r.date_updated
       issued_to = r.instructions.titleize rescue 'Unknown'
 
       if results[dispensed_date].blank?

@@ -41,7 +41,7 @@ class StockDetailsController < ApplicationController
    stock_id = params[:stock_id]
    reason = params[:reason]
    stock = EpicsStockDetails.find(stock_id)
-   stock.voided=1
+   stock.voided = 1
    stock.void_reason = reason
    stock.voided_by = session[:user_id]
    stock.save!
@@ -51,25 +51,32 @@ class StockDetailsController < ApplicationController
   def board_off_stock
     stock_id = params[:stock_id]
     reason = params[:reason]
+    board_off_quantity = params[:board_off_quantity].to_f rescue 0
+
     stock = EpicsStockDetails.find(stock_id)
-    ActiveRecord::Base.transaction do
-      location_type = EpicsLocationType.find_by_name('Medication Disposal')
-      epics_location = EpicsLocation.find_by_epics_location_type_id(location_type.id)
-      order_type = EpicsOrderTypes.find_by_name('Board off')
-      epics_order = EpicsOrders.new
-      epics_order.epics_order_type_id = order_type.id
-      epics_order.epics_location_id = epics_location.id
-      epics_order.instructions = reason
-      epics_order.save!
 
-      product_order = EpicsProductOrders.new
-      product_order.epics_order_id = epics_order
-      product_order.epics_stock_details_id = stock.id
-      product_order.quantity = stock.current_quantity
-      product_order.save!
+    if stock.current_quantity > 0 
+      if stock.current_quantity >= board_off_quantity 
+        ActiveRecord::Base.transaction do
+          location_type = EpicsLocationType.find_by_name('Medication Disposal')
+          epics_location = EpicsLocation.find_by_epics_location_type_id(location_type.id)
+          order_type = EpicsOrderTypes.find_by_name('Board off')
+          epics_order = EpicsOrders.new
+          epics_order.epics_order_type_id = order_type.id
+          epics_order.epics_location_id = epics_location.id
+          epics_order.instructions = reason
+          epics_order.save!
 
-      stock.current_quantity = 0
-      stock.save
+          product_order = EpicsProductOrders.new
+          product_order.epics_order_id = epics_order.id
+          product_order.epics_stock_details_id = stock.id
+          product_order.quantity = stock.current_quantity
+          product_order.save!
+
+          stock.current_quantity = board_off_quantity
+          stock.save
+        end
+      end
     end
     render :text => "done"
   end

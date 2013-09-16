@@ -54,4 +54,31 @@ class LocationController < ApplicationController
     render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
   end
 
+  def print_location_menu
+    store_room_id = EpicsLocationType.find_by_name('Store room').id
+    store_locations = EpicsLocation.find_all_by_epics_location_type_id(store_room_id)
+    @store_room_locations = store_locations.collect{|location|[location.name, location.id]}
+  end
+  
+  def print_location
+    location_id = params[:location_id]
+    print_and_redirect("/location/location_label?location_id=#{location_id}", "/")
+  end
+
+  def location_label
+		location_id = params[:location_id]
+		print_string = get_location_label(EpicsLocation.find(location_id))
+		send_data(print_string,:type=>"application/label; charset=utf-8", :stream=> false, :filename=>"#{Time.now.to_i}.lbl", :disposition => "inline")
+  end
+  
+  def get_location_label(location)
+    label = ZebraPrinter::StandardLabel.new
+    label.font_size = 2
+    label.font_horizontal_multiplier = 2
+    label.font_vertical_multiplier = 2
+    label.left_margin = 50
+    label.draw_barcode(50,180,0,1,5,15,120,false,"#{location.id}")
+    label.draw_multi_text("#{location.name}")
+    label.print(1)
+  end
 end

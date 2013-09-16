@@ -135,7 +135,22 @@ th {
     <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
     <td style="border-width: 1px 1px 1px 0px;">&nbsp;</td>
   </tr>
-  <% @monthly_report[date][category].sort_by {|x,y|y[:item_code]}.each do |item_id , values|%>
+  <% @monthly_report[date][category].sort_by {|x,y|y[:item_code]}.each do |item_id , values|
+    positives = 0
+    negatives = 0
+
+    negatives += values[:losses].to_f if values[:losses]
+    positives += values[:positive_adjustments].to_f if values[:positive_adjustments]
+    negatives += values[:negative_adjustments].to_f if values[:negative_adjustments]
+    negatives += values[:issued].to_f if values[:issued]
+    positives += values[:received_quantity].to_f if values[:received_quantity]
+    
+    current_quantity = (positives - negatives)
+
+    if (current_quantity.to_s[-2..-1]) == '.0'
+      current_quantity = current_quantity.to_i
+    end
+  %>
   <tr>
     <td style="text-align:left;padding-left: 10px;">
       <%=values[:item_code]%>
@@ -143,7 +158,7 @@ th {
     <td style="text-align:left;padding-left: 10px;"><%=values[:item]%></td>
     <td style="text-align: center;"><%=values[:unit_of_issue]%></td>
     <td style="text-align:right;padding-right: 10px;">
-      <%=values[:current_quantity]%>
+      <%= current_quantity %>
     </td>
     <td style="text-align:right;padding-right: 10px;">
       <%=values[:losses]%>

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   #protect_from_forgery
-  before_filter :perform_basic_auth, :except => ['login','logout','authenticate',
+  before_filter :perform_basic_auth, :set_issue_date, :except => ['login','logout','authenticate',
     'store_room_printable','drug_availability_printable','monthly_report_printable',
     'daily_dispensation_printable','disposed_items_printable','expired_items_printable',
     'stock_card_printable'
@@ -17,6 +17,12 @@ class ApplicationController < ActionController::Base
       User.current = User.find(session[:user_id])
     end                                                                         
   end 
+
+  def set_issue_date
+    unless session[:issue_date].blank?
+      EpicsOrders.issue_date = session[:issue_date]
+    end
+  end
 
   def print_and_redirect(print_url, redirect_url, message = "Printing, please wait...", show_next_button = false, patient_id = nil)
     @print_url = print_url

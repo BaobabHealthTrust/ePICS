@@ -9,8 +9,10 @@ class OrdersController < ApplicationController
 
   def new
     @order = EpicsOrderTypes.all.map{|order| [order.name,order.epics_order_type_id]}
-    @locations_map = EpicsLocation.find(:all, :conditions => ["epics_location_type_id = ? ",
-                                                              EpicsLocationType.find_by_name("Departments").id ]).map{|location| [location.name,location.epics_location_id]}
+    @locations_map = EpicsLocation.where("epics_location_type_id = ? ",
+      EpicsLocationType.find_by_name("Departments").id).map do |location| 
+        [location.name, location.epics_location_id]
+      end
   end
 
   def create
@@ -32,6 +34,10 @@ class OrdersController < ApplicationController
   end
 
   def select
+
+    if session[:issue_date].blank?
+      session[:issue_date] = params[:issue_date].to_date
+    end
 
     @product_category_map = EpicsProductCategory.all.map do |product_category|
       [product_category.name,product_category.epics_product_category_id]

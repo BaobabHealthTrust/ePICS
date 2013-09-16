@@ -63,6 +63,7 @@ th {
 <%= render :partial=>"/layouts/top" %>
 <table class="item-table">
 <tr>
+  <th class='left-align'>Batch number</th>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
   <th class='left-align'>Expiry Date</th>
@@ -71,6 +72,7 @@ th {
 </tr>
 <%(@items || []).each do |item|%>
   <tr id="<%=item[:stock_details_id]%>">
+    <td class='left-align'><%=item[:batch_number] %></td>
     <td class='left-align'><%=item[:item_code] %></td>
     <td class='left-align'><%=item[:item_name] %></td>
     <td class='left-align'><%=item[:expiry_date].to_date.strftime('%d %b, %Y') %></td>

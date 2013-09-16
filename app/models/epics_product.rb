@@ -23,69 +23,92 @@ class EpicsProduct < ActiveRecord::Base
   end
 
   def received_quantity(end_date = Date.today)
-    EpicsStockDetails.joins("INNER JOIN epics_products p 
-      ON epics_stock_details.epics_products_id = p.epics_products_id 
-      AND p.epics_products_id = #{self.id}
-      INNER JOIN epics_stocks s 
-      ON s.epics_stock_id = epics_stock_details.epics_stock_id").where("
-      s.grn_date <= ?", end_date).sum(:received_quantity)
+    stock_ids_which_are_not_receipts = [0]                                      
+    (EpicsExchange.all || []).map do |e|                                        
+      stock_ids_which_are_not_receipts << e.epics_stock_id                      
+    end                                                                         
+                                                                                
+    (EpicsLendsOrBorrows.all || []).map do |l|                                  
+      stock_ids_which_are_not_receipts << l.epics_stock_id                      
+    end                                                                         
+                                                                                
+    received_quantity = EpicsStock.joins(:epics_stock_details).where("epics_products_id = ?         
+    AND epics_stock_details.voided = 0 AND epics_stock_details.epics_stock_id NOT IN(?) 
+    AND epics_stocks.grn_date <= ?", self.id,stock_ids_which_are_not_receipts.compact, 
+    end_date).select("SUM(epics_stock_details.received_quantity) received_quantity")[0].received_quantity.to_f
+
+    if (received_quantity.to_s[-2..-1]) == '.0'
+      received_quantity = received_quantity.to_i
+    end unless received_quantity.blank?
+
+    return received_quantity
   end
 
   def losses_quantity(end_date = Date.today)
+    order_type = EpicsOrderTypes.find_by_name('Board Off')                      
+                                                                                
+    board_off = EpicsOrders.joins("INNER JOIN epics_product_orders p                        
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0          
+    AND epics_orders.epics_order_type_id = #{order_type.id}                     
+    INNER JOIN epics_stock_details s                                            
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0     
+    AND s.epics_products_id = #{self.id} INNER JOIN epics_stocks e              
+    ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("SUM(p.quantity) 
+    board_off").where("epics_orders.created_at <= ?",                
+    end_date.strftime('%Y-%m-%d 23:59:59'))[0].board_off.to_f
 
-    EpicsStockDetails.find_by_sql("SELECT SUM(current_quantity) count FROM
-      epics_stock_details INNER JOIN epics_products p 
-      ON epics_stock_details.epics_products_id = p.epics_products_id 
-      AND p.epics_products_id = #{self.id}
-      INNER JOIN epics_stocks s 
-      ON s.epics_stock_id = epics_stock_details.epics_stock_id
-      WHERE s.grn_date <= '#{end_date}' AND epics_stock_details.voided = 1 
-      AND epics_stock_details.void_reason IN('damaged','missing','expired')").first.count.to_i rescue 0
+    if (board_off.to_s[-2..-1]) == '.0'
+      board_off = board_off.to_i
+    end unless board_off.blank?
+
+    return board_off
   end
 
   def positive_adjustments(end_date = Date.today)
-    type = EpicsLendsOrBorrowsType.where("name = ?",'Borrow')[0]
+    stock_ids_which_are_not_receipts = [0]                                      
+    (EpicsExchange.all || []).map do |e|                                        
+      stock_ids_which_are_not_receipts << e.epics_stock_id                      
+    end                                                                         
+                                                                                
+    (EpicsLendsOrBorrows.all || []).map do |l|                                  
+      stock_ids_which_are_not_receipts << l.epics_stock_id                      
+    end                                                                         
+                                                                                
+    positive_adjustments = EpicsStock.joins("INNER JOIN epics_stock_details s                          
+    ON s.epics_stock_id = epics_stocks.epics_stock_id AND s.voided = 0          
+    AND s.epics_products_id = #{self.id}                                        
+    AND s.epics_stock_id IN(#{stock_ids_which_are_not_receipts.compact.join(',')})
+    LEFT JOIN epics_exchanges x ON x.epics_stock_id = s.epics_stock_id          
+    AND x.voided = 0 LEFT JOIN epics_lends_or_borrows b ON b.epics_stock_id = s.epics_stock_id 
+    AND b.voided = 0").select("SUM(s.received_quantity) positive_adjustments").where("epics_stocks.grn_date <= ?" ,
+    end_date)[0].positive_adjustments.to_f 
 
-    borrowed = EpicsLendsOrBorrows.joins("INNER JOIN epics_stocks es
-    ON es.epics_stock_id = epics_lends_or_borrows.epics_stock_id
-    AND epics_lends_or_borrows.epics_lends_or_borrows_type_id = #{type.id}
-    INNER JOIN epics_stock_details s ON s.epics_stock_id = es.epics_stock_id
-    AND s.epics_products_id = #{self.id}").where("es.grn_date <= ?", end_date).sum(:received_quantity)
+    if (positive_adjustments.to_s[-2..-1]) == '.0'
+      positive_adjustments = positive_adjustments.to_i
+    end unless positive_adjustments.blank?
 
-
-    exchange = EpicsExchange.joins("INNER JOIN epics_product_orders o 
-      ON o.epics_order_id=epics_exchanges.epics_order_id
-      INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
-      AND s.epics_products_id = #{self.id} INNER JOIN epics_stocks e              
-      ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date <= ?",
-      end_date).sum(:received_quantity)
-       
-    receipts = EpicsStock.joins("INNER JOIN epics_stock_details s
-      ON s.epics_stock_id = epics_stocks.epics_stock_id
-      AND s.epics_products_id = #{self.id}").where("epics_stocks.grn_date <= ?",
-      end_date).sum(:received_quantity)
-       
-    count = [exchange.to_f , borrowed.to_f].sum
-    count = [count , (receipts.to_f - count)].sum
-
-
-    if(count.to_s.split('.')[1] == '0')
-      return count.to_i
-    end
-    return count
+    return positive_adjustments
   end
 
   def negative_adjustments(end_date = Date.today)
-    type_ids = EpicsOrderTypes.where("name IN(?)",['Lend','Exchange','Return']).map(&:id)
+    order_type = EpicsOrderTypes.where("name IN('Lend','Exchange')").map(&:epics_order_type_id)
+                                                                                
+    negative_adjustments = EpicsOrders.joins("INNER JOIN epics_product_orders p                        
+    ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0          
+    AND epics_orders.epics_order_type_id IN(#{order_type.join(',')})            
+    INNER JOIN epics_stock_details s                                            
+    ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0     
+    AND s.epics_products_id = #{self.id} INNER JOIN epics_stocks e              
+    ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("SUM(p.quantity) 
+    negative_adjustments").where("epics_orders.created_at <= ?", 
+    end_date.strftime('%Y-%m-%d 23:59:59'))[0].negative_adjustments.to_f 
 
-    epics_lends = EpicsOrders.joins("INNER JOIN epics_product_orders o
-      ON o.epics_order_id = epics_orders.epics_order_id
-      AND epics_orders.epics_order_type_id IN(#{type_ids.join(',')})
-      INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
-      AND s.epics_products_id=#{self.id} INNER JOIN epics_stocks e 
-      ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date <= ?" ,end_date).sum(:quantity)
-    
-    return epics_lends
+
+    if (negative_adjustments.to_s[-2..-1]) == '.0'
+      negative_adjustments = negative_adjustments.to_i
+    end unless negative_adjustments.blank?
+
+    return negative_adjustments
   end
 
   def issued(end_date = Date.today)

@@ -1,3 +1,7 @@
+<style>
+  #Unknown { display: none; }
+</style>
+
 
 <script type='text/javascript'><!--
 
@@ -8,6 +12,14 @@
 </script>
 
 <%= form_tag :action => 'select', :method => :post  do %>
+
+  
+  <%= text_field_tag "issue_date", nil,                            
+    {:id => "start_date",                                                   
+    :field_type => 'date',
+    :maxDate => "#{Date.today.to_date}",
+    :helpText => "Select issue date"} %>
+ 
 
  <%= select_tag :location, options_for_select(@locations_map),
     {:field_type => 'alpha',

@@ -7,6 +7,18 @@ development:
   username: root
   password: p@ssword
   socket: /var/run/mysqld/mysqld.sock
+  host: localhost
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: epics_prod
+  pool: 5
+  username: root
+  password: p@ssword
+  socket: /var/run/mysqld/mysqld.sock
+  host: localhost
 
 openmrs:
   adapter: mysql2
@@ -17,5 +29,4 @@ openmrs:
   username: root
   password: password
   socket: /var/run/mysqld/mysqld.sock
-
-
+  host: localhost

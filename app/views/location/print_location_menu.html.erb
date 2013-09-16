@@ -1,0 +1,9 @@
+<script type="text/javascript">
+  tt_cancel_destination = "/clinic";
+</script>
+
+<% form_tag :action => "print_location" do -%>
+  <%= select_tag'location_id', options_for_select(@store_room_locations), {:helpText => 'Select Location'}%></p> 
+  <%= submit_tag "submit" %>
+<% end -%>
+

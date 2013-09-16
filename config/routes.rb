@@ -148,6 +148,9 @@ EPICS::Application.routes.draw do
   post "location/update"
   get "location/void"
   get "location/search"
+  get "location/print_location_menu"
+  post "location/print_location"
+  get "location/location_label"
   ######## location end #######
 
 

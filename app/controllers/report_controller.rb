@@ -377,5 +377,54 @@ class ReportController < ApplicationController
         render :text => "true" and return
     ###############################
   end
-  
+
+  def items_to_expire_next_six_months_attachment
+    @alerts = EpicsStockExpiryDates.joins("
+          INNER JOIN epics_stock_details s ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
+          INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id AND p.expire = 1
+          ").where("DATEDIFF(expiry_date,CURRENT_DATE())
+          BETWEEN 1 AND 183 AND current_quantity > 0").select("p.product_code code,p.name name,
+          current_quantity quantity, min_stock, s.batch_number batch_number,
+          max_stock, expiry_date").order("p.product_code,p.name,expiry_date")
+    render :layout => false
+  end
+
+  def items_to_expire_next_six_months_to_pdf
+    Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/items_to_expire_next_six_months_attachment/" +\
+             "\" /tmp/next_six_months_items_to_expire_attach" + ".pdf \n"
+        }
+  end
+
+  def daily_dispensation_attachment
+    today = Date.today
+    @daily_dispensation = EpicsReport.daily_dispensation(today)
+    render :layout => false
+  end
+
+  def daily_dispensation_to_pdf
+    Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/daily_dispensation_attachment/" +\
+             "\" /tmp/daily_dispensation_attach" + ".pdf \n"
+        }
+  end
+
+  def received_items_attachment
+    start_date = Date.today#params[:date]['start'].to_date
+    end_date = Date.today#params[:date]['end'].to_date
+    @page_title = "Received/Issued:<br />" + start_date.strftime('%d %b, %Y')
+    @page_title += " to " + end_date.strftime('%d %b, %Y')
+    @received_items = EpicsReport.received_items(start_date,end_date)
+    render :layout => false
+  end
+
+  def received_items_to_pdf
+    Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            request.env["HTTP_HOST"] + "\"/report/received_items_attachment/" +\
+             "\" /tmp/received_items_attach" + ".pdf \n"
+        }
+  end
 end

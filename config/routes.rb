@@ -287,6 +287,18 @@ EPICS::Application.routes.draw do
   post "report/received_items"
   post "report/print_expired_items_report"
   get "report/expired_items_printable"
+  get "report/items_to_expire_next_six_months_attachment"
+  post "report/items_to_expire_next_six_months_attachment"
+  get "report/items_to_expire_next_six_months_to_pdf"
+  post "report/items_to_expire_next_six_months_to_pdf"
+  get "report/daily_dispensation_attachment"
+  post "report/daily_dispensation_attachment"
+  get "report/daily_dispensation_to_pdf"
+  post "report/daily_dispensation_to_pdf"
+  get "report/received_items_attachment"
+  post "report/received_items_attachment"
+  get "report/received_items_to_pdf"
+  post "report/received_items_to_pdf"
   ########### reports end #########
 
   #get "home/index"

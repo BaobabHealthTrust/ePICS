@@ -3,7 +3,9 @@ class ApplicationController < ActionController::Base
   before_filter :perform_basic_auth, :set_issue_date, :except => ['login','logout','authenticate',
     'store_room_printable','drug_availability_printable','monthly_report_printable',
     'daily_dispensation_printable','disposed_items_printable','expired_items_printable',
-    'stock_card_printable'
+    'stock_card_printable','items_to_expire_next_six_months_attachment',
+    'items_to_expire_next_six_months_to_pdf','daily_dispensation_attachment',
+    'daily_dispensation_to_pdf', 'received_items_attachment','received_items_to_pdf'
   ]
 
   protected                                                                     

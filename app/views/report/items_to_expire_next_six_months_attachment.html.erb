@@ -1,0 +1,60 @@
+<style>
+.item-table {
+  width: 98%;
+  padding-top: 10px;
+}
+
+td {
+  font-size: 16px;
+}
+
+th {
+  font-size: 20;
+}
+
+.left-align {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.right-align {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.report-div {                                                                   
+  overflow: auto;                                                               
+  height: 550px;                                                                
+}  
+
+</style>
+
+<div class="report-div">
+
+<table class="item-table">
+<tr>
+  <th class='left-align'>Batch number</th>
+  <th class='left-align'>Item code</th>
+  <th class='left-align'>Item name</th>
+  <th class='right-align'>Item minimun stock</th>
+  <th class='right-align'>Item maximum stock</th>
+  <th class='right-align'>Item current stock</th>
+  <th class='right-align'>Item expiry date</th>
+</tr>
+<%(@alerts || []).each do |alert|%>
+  <tr>
+    <td class='left-align'><%=alert.batch_number rescue 'N/A'%></td>
+    <td class='left-align'><%=alert.code %></td>
+    <td class='left-align'><%=alert.name %></td>
+    <td class='right-align'><%=alert.min_stock %></td>
+    <td class='right-align'><%=alert.max_stock %></td>
+    <td class='right-align'><%=alert.quantity %></td>
+    <td class='right-align'><%=alert.expiry_date.to_date.strftime('%B %Y') rescue 'N/A' %></td>
+  </tr>
+  <tr>
+    <td colspan="7"><hr /><td>
+  </tr>
+<%end%>
+</table>
+
+</div>

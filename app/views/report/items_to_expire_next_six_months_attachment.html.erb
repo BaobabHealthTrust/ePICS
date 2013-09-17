@@ -26,17 +26,22 @@ th {
   overflow: auto;                                                               
   height: 550px;                                                                
 }  
-
+ .logo{
+    margin-left: 40%;
+  }
 </style>
 
 <div class="report-div">
-
+<%= image_tag("mw.gif", :class => "logo") %><br />
+<b style="font-size:18pt; margin-left: 35%;">REPUBLIC OF MALAWI</b><br />
+<b style="font-size: large; margin-left: 38%;">MINISTRY OF HEALTH</b><br /><br />
+<b style="font-size:14pt; margin-left: 33%;"><u>Items to expire in the next six months</u></b>
 <table class="item-table">
 <tr>
   <th class='left-align'>Batch number</th>
   <th class='left-align'>Item code</th>
   <th class='left-align'>Item name</th>
-  <th class='right-align'>Item minimun stock</th>
+  <th class='right-align'>Item minimum stock</th>
   <th class='right-align'>Item maximum stock</th>
   <th class='right-align'>Item current stock</th>
   <th class='right-align'>Item expiry date</th>

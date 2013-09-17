@@ -236,19 +236,18 @@ class EpicsReport < ActiveRecord::Base
   ############################### stock card ends #########################################	
 
   def self.expired_items
-    EpicsStockDetails.joins("INNER JOIN epics_products p 
-      ON p.epics_products_id = epics_stock_details.epics_products_id
-      INNER JOIN epics_stock_expiry_dates x 
-      ON x.epics_stock_details_id = epics_stock_details.epics_stock_details_id
-      ").where("x.expiry_date <= CURRENT_DATE() 
-      AND epics_stock_details.current_quantity > 0").select("p.product_code item_code,p.name,
-      x.expiry_date,epics_stock_details.current_quantity,epics_stock_details.batch_number,
-      p.epics_products_id item_id,epics_stock_details.epics_stock_details_id").map do |r|
-        {:item_code => r.item_code,:item_name => r.name,:item_id => r.item_id,
-         :current_quantity => r.current_quantity, :expiry_date => r.expiry_date,
-         :stock_details_id => r.epics_stock_details_id,:batch_number => r.batch_number
-        }
-      end
+    EpicsStockExpiryDates.joins("INNER JOIN epics_stock_details s 
+    ON s.epics_stock_id = epics_stock_expiry_dates.epics_stock_details_id
+    INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id AND p.expire = 1
+    ").where("DATEDIFF(expiry_date,CURRENT_DATE()) <= 0                   
+    AND current_quantity > 0").select("p.product_code code,p.name name, s.batch_number batch_number,
+    current_quantity, min_stock,p.epics_products_id item_id,s.epics_stock_details_id, 
+    max_stock, expiry_date").order("p.product_code,p.name,expiry_date").map do |r|
+      {:item_code => r.code,:item_name => r.name,:item_id => r.item_id,
+       :current_quantity => r.current_quantity, :expiry_date => r.expiry_date,
+       :stock_details_id => r.epics_stock_details_id,:batch_number => r.batch_number
+      }
+    end
   end
 
   def self.disposed_items(start_date, end_date)

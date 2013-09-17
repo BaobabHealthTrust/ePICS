@@ -4,6 +4,19 @@
 	tt_cancel_destination='/contact/index'
 
 //-->
+
+function addAtButton(){
+  btn = document.getElementById(',')
+  if (btn){
+    btn.innerHTML='<span>@</span>'
+    btn.id='@'
+    btn.onmousedown = function(){
+      press(this.id)
+    }
+  }
+
+}
+window.setTimeout("addAtButton();",50)
 </script>
 
 <%= form_tag :action => 'create', :method => :post  do %>
@@ -26,7 +39,9 @@
           :helpText => 'Enter Phone Number'} %>
 
 <%= text_field_tag "contact[email_address]", nil,
-         {:id => 'contact_email_address', :field_type => 'alpha',
+         {:id => 'contact_email_address', 
+         :field_type => 'alpha',
+         :tt_onLoad => 'addAtButton();',
           :helpText => 'Enter Email Address'} %>
 
  

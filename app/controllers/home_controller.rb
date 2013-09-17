@@ -36,8 +36,8 @@ class HomeController < ApplicationController
 
     @administration = [
       ["Set Items","/product/index","default.png"],
-      ["Print Location","/location/print_location_menu","emblem_print.png"]
-      ["Set Contacts","/contact/index","default.png"],
+      ["Print Location","/location/print_location_menu","emblem_print.png"],
+      ["Set Contacts","/contact/index","default.png"]
     ]
 
     if User.current.epics_user_role.name == "Administrator"

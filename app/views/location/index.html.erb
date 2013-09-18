@@ -34,6 +34,8 @@ function showMsg(msg){
         }
 </script>
 
+<div class="report-div">
+
 <table cellpadding=5 width='100%'>
   <tr>
     <td>
@@ -54,6 +56,9 @@ function showMsg(msg){
   </tr>
       <a style="position: absolute; width:200px; left: 45%; top: 82%" class="buttons" onclick='window.location="/location/new"'>Add</a>
 </table>
+
+</div>
+
 <style>
   .buttons {
     background-color: grey;
@@ -77,6 +82,11 @@ function showMsg(msg){
     border-right-color-value: rgba(0, 0, 0, 0.1);
     border-top-color: rgba(0, 0, 0, 0.1);
     font-size: 1.3em;
+  }
+
+  .report-div {                                                                 
+    overflow: auto;                                                             
+    height: 550px;                                                              
   }
 
 </style>

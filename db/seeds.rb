@@ -131,7 +131,11 @@ product_units = ["Each" , "Tablet","mg","KG","cm","Ltr","mL","Other"]
 end
 
 puts 'loading roles'
-roles = [["Administrator","overseer of all activities"], ["Pharmacist", "receiver and issuer of items"]]
+roles = [
+         ["Administrator","overseer of all activities"], 
+         ["Pharmacist", "receiver and issuer of items"],
+         ['Pharmacy technician','receiver and issuer of items - works under Pharmacist']
+        ]
 
 (roles || []).each do |role, description|
   new_role = EpicsRole.new()

@@ -392,7 +392,7 @@ class ReportController < ApplicationController
   def items_to_expire_next_six_months_to_pdf
     Thread.new{
           Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-            "192.168.13.102:3000" + "\"/report/items_to_expire_next_six_months_attachment/" +\
+            "192.168.13.102:80" + "\"/report/items_to_expire_next_six_months_attachment/" +\
              "\" /tmp/items_to_expire_next_six_months" + ".pdf \n"
         }
   end
@@ -406,7 +406,7 @@ class ReportController < ApplicationController
   def daily_dispensation_to_pdf
     Thread.new{
           Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-            "192.168.13.102:3000" + "\"/report/daily_dispensation_attachment/" +\
+            "192.168.13.102:80" + "\"/report/daily_dispensation_attachment/" +\
              "\" /tmp/daily_dispensation" + ".pdf \n"
         }
   end
@@ -423,7 +423,7 @@ class ReportController < ApplicationController
   def received_items_to_pdf
     Thread.new{
           Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-            "192.168.13.102:3000" + "\"/report/received_items_attachment/" +\
+            "192.168.13.102:80" + "\"/report/received_items_attachment/" +\
              "\" /tmp/received_items" + ".pdf \n"
         }
   end

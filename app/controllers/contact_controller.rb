@@ -59,6 +59,7 @@ class ContactController < ApplicationController
     report.daily_dispensation_to_pdf
     report.received_items_to_pdf
     EpicsContact.send_email
+    render :text => "done" and return
   end
 
 end

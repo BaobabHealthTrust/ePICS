@@ -23,8 +23,8 @@ th {
 }
 
 .report-div {                                                                   
-  overflow: auto;                                                               
-  height: 550px;                                                                
+  /*overflow: auto;
+  height: 550px;*/
 }  
  .logo{
     margin-left: 40%;
@@ -57,7 +57,7 @@ th {
     <td class='right-align'><%=alert.expiry_date.to_date.strftime('%B %Y') rescue 'N/A' %></td>
   </tr>
   <tr>
-    <td colspan="7"><hr /><td>
+    <td colspan="7"><hr /></td>
   </tr>
 <%end%>
 </table>

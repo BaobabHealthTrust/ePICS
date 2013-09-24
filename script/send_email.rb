@@ -1,14 +1,11 @@
+  require 'rubygems'
+  require 'rest-client'
+  require 'json'
+  require 'rails'
+  AppPort = 80
+  LogErr = Logger.new("/var/www/ePICS/log/send_email.txt")
 begin
-	require 'rubygems'
-	require 'rest-client'
-	require 'json'
-	require 'rails'
-  report = ReportController.new
-  report.items_to_expire_next_six_months_to_pdf
-  report.daily_dispensation_to_pdf
-  report.daily_dispensation_to_pdf
-  report.received_items_to_pdf
-	EpicsContact.send_email
+  RestClient.get("http://test:admin@localhost:#{AppPort}/contact/send_email")
 rescue => e
   puts e.inspect
 end

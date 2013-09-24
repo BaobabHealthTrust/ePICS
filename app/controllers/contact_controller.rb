@@ -52,4 +52,13 @@ class ContactController < ApplicationController
 		render :text => 'showMsg("Record Deleted!")'
   end
 
+  def send_email
+    report = ReportController.new
+    report.items_to_expire_next_six_months_to_pdf
+    report.daily_dispensation_to_pdf
+    report.daily_dispensation_to_pdf
+    report.received_items_to_pdf
+    EpicsContact.send_email
+  end
+
 end

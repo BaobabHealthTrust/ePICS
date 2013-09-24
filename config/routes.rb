@@ -10,6 +10,8 @@ EPICS::Application.routes.draw do
 
   post "contact/update"
 
+  get "contact/send_email"
+
   get "contact/void"
 
   ######## person #########

@@ -354,7 +354,9 @@ EOF
     AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e
     ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
     e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
-    epics_orders.created_at dispensed_date, s.batch_number").map do |r|
+    epics_orders.created_at dispensed_date, s.batch_number,
+    epics_orders.epics_order_id,s.epics_stock_details_id,p.epics_product_order_id,
+    s.epics_products_id,s.epics_stock_id").map do |r|
       dispensed_date = r.dispensed_date
       issued_to = EpicsLocation.find(r.location_id).name 
 
@@ -372,12 +374,18 @@ EOF
 
       if results[dispensed_date][r.invoice_number][r.batch_number][issued_to].blank?
         results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-          :issued => nil 
+          :issued => nil, 
+          :epics_stock_id => nil, :epics_stock_details_id => nil,
+          :epics_products_id => nil, :epics_order_id => nil,
+          :epics_product_order_id => nil, :transaction => nil
         }
       end
 
       results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-        :issued => r.quantity 
+        :issued => r.quantity ,
+        :epics_stock_id => r.epics_stock_id, :epics_stock_details_id => r.epics_stock_details_id,
+        :epics_products_id => r.epics_products_id, :epics_order_id => r.epics_order_id,
+        :epics_product_order_id => r.epics_product_order_id, :transaction => 'issues' 
       }
     end
 
@@ -398,7 +406,7 @@ EOF
     AND epics_stock_details.voided = 0 
     AND epics_stock_details.epics_stock_id NOT IN(?)",
     item.id,stock_ids_which_are_not_receipts.compact).select("epics_stocks.*,
-    epics_stock_details.*,epics_stocks.created_at created_at").map do |r|
+    epics_stock_details.*, epics_stocks.created_at created_at").map do |r|
       received_from = EpicsSupplier.find(r.epics_supplier_id).name
       grn_date = "#{r.grn_date} #{r.created_at.to_time.strftime('%H:%M:%S')}".to_time
       if results[grn_date].blank?
@@ -415,14 +423,18 @@ EOF
 
       if results[grn_date][r.invoice_number][r.batch_number][received_from].blank?
         results[grn_date][r.invoice_number][r.batch_number][received_from] = {
-          :received_quantity => nil , 
-          :current_quantity => nil
+          :received_quantity => nil , :current_quantity => nil ,
+          :epics_stock_id => nil, :epics_stock_details_id => nil,
+          :epics_products_id => nil, :transaction => nil
         }
       end
 
       results[grn_date][r.invoice_number][r.batch_number][received_from] = {
         :received_quantity => r.received_quantity , 
-        :current_quantity => r.current_quantity
+        :current_quantity => r.current_quantity ,
+        :epics_stock_id => r.epics_stock_id, 
+        :epics_stock_details_id => r.epics_stock_details_id,
+        :epics_products_id => r.epics_products_id, :transaction => 'receipts' 
       }
     end
 
@@ -446,14 +458,16 @@ EOF
     LEFT JOIN epics_exchanges x ON x.epics_stock_id = s.epics_stock_id
     AND x.voided = 0 LEFT JOIN epics_lends_or_borrows b 
     ON b.epics_stock_id = s.epics_stock_id AND b.voided = 0").select("epics_stocks.*, 
-    s.*, x.epics_location_id exchange_location_id, 
+    s.*, x.epics_location_id exchange_location_id, x.epics_exchange_id,b.epics_lends_or_borrows_id,
     b.facility borrow_location_id, epics_stocks.created_at created_at").map do |r|
       grn_date = "#{r.grn_date} #{r.created_at.to_time.strftime('%H:%M:%S')}".to_time
 
       if not r.exchange_location_id.blank?
         received_from = EpicsLocation.find(r.exchange_location_id).name 
+        transaction = 'positive_adjustments:exchange'
       elsif not r.borrow_location_id.blank?
         received_from = EpicsLocation.find(r.borrow_location_id).name 
+        transaction = 'positive_adjustments:borrow'
       end
 
       if results[grn_date].blank?
@@ -470,12 +484,20 @@ EOF
 
       if results[grn_date][r.invoice_number][r.batch_number][received_from].blank?
         results[grn_date][r.invoice_number][r.batch_number][received_from] = {
-          :quantity_received => nil 
+          :quantity_received => nil ,
+          :epics_stock_id => nil, :epics_stock_details_id => nil,
+          :epics_products_id => nil, :epics_order_id => nil,
+          :epics_product_order_id => nil , :epics_exchange_id => nil,
+          :epics_lends_or_borrows_id => nil ,:transaction => nil
         }
       end
 
       results[grn_date][r.invoice_number][r.batch_number][received_from] = {
-        :quantity_received => r.received_quantity 
+        :quantity_received => r.received_quantity ,
+        :epics_stock_id => r.epics_stock_id, :epics_stock_details_id => r.epics_stock_details_id,
+        :epics_products_id => r.epics_products_id, 
+        :epics_exchange_id => r.epics_exchange_id,:transaction => transaction ,
+        :epics_lends_or_borrows_id => r.epics_lends_or_borrows_id 
       }
     end
 
@@ -483,7 +505,7 @@ EOF
   end
 
   def self.negative_adjustments(item , results = {})
-    order_type = EpicsOrderTypes.where("name IN('Lend','Exchange')").map(&:epics_order_type_id)
+    order_type = EpicsOrderTypes.where("name IN('Lend','Exchange','Return')").map(&:epics_order_type_id)
 
     EpicsOrders.joins("INNER JOIN epics_product_orders p 
     ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0
@@ -493,7 +515,9 @@ EOF
     AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e
     ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
     e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
-    epics_orders.created_at dispensed_date, s.batch_number").map do |r|
+    epics_orders.created_at dispensed_date, s.batch_number,s.epics_stock_details_id,
+    epics_orders.epics_order_id,p.epics_product_order_id,epics_orders.epics_order_type_id,
+    s.epics_products_id").map do |r|
       dispensed_date = r.dispensed_date
       issued_to = EpicsLocation.find(r.location_id).name 
 
@@ -511,12 +535,18 @@ EOF
 
       if results[dispensed_date][r.invoice_number][r.batch_number][issued_to].blank?
         results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-          :quantity_given_out => nil 
+          :quantity_given_out => nil , :epics_stock_details_id => nil,
+          :epics_products_id => nil, :epics_order_id => nil,
+          :epics_product_order_id => nil, :transaction => nil
         }
       end
 
       results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-        :quantity_given_out => r.quantity 
+        :quantity_given_out => r.quantity ,
+        :epics_stock_details_id => r.epics_stock_details_id,
+        :epics_products_id => r.epics_products_id, :epicis_order_id => r.epics_order_id,
+        :epics_product_order_id => r.epics_product_order_id, 
+        :transaction => "negative_adjustments:#{EpicsOrderTypes.find(r.epics_order_type_id).name}"
       }
     end
 
@@ -535,7 +565,8 @@ EOF
     ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
     e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
     s.updated_at date_updated,
-    s.batch_number,epics_orders.instructions").map do |r|
+    s.batch_number,epics_orders.instructions,epics_orders.epics_order_id, 
+    p.epics_product_order_id,s.epics_stock_details_id, s.epics_products_id").map do |r|
       dispensed_date = r.date_updated
       issued_to = r.instructions.titleize rescue 'Unknown'
 
@@ -553,12 +584,18 @@ EOF
 
       if results[dispensed_date][r.invoice_number][r.batch_number][issued_to].blank?
         results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-          :issued => nil 
+          :issued => nil , 
+          :epics_stock_details_id => nil,
+          :epics_products_id => nil, :epics_order_id => nil,
+          :epics_product_order_id => nil ,:transaction => nil
         }
       end
 
       results[dispensed_date][r.invoice_number][r.batch_number][issued_to] = {
-        :losses => r.quantity 
+        :losses => r.quantity, 
+        :epics_stock_details_id => r.epics_stock_details_id,
+        :epics_products_id => r.epics_products_id, :epics_order_id => r.epics_order_id,
+        :epics_product_order_id => r.epics_product_order_id, :transaction => 'board off'
       }
     end
 

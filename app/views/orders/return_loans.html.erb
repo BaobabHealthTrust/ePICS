@@ -15,6 +15,12 @@ function set_ajaxURL_for_batch(value) {
 
 <%= form_tag :action => 'reimburse_index', :method => :post  do %>
 
+    <%= text_field_tag "reimburse_date", nil,                                         
+      {:id => "reimburse_date",                                                       
+      :field_type => 'date',                                                      
+      :maxDate => "#{Date.today.to_date}",                                        
+      :helpText => "Select reimburse date"} %>
+ 
     <%= select_tag :facility, options_for_select(@debtors),
                    { :id => "facility",
                      :field_type => 'alpha',
@@ -25,7 +31,6 @@ function set_ajaxURL_for_batch(value) {
                      :field_type => 'alpha',
                      :tt_onLoad => 'set_ajaxURL_for_batch($("facility").value)',
                      :helpText => "Select invoice number "} %>
-
 
     <%= submit_tag "Create Loan Return" %>
 

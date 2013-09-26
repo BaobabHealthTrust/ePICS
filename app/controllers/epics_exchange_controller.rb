@@ -108,6 +108,7 @@ class EpicsExchangeController < ApplicationController
       @order = EpicsOrders.new()
       @order.epics_order_type_id = order_type.id 
       @order.epics_location_id = params[:issue_to]
+      @order.created_at = "#{@stock.grn_date.to_date} #{Time.now.strftime('%H:%M:%S')}"
       @order.save
 
       (@issued_items.items || {}).each do |item, values|
@@ -116,6 +117,7 @@ class EpicsExchangeController < ApplicationController
           item_order.epics_order_id = @order.id
           item_order.epics_stock_details_id = stock_id
           item_order.quantity = quantity
+          item_order.created_at = "#{@stock.grn_date.to_date} #{Time.now.strftime('%H:%M:%S')}"
           item_order.save
           update_stock_details(stock_id, quantity)
         end

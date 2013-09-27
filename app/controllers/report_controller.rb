@@ -390,9 +390,10 @@ class ReportController < ApplicationController
   end
 
   def items_to_expire_next_six_months_to_pdf
+    app_address = EpicsGlobalProperty.find_by_property('app.address').property_value rescue ""
     Thread.new{
           Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-            "192.168.13.102:80" + "\"/report/items_to_expire_next_six_months_attachment/" +\
+            "#{app_address}" + "\"/report/items_to_expire_next_six_months_attachment/" +\
              "\" /tmp/items_to_expire_next_six_months" + ".pdf \n"
         }
   end
@@ -404,9 +405,10 @@ class ReportController < ApplicationController
   end
 
   def daily_dispensation_to_pdf
+    app_address = EpicsGlobalProperty.find_by_property('app.address').property_value rescue ""
     Thread.new{
           Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-            "192.168.13.102:80" + "\"/report/daily_dispensation_attachment/" +\
+            "#{app_address}" + "\"/report/daily_dispensation_attachment/" +\
              "\" /tmp/daily_dispensation" + ".pdf \n"
         }
   end
@@ -421,9 +423,10 @@ class ReportController < ApplicationController
   end
 
   def received_items_to_pdf
+    app_address = EpicsGlobalProperty.find_by_property('app.address').property_value rescue ""
     Thread.new{
           Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-            "192.168.13.102:80" + "\"/report/received_items_attachment/" +\
+            "#{app_address}" + "\"/report/received_items_attachment/" +\
              "\" /tmp/received_items" + ".pdf \n"
         }
   end

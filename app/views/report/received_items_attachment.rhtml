@@ -23,19 +23,24 @@ th {
 }
 
 .report-div {                                                                   
-  overflow: auto;                                                               
-  height: 550px;                                                                
+  /*overflow: auto;
+  height: 550px;*/
 }  
 .logo{
-  margin-left: 40%;
+  /*margin-left: 40%;*/
+  margin-top: 2%
 }
 </style>
 
 <div class="report-div">
 <%= image_tag("mw.gif", :class => "logo") %><br />
-<b style="font-size:18pt; margin-left: 35%;">REPUBLIC OF MALAWI</b><br />
-<b style="font-size: large; margin-left: 38%;">MINISTRY OF HEALTH</b><br /><br />
-<b style="font-size:14pt; margin-left: 42%;"><u>Received Items</u></b>
+<div style="margin-top:-15%">
+  <b style="font-size:14pt; margin-left: 25%;">REPUBLIC OF MALAWI</b><br />
+  <b style="font-size:14pt; margin-left: 25%;">MINISTRY OF HEALTH</b><br />
+  <b style="font-size:12pt; margin-left: 25%;">Received Items</b><br />
+  <b style="font-size:12pt; margin-left: 25%;">Date:  <u><i><%= Date.today.strftime("%A, %d-%b-%Y") %></i></u></b><br />
+</div><br /><br /><br />
+
 <table class="item-table">
 <tr>
   <th class='left-align'>Item code</th>
@@ -51,7 +56,7 @@ th {
     <td class='right-align'><%=item[:issued] || 0 %></td>
   </tr>
   <tr>
-    <td colspan="4"><hr /><td>
+    <td colspan="4"><hr /></td>
   </tr>
 <%end%>
 </table>

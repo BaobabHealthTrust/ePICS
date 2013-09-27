@@ -23,19 +23,24 @@ th {
 }
 
 .report-div {                                                                   
-  overflow: auto;                                                               
-  height: 550px;                                                                
+  /*overflow: auto;
+  height: 550px;*/
 }  
  .logo{
-    margin-left: 40%;
+    /*margin-left: 40%;*/
+    margin-top: 2%
   }
 </style>
 
 <div class="report-div">
 <%= image_tag("mw.gif", :class => "logo") %><br />
-<b style="font-size:18pt; margin-left: 35%;">REPUBLIC OF MALAWI</b><br />
-<b style="font-size: large; margin-left: 38%;">MINISTRY OF HEALTH</b><br /><br />
-<b style="font-size:14pt; margin-left: 33%;"><u>Items to expire in the next six months</u></b>
+<div style="margin-top:-15%">
+<b style="font-size:14pt; margin-left: 25%;">REPUBLIC OF MALAWI</b><br />
+<b style="font-size:14pt; margin-left: 25%;">MINISTRY OF HEALTH</b><br />
+<b style="font-size:12pt; margin-left: 25%;">Items to expire in the next six months</b><br />
+<b style="font-size:12pt; margin-left: 25%;">Date:  <u><i><%= Date.today.strftime("%A, %d-%b-%Y") %></i></u></b><br />
+</div><br /><br /><br />
+
 <table class="item-table">
 <tr>
   <th class='left-align'>Batch number</th>
@@ -57,7 +62,7 @@ th {
     <td class='right-align'><%=alert.expiry_date.to_date.strftime('%B %Y') rescue 'N/A' %></td>
   </tr>
   <tr>
-    <td colspan="7"><hr /><td>
+    <td colspan="7"><hr /></td>
   </tr>
 <%end%>
 </table>

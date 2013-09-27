@@ -407,9 +407,144 @@ class StockDetailsController < ApplicationController
   def exchange_items_label()
 
   end
-  
+
+  def void_transaction                                                          
+    render :text => "#{params[:transaction]}  Works!!!!" and return         
+    
+    transaction = params[:transaction].upcase                            
+    product_id = params[:product_id]
+
+    if transaction == 'BOARD OFF' || transaction == 'ISSUES'                                   
+      transaction_id = params[:epics_product_order_id]                   
+      revert_issue(transaction_id)             
+    elsif transaction.match(/POSITIVE_ADJUSTMENTS:EXCHANGE/i)       
+      revert_positive_adjustments(params[:epics_stock_details_id], product_id, transaction)                  
+    elsif transaction.match(/POSITIVE_ADJUSTMENTS:BORROW/i)         
+      revert_positive_adjustments(params[:epics_stock_details_id], product_id, transaction)                  
+    elsif transaction.match(/NEGATIVE_ADJUSTMENTS/i)                
+      transaction_id = params[:epics_product_order_id]                   
+    elsif transaction == 'RECEIPTS'                                 
+      transaction_id = params[:epics_stock_details_id]                   
+    end
+ 
+    render :text => "Reverted ...." and return         
+  end
+          
   protected
+ 
+  # ......................................................................... 
+
+  def revert_positive_adjustments(epics_lends_or_borrows_id, product_id, transaction_name)
+    if transaction_name == 'POSITIVE_ADJUSTMENTS:BORROW'
+      EpicsLendsOrBorrows.transaction do 
+        epics_lends_or_borrows = EpicsLendsOrBorrows.find(epics_lends_or_borrows_id)
+        epics_lends_or_borrows.voided = 1
+        epics_stock_id = epics_lends_or_borrows.epics_stock_id
+        epics_order_id = epics_lends_or_borrows.epics_order_id
+        epics_lends_or_borrows.save
   
+        unless epics_order_id.blank?
+          epics_stock_details_id = EpicsProductOrders.joins("INNER JOIN epics_stock_details s
+            ON s.epics_stock_details_id = epics_product_orders.epics_stock_details_id
+            AND s.voided = 0").where("epics_order_id = ? AND s.epics_products_id = ?",
+            epics_order_id, product_id).first.epics_stock_details_id rescue nil
+
+          unless epics_stock_details_id.blank?
+            EpicsProductOrders.where(:epics_stock_details_id => epics_stock_details_id).update_all(:voided => true)
+          end
+
+          if EpicsOrders.find(epics_order_id).epics_product_orders.blank?
+            EpicsOrders.where(:epics_order_id => epics_order_id).update_all(:voided => true)
+          end
+        end
+
+        unless epics_stock_id.blank?
+          epics_stock = EpicsStock.find(epics_stock_id)
+          if epics_stock.epics_stock_details.blank?
+            epics_stock.voided = 1
+            epics_stock.save
+          end
+        end
+
+      end
+    
+    elsif transaction_name == 'POSITIVE_ADJUSTMENTS:EXCHANGE'
+      EpicsExchange.transaction do
+        exchange = EpicsExchange.find(epics_lends_or_borrows_id)
+        epics_stock_id = exchange.epics_stock_id
+        epics_order_id = exchange.epics_order_id
+
+        epics_product_orders = EpicsProductOrders.joins("INNER JOIN epics_stock_details s 
+          ON s.epics_stock_details_id = epics_product_orders.epics_stock_details_id
+          AND s.voided = 0").where("epics_order_id = ? AND epics_products_id = ?",
+          epics_order_id, product_id) 
+
+        (epics_product_orders || []).each do |product_order|
+          quantity = product_order.quantity 
+          stock_details_id = product_order.epics_stock_details_id
+
+          epics_stock_detail = EpicsStockDetails.find(stock_details_id)
+          epics_stock_detail.current_quantity += quantity
+          epics_stock_detail.save          
+        end
+
+        unless epics_product_orders.blank?
+          EpicsProductOrders.where("epics_product_order_id IN(?)", 
+          epics_product_orders.map(&:epics_product_order_id)).update_all(:voided => true)
+        end
+
+        if EpicsOrders.where(:epics_order_id => epics_order_id).epics_product_orders.blank?
+          EpicsOrders.where(:epics_order_id => epics_order_id).update_all(:voided => true)
+        end
+
+        epics_product_orders = EpicsProductOrders.joins("INNER JOIN epics_stock_details s 
+          ON s.epics_stock_details_id = epics_product_orders.epics_stock_details_id
+          AND s.voided = 0").where("epics_order_id = ? AND epics_products_id <> ?",
+          epics_order_id, product_id) 
+        
+        unless epics_product_orders.blank?
+          #call delete receipts and void exchange record
+        end
+      end 
+
+
+    end
+  end
+
+  def revert_issue(epics_product_order_id)
+    EpicsProductOrders.ransaction do 
+      epics_product_order = EpicsProductOrders.find(epics_product_order_id)
+      epics_product_order.voided = 1
+      quantity = epics_product_order.quantity
+      epics_order_id = epics_product_order.epics_order_id
+      epics_stock_details_id = epics_product_order.epics_stock_details_id
+      epics_product_order.save
+
+      epics_order = EpicsOrders.find(epics_order_id)
+      if epics_order.epics_product_orders.blank?
+        epics_order.voided = 1
+        epics_order.save
+      end
+  
+      epics_stock_detail = EpicsStockDetails.find(epics_stock_details_id)
+      epics_stock_detail.current_quantity += quantity
+      epics_stock_detail.save
+    end
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # ......................................................................... 
   def find_product_cart
     session[:cart] ||= ProductCart.new
   end

@@ -564,9 +564,9 @@ EOF
     AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e
     ON e.epics_stock_id = s.epics_stock_id AND e.voided = 0").select("e.grn_date,
     e.invoice_number,p.quantity, epics_orders.epics_location_id location_id ,
-    s.updated_at date_updated,
-    s.batch_number,epics_orders.instructions,epics_orders.epics_order_id, 
-    p.epics_product_order_id,s.epics_stock_details_id, s.epics_products_id").map do |r|
+    s.updated_at date_updated,s.batch_number,epics_orders.instructions,
+    epics_orders.epics_order_id, p.epics_product_order_id,
+    s.epics_stock_details_id, s.epics_products_id").map do |r|
       dispensed_date = r.date_updated
       issued_to = r.instructions.titleize rescue 'Unknown'
 

@@ -104,7 +104,7 @@
         <tr class="tbody-header">
           <td style="padding-left: 10px;">Product name</td>
           <td style="padding-left: 10px;font-weight: normal;"><%=@item.name%></td>
-          <%if User.current.epics_user_role.name == "Administratorx"%>
+          <%if User.current.epics_user_role.name == "Administrator"%>
             <td colspan="68"></td>
           <%else%>
             <td colspan="67"></td>
@@ -114,7 +114,7 @@
           <td>CODE</td>
           <td style="padding-left: 10px;font-weight: normal;"><%=@item.product_code%></td>
           <td>Unit of issue</td>
-          <%if User.current.epics_user_role.name == "Administratorx"%>
+          <%if User.current.epics_user_role.name == "Administrator"%>
             <td colspan="7" style="padding-left: 10px;font-weight: normal;"><%=@item.epics_product_units.name%></td>
           <%else%>
             <td colspan="6" style="padding-left: 10px;font-weight: normal;"><%=@item.epics_product_units.name%></td>
@@ -130,7 +130,7 @@
           <td>-Adjust<br />(G)</td>
           <td>Quantity on Hand<br />(H)</td>
           <td>Remarks<br />(I)</td>
-          <%if User.current.epics_user_role.name == "Administratorx"%>
+          <%if User.current.epics_user_role.name == "Administrator"%>
             <td>&nbsp;</td>
           <%end%>
         </tr>
@@ -147,7 +147,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <%if User.current.epics_user_role.name == "Administratorx"%>
+        <%if User.current.epics_user_role.name == "Administrator"%>
           <td>&nbsp;</td>
         <%end%>
       </tr>
@@ -204,11 +204,15 @@
         <td><%=d[:quantity_given_out]%></td>
         <td><%=current_quantity%></td>
         <td><%=remark%></td>
-        <%if User.current.epics_user_role.name == "Administratorx"%>
+        <%if User.current.epics_user_role.name == "Administrator" && transaction == "ISSUES" %>
           <td style="text-align: center; vertical-align: middle;">
             <%= image_tag("close.png", :class => 'void-buttons', 
               :onclick =>"voidTransaction(#{transaction_id},'#{d[:transaction]}')") %>
           </td>
+         <% elsif User.current.epics_user_role.name == "Administrator" %>
+            <td style="text-align: center; vertical-align: middle;">
+              &nbsp;
+            </td>
         <%end%>
       </tr>
       

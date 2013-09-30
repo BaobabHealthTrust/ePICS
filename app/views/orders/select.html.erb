@@ -12,8 +12,9 @@ tt_cancel_destination='/'
     listSuggestions(tstCurrentPage);                                      
   }
 
-  function set_ajaxURL_for_stock_details(name) {                             
-    url = "/get_batch?name=" + encodeURIComponent(name) + "&search_str=";
+  function set_ajaxURL_for_stock_details(name) {
+    date = "<%= session[:issue_date] %>" ;
+    url = "/get_batch?name=" + encodeURIComponent(name)+"&issue_date="+ date + "&search_str=";
     $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', url);    
     listSuggestions(tstCurrentPage);                                      
   }

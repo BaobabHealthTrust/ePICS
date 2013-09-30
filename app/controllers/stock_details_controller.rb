@@ -51,7 +51,13 @@ class StockDetailsController < ApplicationController
   def board_off_stock
     stock_id = params[:stock_id]
     reason = params[:reason]
-    board_off_quantity = params[:board_off_quantity].to_f rescue 0
+    item_quantity = params[:stock_details][:item_quantity].to_i
+    unless (params[:stock_details][:issue_quantity].to_i == 0)
+      issue_quantity = params[:stock_details][:issue_quantity].to_i
+    else
+      issue_quantity = params[:stock_details][:other_quantity].to_i
+    end
+    board_off_quantity = issue_quantity * item_quantity
 
     stock = EpicsStockDetails.find(stock_id)
 
@@ -70,15 +76,15 @@ class StockDetailsController < ApplicationController
           product_order = EpicsProductOrders.new
           product_order.epics_order_id = epics_order.id
           product_order.epics_stock_details_id = stock.id
-          product_order.quantity = stock.current_quantity
+          product_order.quantity = board_off_quantity
           product_order.save!
 
-          stock.current_quantity = board_off_quantity
+          stock.current_quantity = (stock.current_quantity - board_off_quantity)
           stock.save
         end
       end
     end
-    render :text => "done"
+    redirect_to :controller => "product", :action => "view", :product => session[:product]
   end
   
   def checkout
@@ -406,6 +412,10 @@ class StockDetailsController < ApplicationController
 #*******************************************************************************
   def exchange_items_label()
 
+  end
+
+  def edit_current_quantity
+    
   end
   
   protected

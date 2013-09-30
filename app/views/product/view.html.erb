@@ -29,7 +29,8 @@
 
   function selectReason(node){
     current_reason = node.getAttribute('reason');
-    jQuery.ajax({
+    window.location="/stock_details/edit_current_quantity?stock_id=" + current_stock_id + '&reason=' + current_reason
+    /*jQuery.ajax({
       type: "POST",
       url: "/stock_details/board_off_stock",
       data: "stock_id=" + current_stock_id + '&reason=' + current_reason,
@@ -48,7 +49,7 @@
         hidePopups();
       }
 
-    });
+    });*/
     
   }
 

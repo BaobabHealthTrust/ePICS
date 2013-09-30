@@ -161,8 +161,13 @@
         <td style="text-align: right;padding-right: 10px;"><%=stock.received_quantity%></td>
         <td style="text-align: right;padding-right: 10px;"><%=stock.current_quantity%></td>
         <td style="padding-left: 10px;"><%=stock.epics_location.name%></td>
-        <td style="width: 10%;"><%= image_tag("close.png",:id => stock.id, :class=>"img", :onclick=>"showPopup(this);") %></td>
-        <td style="width: 10%;"><%= image_tag("pencil.png",:id => stock.id, :class=>"img", :onclick=>"editStock(this.id)") %></td>
+        <% if stock.current_quantity == stock.received_quantity %>
+            <td style="width: 10%;"><%= image_tag("close.png",:id => stock.id, :class=>"img", :onclick=>"showPopup(this);") %></td>
+            <td style="width: 10%;"><%= image_tag("pencil.png",:id => stock.id, :class=>"img", :onclick=>"editStock(this.id)") %></td>
+        <% else %>
+            <td style="width: 10%;"> &nbsp;</td>
+            <td style="width: 10%;"> &nbsp;</td>
+        <% end %>
       </tr>
     <%end%>
   </table>

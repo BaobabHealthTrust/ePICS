@@ -70,9 +70,22 @@ class OrdersController < ApplicationController
     order_type = EpicsOrderTypes.find_by_name(ord_type)
 
     EpicsOrders.transaction do
+      created_at = "#{session[:lend_details]['issue_date'].to_date} #{Time.now.strftime('%H:%M:%S')}" rescue nil
+      if created_at.blank?
+        created_at = "#{session[:return_details][:date].to_date} #{Time.now.strftime('%H:%M:%S')}" rescue nil
+      end
+
+      epics_location_id = params[:issue_to]
+      if epics_location_id.blank?
+        epics_location_id = EpicsLocation.find_by_name(session[:return_details][:return_to]).id rescue nil
+      end
+
+      raise "Issuing Location site not set ...." if epics_location_id.blank?
+
       order = EpicsOrders.new() 
       order.epics_order_type_id = order_type.id 
-      order.epics_location_id = params[:issue_to]
+      order.epics_location_id = epics_location_id
+      order.created_at = created_at
       order.save
 
       (items || {}).each do |name , values|
@@ -81,6 +94,7 @@ class OrdersController < ApplicationController
           item_order.epics_order_id = order.id
           item_order.epics_stock_details_id = stock_id
           item_order.quantity = quantity
+          item_order.created_at = "#{order.created_at.to_date} #{Time.now.strftime('%H:%M:%S')}"
           item_order.save
 
 
@@ -100,8 +114,9 @@ class OrdersController < ApplicationController
             authorizer.save
 
           elsif ord_type.eql?('return')
-            lend = EpicsLendsOrBorrows.find(:first, :conditions => ["epics_stock_id = ?",
-                                                                    EpicsStock.find_by_invoice_number(session[:return_details][:return_batch]).id ])
+            lend = EpicsLendsOrBorrows.find(:first, 
+              :conditions => ["epics_stock_id = ?",
+              EpicsStock.find_by_invoice_number(session[:return_details][:return_batch]).id ])
             lend.epics_orders_id = order.id
             lend.reimbursed = true
             lend.save
@@ -219,6 +234,7 @@ class OrdersController < ApplicationController
       session[:return_details] = {}
       session[:return_details][:return_to] = params["facility"]
       session[:return_details][:return_batch] = params["batch"]
+      session[:return_details][:date] = params["reimburse_date"].to_date
     end
     @page_title = "Returning Borrowed Items"
     render :layout => "custom"
@@ -311,9 +327,7 @@ class OrdersController < ApplicationController
   end
 
  def update_stock_details(stock_id, quantity)
-
   old_stock = EpicsStockDetails.find(stock_id)
-
   old_stock.current_quantity = (old_stock.current_quantity - quantity)
   old_stock.save
  end

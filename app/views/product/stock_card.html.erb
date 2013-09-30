@@ -25,7 +25,35 @@
 
         });
       }
+
+      function voidTransaction(transaction_id, name) {
+        var product_id = <%=@item.id%>;
+
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari  
+          xmlhttp=new XMLHttpRequest();                                             
+        }else{// code for IE6, IE5                                                  
+          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+        }                                                                           
+        xmlhttp.onreadystatechange=function() {                                     
+          if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+            var results = xmlhttp.responseText;                                     
+            if(results == 'undefined' || results == '' || results == '"not validate"') {                           
+              return;                                                               
+            }else{                                                                  
+              alert(results)
+            }                                                                       
+          }                                                                         
+        }                                                   
+
+        url = "/stock_details/void_transaction?transaction_id=";
+        url += transaction_id + "&transaction=" + name + "&product_id=" + product_id;                        
+        xmlhttp.open("GET", url, true);           
+        xmlhttp.send();
+
+      }
+
     </script>
+
     <style>
      #printer{
         height: 65px;
@@ -62,6 +90,11 @@
         background-color: lightgrey;
       }
 
+      .void-buttons {
+        width: 75px;
+        height: 75px;
+      }
+
     </style>
   </head>
   <body>
@@ -71,13 +104,21 @@
         <tr class="tbody-header">
           <td style="padding-left: 10px;">Product name</td>
           <td style="padding-left: 10px;font-weight: normal;"><%=@item.name%></td>
-          <td colspan="67"></td>
+          <%if User.current.epics_user_role.name == "Administrator"%>
+            <td colspan="68"></td>
+          <%else%>
+            <td colspan="67"></td>
+          <%end%>
         </tr>
         <tr class="tbody-header">
           <td>CODE</td>
           <td style="padding-left: 10px;font-weight: normal;"><%=@item.product_code%></td>
           <td>Unit of issue</td>
-          <td colspan="6" style="padding-left: 10px;font-weight: normal;"><%=@item.epics_product_units.name%></td>
+          <%if User.current.epics_user_role.name == "Administrator"%>
+            <td colspan="7" style="padding-left: 10px;font-weight: normal;"><%=@item.epics_product_units.name%></td>
+          <%else%>
+            <td colspan="6" style="padding-left: 10px;font-weight: normal;"><%=@item.epics_product_units.name%></td>
+          <%end%>
         </tr>
         <tr class="tbody-header">
           <td>DATE<br />(A)</td>
@@ -89,6 +130,9 @@
           <td>-Adjust<br />(G)</td>
           <td>Quantity on Hand<br />(H)</td>
           <td>Remarks<br />(I)</td>
+          <%if User.current.epics_user_role.name == "Administrator"%>
+            <td>&nbsp;</td>
+          <%end%>
         </tr>
       </thead>
       <tbody>
@@ -103,6 +147,9 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
+        <%if User.current.epics_user_role.name == "Administrator"%>
+          <td>&nbsp;</td>
+        <%end%>
       </tr>
 
       <%
@@ -118,7 +165,7 @@
                 else
                   color = 'white'
                 end
-
+                    
                 total_positives += d[:received_quantity].to_f if d[:received_quantity]
                 total_positives += d[:quantity_received].to_f if d[:quantity_received]
 
@@ -131,6 +178,21 @@
                 if(current_quantity.to_s[-2..-1] == '.0')
                   current_quantity = current_quantity.to_i
                 end
+
+                transaction = d[:transaction].upcase
+                if transaction == 'BOARD OFF'
+                  transaction_id = d[:epics_product_order_id]
+                elsif transaction.match(/POSITIVE_ADJUSTMENTS:EXCHANGE/i)
+                  transaction_id = d[:epics_exchange_id]
+                elsif transaction.match(/POSITIVE_ADJUSTMENTS:BORROW/i)
+                  transaction_id = d[:epics_lends_or_borrows_id]
+                elsif transaction.match(/NEGATIVE_ADJUSTMENTS/i)
+                  transaction_id = d[:epics_product_order_id]
+                elsif transaction == 'RECEIPTS'
+                  transaction_id = d[:epics_stock_details_id]
+                elsif transaction == 'ISSUES'
+                  transaction_id = d[:epics_product_order_id]
+                end
       %>
       <tr class="tbody-data row_<%=color%>">
         <td><%=date.to_date.strftime("%d-%b-%Y")%></td>
@@ -142,6 +204,16 @@
         <td><%=d[:quantity_given_out]%></td>
         <td><%=current_quantity%></td>
         <td><%=remark%></td>
+        <%if User.current.epics_user_role.name == "Administrator" && transaction == "ISSUES" %>
+          <td style="text-align: center; vertical-align: middle;">
+            <%= image_tag("close.png", :class => 'void-buttons', 
+              :onclick =>"voidTransaction(#{transaction_id},'#{d[:transaction]}')") %>
+          </td>
+         <% elsif User.current.epics_user_role.name == "Administrator" %>
+            <td style="text-align: center; vertical-align: middle;">
+              &nbsp;
+            </td>
+        <%end%>
       </tr>
       
           <%end
@@ -153,3 +225,4 @@
   </div>
   </body>
 </html>
+

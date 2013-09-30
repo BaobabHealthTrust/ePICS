@@ -119,6 +119,7 @@ EPICS::Application.routes.draw do
   get "stock_details/receive_back_items_data"
   get "stock_details/edit_current_quantity"
   post "stock_details/edit_current_quantity"
+  get "stock_details/void_transaction"
   ######### stock_details end ########
 
   ######### stock start ########

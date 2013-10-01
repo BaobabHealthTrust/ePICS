@@ -95,9 +95,14 @@ class ProductController < ApplicationController
   end
 
   def get_batch_details
-    item =  EpicsStockDetails.joins("INNER JOIN epics_products p on p.epics_products_id=epics_stock_details.epics_products_id
-                                      INNER JOIN epics_stocks e on e.epics_stock_id = epics_stock_details.epics_stock_details_id
-                                      AND name='#{params[:name]}' and e.grn_date <= '#{params[:issue_date]}'")
+    product_id = EpicsProduct.where(:name => params[:name])[0].id
+    stock_ids = [0]
+    EpicsStock.where("grn_date <= ?", params[:issue_date].to_date).map do |e|
+      stock_ids << e.id
+    end
+      
+    item = EpicsStockDetails.where("epics_stock_id IN(?) AND epics_products_id = ?", stock_ids,product_id)
+
     @products = []
     (item ||[]).each do |detail|
       next if (detail.epics_stock_expiry_date.blank? || (detail.current_quantity == 0))

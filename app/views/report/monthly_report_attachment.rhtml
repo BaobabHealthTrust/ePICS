@@ -1,0 +1,202 @@
+<script>
+  function addPrinterIcon(){
+    nav = document.getElementById('nav')
+    img = document.createElement('img')
+    img.src="/images/emblem_print.png"
+    img.id='printer'
+    img.onclick=function(){
+      printReport();
+    }
+    nav.appendChild(img)
+  }
+  window.setTimeout("addPrinterIcon();", 50)
+
+  function printReport(){
+
+    jQuery.ajax({
+      type: "POST",
+      url: "/report/print_monthly_report",
+      data: "start_date=<%=@start_date%>",
+      success: function(){
+        document.location.href="/"
+      }
+
+    });
+  }
+</script>
+
+<style>
+#printer{
+  height: 60px;
+  margin-left: 81%;
+  margin-top: 10px;
+  cursor: pointer;
+  float: left;
+}
+
+.monthly {
+  width: 100%;
+ /* border-collapse: collapse;*/
+  margin-top: 10px;
+  border-spacing: 0.001em;
+}
+
+th {
+  border-style: solid;
+  border-width: thin;
+}
+
+.item_category {
+  background-color: lightslategrey;
+}
+
+.monthly td {
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-spacing: 1px;
+}
+
+.report-div {                                                                   
+  /*overflow: auto;
+  height: 550px; */
+}  
+.logo{
+  /*margin-left: 40%;*/
+  margin-top: 2%
+}
+</style>
+
+
+<div class="report-div">
+<%= image_tag("mw.gif", :class => "logo") %><br />
+
+<div style="margin-top:-15%">
+  <b style="font-size:14pt; margin-left: 25%;">REPUBLIC OF MALAWI</b><br />
+  <b style="font-size:14pt; margin-left: 25%;">MINISTRY OF HEALTH</b><br />
+  <b style="font-size:12pt; margin-left: 25%;">Monthly Report</b><br />
+  <b style="font-size:12pt; margin-left: 25%;">Date:  <u><i><%= Date.today.strftime("%A, %d-%b-%Y") %></i></u></b><br />
+</div><br /><br /><br />
+
+<table class="monthly">
+<thead>
+  <tr>
+    <th style="text-align:left;padding-left: 10px;">Facility</th>
+    <th>&nbsp;</th>
+    <th>District</th>
+    <th>&nbsp;</th>
+    <th>Month</th>
+    <th style="border-width:1px 0px;"><%=@start_date.strftime('%B, %d')%></th>
+    <th style="border-width:1px 0px; 1px 0px;">&nbsp;</th>
+    <th style="border-width:1px 0px; 1px 0px;">&nbsp;</th>
+    <th style="border-width:1px 0px; 1px 0px;">&nbsp;</th>
+    <td style="border-width: 1px 1px 1px 0px;">&nbsp;</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>Year</th>
+    <th style="border-width:1px 0px; 1px 0px;"><%=@start_date.year%></th>
+    <th style="border-width:1px 0px; 1px 0px;">&nbsp;</th>
+    <th style="border-width:1px 0px; 1px 0px;">&nbsp;</th>
+    <th style="border-width:1px 0px; 1px 0px;">&nbsp;</th>
+    <td style="border-width: 1px 1px 1px 0px;">&nbsp;</td>
+  </tr>
+  <tr>
+    <th style="text-align:left;padding-left: 10px;">Item No</th>
+    <th style="text-align:left;padding-left: 10px;">Item</th>
+    <th>Unit of<br />Issue</th>
+    <th>Balance<br />(stock on hand)</th>
+    <th>Losses</th>
+    <th>+Adjustments</th>
+    <th>-Adjustments</th>
+    <th>Quantity Issued</th>
+    <th>Days<br />Stocked out</th>
+    <th>Quantity Received</th>
+  </tr>
+</thead>
+
+<tbody>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <%(@monthly_report || {}).sort_by {|x,y|x.to_date}.each do |date, categories|
+    (categories).sort_by {|x,y|x}.each do |category, items|
+  %>
+  <tr class="item_category">
+    <td style="text-align:left; padding-left: 10px; border-width: 1px 0px 1px 1px;"><%=category%></td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 0px 1px 0px;">&nbsp;</td>
+    <td style="border-width: 1px 1px 1px 0px;">&nbsp;</td>
+  </tr>
+  <% @monthly_report[date][category].sort_by {|x,y|y[:item_code]}.each do |item_id , values|
+    positives = 0
+    negatives = 0
+
+    negatives += values[:losses].to_f if values[:losses]
+    positives += values[:positive_adjustments].to_f if values[:positive_adjustments]
+    negatives += values[:negative_adjustments].to_f if values[:negative_adjustments]
+    negatives += values[:issued].to_f if values[:issued]
+    positives += values[:received_quantity].to_f if values[:received_quantity]
+    
+    current_quantity = (positives - negatives)
+
+    if (current_quantity.to_s[-2..-1]) == '.0'
+      current_quantity = current_quantity.to_i
+    end
+  %>
+  <tr>
+    <td style="text-align:left;padding-left: 10px;">
+      <%=values[:item_code]%>
+    </td>
+    <td style="text-align:left;padding-left: 10px;"><%=values[:item]%></td>
+    <td style="text-align: center;"><%=values[:unit_of_issue]%></td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%= current_quantity %>
+    </td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:losses]%>
+    </td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:positive_adjustments]%>
+    </td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:negative_adjustments]%>
+    </td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:issued]%>
+    </td>
+    <td style="text-align: center;">
+      <%=values[:days_stocked_out]%>
+    </td>
+    <td style="text-align:right;padding-right: 10px;">
+      <%=values[:received_quantity]%>
+    </td>
+  </tr>
+  <%
+     end
+    end
+  end
+  %>
+</tbody>
+
+</table>
+
+</div>

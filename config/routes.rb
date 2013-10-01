@@ -316,6 +316,8 @@ EPICS::Application.routes.draw do
   post "report/received_items_attachment"
   get "report/received_items_to_pdf"
   post "report/received_items_to_pdf"
+  get "report/monthly_report_attachment"
+  get "report/monthly_report_to_pdf"
   ########### reports end #########
 
   #get "home/index"

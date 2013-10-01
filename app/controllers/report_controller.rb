@@ -430,4 +430,20 @@ class ReportController < ApplicationController
              "\" /tmp/received_items" + ".pdf \n"
         }
   end
+
+  def monthly_report_attachment
+    today = Date.today
+    @start_date = today
+    @monthly_report = EpicsReport.monthly_report(today)
+    render :layout => false
+  end
+
+  def monthly_report_to_pdf
+    app_address = EpicsGlobalProperty.find_by_property('app.address').property_value rescue ""
+    Thread.new{
+          Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+            "#{app_address}" + "\"/report/monthly_report_attachment/" +\
+             "\" /tmp/monthly_report_attachment" + ".pdf \n"
+        }
+  end
 end

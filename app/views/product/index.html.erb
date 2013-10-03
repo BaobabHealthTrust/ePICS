@@ -1,5 +1,257 @@
-<%= render  :partial =>  "/layouts/top" %>
+<head>
+    <%= javascript_include_tag "prototype" %>
+    <%= javascript_include_tag 'jquery' %>
+    <%= stylesheet_link_tag 'extra_buttons' %>
+    <%= javascript_include_tag 'jquery_data_table.js' %>
+    <%= stylesheet_link_tag 'jquery.dataTables' %>
+    <script type="text/javascript" charset="utf8" src="/javascripts/jquery.dataTables.min.js"></script>
+    <script>
+      var tt_cancel_destination = "/clinic"
+      jQuery(document).ready(function($) {
+          $('#table_id').dataTable({
+            "bAutoWidth": true,
+            "bProcessing": true,
+            "sScrollY": "500px",
+            "bInfo": true,
+            "bPaginate": false
+          });
+    search_box = $('#table_id').dataTable()
+    search = document.getElementsByTagName("input")[0];
+    search.setAttribute("id","search");
+    document.getElementById('search').setAttribute("onclick","showKeyboard();");
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    keyboard = document.getElementsByClassName("keypad")[0]
+    function getCharButtonSetID(character,id){
+      return '<button onMouseDown="press(\''+character+'\');" class="keyboardButton" id="'+id+'">' +"<span style='width:32px'>"+character+"</span>"+ "</button>";
+    }
+    function getButtonString(id,string){
+      return "<button \
+                            onMouseDown='press(this.id);' \
+                            class='keyboardButton' \
+                            id='"+id+"'>"+
+        string +
+        "</button>";
+    }
 
+    function getButtons(chars){
+      var buttonLine = "";
+      for(var i=0; i<chars.length; i++){
+        character = chars.substring(i,i+1)
+        buttonLine += getCharButtonSetID(character,character)
+      }
+      return buttonLine;
+    }
+
+    showAlphaKeypad();
+
+    function showAlphaKeypad(){
+      document.getElementById("keypad").style.height = "280";
+      keyboard.innerHTML= getButtons("0123456789") + "</br>"
+      keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
+      keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
+      keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
+      keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+      keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+      keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+    }
+
+    function showNumericKeypad(){
+      document.getElementById("keypad").style.height = "145";
+      keyboard.innerHTML = getButtons("123")
+      keyboard.innerHTML+= getButtons("456")
+      keyboard.innerHTML+= getButtons("7890")
+      keyboard.innerHTML+= getButtonString('space','<span>Space</span>')
+      keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+      keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+      keyboard.innerHTML+= getButtonString('abc','<span>abc</span>')
+      keyboard.innerHTML+= getButtonString('dash','<span>-</span>')
+      keyboard.innerHTML+= getButtonString('slash','<span>/</span>')
+    }
+
+    data_table_length =document.getElementsByName('table_id_length')[0];
+    data_table_length.setAttribute("style","font-size:20px;");
+
+    table_length = document.getElementById("table_id_length");
+    table_length.setAttribute("style","width:100px;");
+
+  })
+    </script>
+
+    <script>
+
+      function showKeyboard(){
+        key = document.getElementById("keypad")
+        if(key.style.display == 'none' || key.style.display == ""){
+          key.style.display = "inline";
+          return
+        }
+
+        key.style.display = "none";
+      }
+
+      function press(pressedChar){
+        switch (pressedChar) {
+          case 'backspace':
+            search.value = search.value.substring(0,search.value.length-1);
+            search_box.fnFilter(search.value)
+            return;
+          case 'Space':
+            search.value+= " "
+            search_box.fnFilter(search.value)
+            return
+          case 'clear':
+            search.value = ""
+            search_box.fnFilter(search.value)
+            return
+          case 'num':
+            showNumericKeypad();
+            return
+          case 'slash':
+            search.value+= "/"
+            search_box.fnFilter(search.value)
+            return
+          case 'dash':
+            search.value+= "-"
+            search_box.fnFilter(search.value)
+            return
+          case 'abc':
+            showAlphaKeypad();
+            return
+        }
+        search.value+= pressedChar
+        search_box.fnFilter(search.value)
+      }
+      //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    </script>
+
+    <style>
+
+      #backspace{
+        position:absolute;
+        left:100px;
+        bottom:2px;
+      }
+
+      #Space{
+        position:absolute;
+        left:220px;
+        bottom:2px;
+        width:200px;
+      }
+
+      #clear{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+      }
+       #num{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+        width:200px;
+      }
+      #keypad{
+        background-color: #FFFFFF;
+        border: 2px solid #9999FF;
+        border-radius: 15px 15px 15px 15px;
+        display: none;
+        height: 303px;
+        padding: 5px;
+        position: absolute;
+        right: 47px;
+        top: 194px;
+        width: 672px;
+      }
+    </style>
+    <style>
+      div {
+        -moz-user-select: none;
+      }
+      .basic_span {
+        position:relative;
+        width:50%;
+        display:block;
+        float:left;
+      }
+
+      .logo {
+        float:left
+      }
+
+      #table_id {
+        width: 100%;
+      }
+
+
+
+      #table_id_filter input{
+        padding:0.5em;
+      }
+
+
+      .dataTables_length select {
+        font-size: 25px;
+      }
+      .horizontal_line hr{
+        position:absolute;
+        bottom:104px;
+      }
+      #table_id_info{
+        left: 5px;
+        position: absolute;
+        top: 570px;
+        font-weight:bold;
+      }
+
+      #table_id_filter{
+        position:absolute;
+        top:0px;
+        right:1%;
+        margin-top:-40px;
+      }
+      #table_id_length{
+        display:none;
+      }
+       #table_id_paginate{
+        display:none;
+      }
+      #num{ display:none; }
+      #char{ display:none; }
+      .buttons {
+        background-color: grey;
+        border-bottom: 1px outset #EEEEEE;
+        border-style: outset;
+        border-top: 1px outset #EEEEEE;
+        color: white;
+        display: block;
+        padding: 10px;
+        text-align: center;
+        text-decoration: none;
+        background-color: rgb(0, 116, 204);
+        background-image: -moz-linear-gradient(center top , rgb(0, 136, 204), rgb(0, 85, 204));
+        background-repeat: repeat-x;
+        border-bottom-color: rgba(0, 0, 0, 0.25);
+        border-left-color-ltr-source: physical;
+        border-left-color-rtl-source: physical;
+        border-left-color-value: rgba(0, 0, 0, 0.1);
+        border-right-color-ltr-source: physical;
+        border-right-color-rtl-source: physical;
+        border-right-color-value: rgba(0, 0, 0, 0.1);
+        border-top-color: rgba(0, 0, 0, 0.1);
+        font-size: 1.3em;
+    }
+
+    #app_logo{
+      display: none;
+    }
+    .keyboardButton{
+      background-color: rgb(0, 116, 204);
+      color: white;
+      width: 67px;
+      padding: 17px;
+    }
+    </style>
+  </head>
 <script>
 function showMsg(msg){
           alert(msg);
@@ -34,69 +286,50 @@ function showMsg(msg){
 
         }
 </script>
-
-<table cellpadding=5 width='100%'>
-  <tr>
-    <td>
-      <table cellpadding=5 width='100%'>
-        <tr>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Code</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Name</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Type</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Category</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Expires?</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Unit</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Min Stock</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Item Max Stock</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>Fast Moving?</th>
-          <th style='border: 1px solid #ccc; background-color: #666; color: #eee;width:10%'>&nbsp;</th></tr>
-      </table>
-      <div style="height:500px; overflow: auto; width: 100%;">
-        <table cellpadding=5 width='100%'>
+  
+<%= ("<br />"  * 4).html_safe %>
+<%= render  :partial =>  "/layouts/top" %>
+<table id="table_id" cellpadding=5 width='100%'>
+        <thead>
+          <tr style="background-color: silver">
+            <th width="100px" align="left">Item Code</th>
+            <th align="left">Item Name</th>
+            <th width="100px" align="left">Item Type</th>
+            <th width="110px" align="left">Item Category</th>
+            <th width="105px" align="left">Item Expires?</th>
+            <th width="90px" align="left">Item Unit</th>
+            <th width="130px" align="left">Item Min Stock</th>
+            <th width="130px" align="left">Item Max Stock</th>
+            <th width="105px" align="left">Fast Moving?</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
           <% @products.each do |product| %>
               <tr>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.product_code rescue '' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.name rescue '' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.epics_product_type.name rescue '' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.epics_product_category.name rescue '' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.expire == true ? 'Yes' : 'No' rescue '' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.epics_product_units.name rescue '' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.min_stock rescue '&nbsp;' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.max_stock rescue '&nbsp;' %></td>
-                <td style='border: 1px solid #ccc;width:10%'><%= product.movement == true ? 'Yes' : 'No' rescue '' %></td>
-                <td style='border: 1px solid #ccc;width:9%'><table cellpadding=5 width='100%'><tr><td><img src='/images/pencil.png' onclick='window.location="/product/edit?product=" + <%= product.epics_products_id %>' style='padding-top: 3px; cursor: pointer;'/></td><td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product/void?product_id=" + <%= product.epics_products_id %>)' style='padding-top: 3px; cursor: pointer;'/></td></tr></table></td></tr>
+                <td><%= product.product_code rescue '' %></td>
+                <td><%= product.name rescue '' %></td>
+                <td><%= product.epics_product_type.name rescue '' %></td>
+                <td><%= product.epics_product_category.name rescue '' %></td>
+                <td><%= product.expire == true ? 'Yes' : 'No' rescue '' %></td>
+                <td><%= product.epics_product_units.name rescue '' %></td>
+                <td><%= product.min_stock rescue '&nbsp;' %></td>
+                <td><%= product.max_stock rescue '&nbsp;' %></td>
+                <td><%= product.movement == true ? 'Yes' : 'No' rescue '' %></td>
+                <td><img src='/images/pencil.png' onclick='window.location="/product/edit?product=" + <%= product.epics_products_id %>' style='padding-top: 3px; cursor: pointer;'/></td>
+                <td><img src='/images/delete.png' onclick='var response = confirm("Do you really want to delete the selected entry?"); if(response) ajaxRequest(null, "/product/void?product_id=" + <%= product.epics_products_id %>)' style='padding-top: 3px; cursor: pointer;'/></td>
+              </tr>
 
           <% end %>
-        </table>
-      </div>
-    </td>
-  </tr>
+        
+      </tbody>
+
       <a style="position: absolute; width:200px; left: 45%; top: 82%" class="buttons" onclick='window.location="/product/new"'>Add</a>
 </table>
 
-<style>
-  .buttons {
-    background-color: grey;
-    border-bottom: 1px outset #EEEEEE;
-    border-style: outset;
-    border-top: 1px outset #EEEEEE;
-    color: white;
-    display: block;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-    background-color: rgb(0, 116, 204);
-    background-image: -moz-linear-gradient(center top , rgb(0, 136, 204), rgb(0, 85, 204));
-    background-repeat: repeat-x;
-    border-bottom-color: rgba(0, 0, 0, 0.25);
-    border-left-color-ltr-source: physical;
-    border-left-color-rtl-source: physical;
-    border-left-color-value: rgba(0, 0, 0, 0.1);
-    border-right-color-ltr-source: physical;
-    border-right-color-rtl-source: physical;
-    border-right-color-value: rgba(0, 0, 0, 0.1);
-    border-top-color: rgba(0, 0, 0, 0.1);
-    font-size: 1.3em;
-  }
+  <div id="keypad">
+      <span class="keypad">
+      </span>
 
-</style>
+  </div>

@@ -70,7 +70,7 @@
       <tr>
         <td style="width: 100px; border-bottom: 1px solid #5496ef;">
           <font class="page-title"><%=@page_title.html_safe rescue nil%></font>
-          <img alt="EPICS" src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ?
+          <img id="app_logo" alt="EPICS" src="/images/<%= (File.exists?("#{Rails.root}/public/images/app.png") ?
                    "app.png" : "mw.gif") %>" height="80" style="float: right;" onclick="window.location='/'" />
         </td>
       </tr>

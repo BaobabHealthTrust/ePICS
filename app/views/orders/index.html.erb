@@ -62,14 +62,14 @@ function issueItems() {
 
   <%(@cart.items || []).each do |cart| %>
     newElement = document.createElement("input")
-    newElement.setAttribute("name",'item_quantity["<%=cart.name%>"]')
+    newElement.setAttribute("name",'item_quantity["<%=cart.name.gsub("'", "\\\\'")%>"]')//Trying to escape single quotes names e.g Ringer's lactate'
     newElement.setAttribute("type","hidden");
     newElement.value = "<%=cart.quantity%>";
     submitForm.appendChild(newElement);
 
     <%if cart.expiry_date%>
       newElement = document.createElement("input")
-      newElement.setAttribute("name",'item_expiry_date["<%=cart.name%>"]')
+      newElement.setAttribute("name",'item_expiry_date["<%=cart.name.gsub("'", "\\\\'")%>"]')
       newElement.setAttribute("type","hidden");
       newElement.value = "<%=cart.expiry_date%>";
       submitForm.appendChild(newElement);

@@ -10,7 +10,7 @@
           $('#table_id').dataTable({
             "bAutoWidth": true,
             "bProcessing": true,
-            "sScrollY": "500px",
+            "sScrollY": "510px",
             "bInfo": true,
             "bPaginate": false
           });
@@ -198,7 +198,7 @@
       #table_id_info{
         left: 5px;
         position: absolute;
-        top: 570px;
+        top: 590px;
         font-weight:bold;
       }
 
@@ -286,9 +286,9 @@ function showMsg(msg){
         }
 </script>
   
-<%= ("<br />"  * 4).html_safe %>
+<%= ("<br />").html_safe %>
 <%= render  :partial =>  "/layouts/top" %>
-<table id="table_id" cellpadding=5 width='100%'>
+<table id="table_id">
         <thead>
           <tr style="background-color: silver">
             <th width="100px" align="left">Item Code</th>
@@ -323,8 +323,13 @@ function showMsg(msg){
           <% end %>
         
       </tbody>
-
-      <a style="position: absolute; width:200px; left: 45%; top: 82%" class="buttons" onclick='window.location="/product/new"'>Add</a>
+      <tfoot>
+        <tr>
+          <td colspan="11">
+            <a style="width: 200px; float: right" class="buttons" onclick='window.location="/product/new"'>Add</a>
+          </td>
+        </tr>
+      </tfoot>
 </table>
 
   <div id="keypad">

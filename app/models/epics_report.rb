@@ -52,7 +52,8 @@ class EpicsReport < ActiveRecord::Base
         end
       
         if @item_categories[receipt[:grn_date]]["#{cat.name}: #{cat.description}"][receipt[:item_id]].blank?
-          item = EpicsProduct.find(receipt[:item_id])
+          item = EpicsProduct.find(receipt[:item_id]) rescue []
+          next if item.blank?
           @item_categories[receipt[:grn_date]]["#{cat.name}: #{cat.description}"][receipt[:item_id]] = {
             :item_code => receipt[:item_code],
             :item => receipt[:item_name],

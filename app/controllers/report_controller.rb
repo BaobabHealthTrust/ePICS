@@ -164,6 +164,7 @@ class ReportController < ApplicationController
   end
 
   def monthly_report
+    @page_title = "Monthly Report<br />Date #{params[:date]['start'].to_date.strftime('%d, %B, %Y')}"
     @start_date = params[:date]['start'].to_date
     @monthly_report = EpicsReport.monthly_report(@start_date)
   end

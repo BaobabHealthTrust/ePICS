@@ -230,6 +230,13 @@ EPICS::Application.routes.draw do
   post "product/edit_cost"
   post "product/print_stock_card"
   get "product/stock_card_printable"
+  get "product/select_drug"
+  post "product/select_drug"
+  get "product/product_batches"
+  post "product/product_batches"
+  get "product/modify_expiry_date"
+  post "product/modify_expiry_date"
+  get "product/select_drug_menu"
   ####### product ends #######
 
 

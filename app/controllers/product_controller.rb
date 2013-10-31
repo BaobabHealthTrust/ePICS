@@ -222,5 +222,36 @@ class ProductController < ApplicationController
       print(file_name)
     end
   end
+
+  def select_drug_menu
+    
+  end
   
+  def select_drug
+    search_string = params[:search_string]
+    if (search_string.blank?)
+      epics_products = EpicsProduct.all(:limit => 10).map(&:name).sort
+    else
+        epics_products = EpicsProduct.all(:conditions => ["name LIKE (?)","%#{search_string}%"]).map(&:name).sort
+    end
+   render :text => "<li></li><li>" + epics_products.join("</li><li>") + "</li>"
+  end
+
+  def product_batches
+    product_name = params[:product_name]
+    epics_product = EpicsProduct.find_by_name(product_name)
+    expiry_dates = epics_product.epics_stock_details.collect{ |esd|
+              [esd.epics_stock_expiry_date.id, esd.epics_stock_expiry_date.expiry_date.strftime("%d-%b-%Y") + " (Batch #:#{esd.batch_number})"]
+              }
+    render :text => "<li></li>" + expiry_dates.sort_by{|k, v| v[0..11].to_date}.collect{|k|"<li value = #{k[0]}>#{k[1]}</li>"}.to_s
+  end
+
+  def modify_expiry_date
+    stock_expiry_id = params[:stock_expiry_id]
+    new_expiry_date = params[:new_expiry_date].to_date
+    stock_expiry_date = EpicsStockExpiryDates.find(stock_expiry_id)
+    stock_expiry_date.expiry_date = new_expiry_date
+    stock_expiry_date.save!
+    redirect_to("/")
+  end
 end

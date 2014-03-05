@@ -38,7 +38,7 @@ epics_location.name = 'Incinerator'
 epics_location.save!
 
 puts 'loading lends or borrows types'
-epics_lends_or_borrows_types = ["Borrow","Lend"]
+epics_lends_or_borrows_types = ["Borrow","Lend", "Donate"]
 
 (epics_lends_or_borrows_types).each do |name|
   type = EpicsLendsOrBorrowsType.new()
@@ -48,7 +48,7 @@ epics_lends_or_borrows_types = ["Borrow","Lend"]
 end
 
 puts 'loading order types'
-order_types = ["Dispense","Exchange","Lend", "Return", "Board off"]
+order_types = ["Dispense","Exchange","Lend", "Return", "Board off", "Donate"]
 
 (order_types).each do |name|
   type = EpicsOrderTypes.new()

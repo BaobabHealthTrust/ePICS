@@ -79,6 +79,12 @@ EPICS::Application.routes.draw do
   get "orders/select_item_to_return"
   post "orders/select_item_to_return"
   post "/orders/remove_reimburse_from_cart"
+  get "orders/donate"
+  get "orders/donate_index"
+  post "orders/donate_index"
+  get "orders/select_donation_item"
+  post "orders/select_donation_item"
+  post "orders/remove_product_from_donate_cart"
   ######### orders end ########
 
   ######### stock_details start ########

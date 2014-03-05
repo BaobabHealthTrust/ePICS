@@ -1,0 +1,86 @@
+<script type='text/javascript'><!--
+
+tt_cancel_show='/'
+tt_cancel_destination='/'
+
+//-->
+</script>
+<script>
+    function set_ajaxURL_for_suggestions(cat) {
+        url = "/product/get_products?product_category_id=" + cat + "&search_str=";
+        $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', url);
+        listSuggestions(tstCurrentPage);
+    }
+
+    function set_ajaxURL_for_stock_details(name) {
+        date = "<%= session[:donation_details]['issue_date'] %>" ;
+        url = "/get_batch?name=" + encodeURIComponent(name)+"&issue_date="+ date + "&search_str=";
+        $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', url);
+        listSuggestions(tstCurrentPage);
+    }
+
+    var product_expire_details = {};
+
+    <%@product_expire_details.each do |product_name , expire| %>
+    product_expire_details["<%=product_name%>"] = "<%=expire%>";
+    <%end%>
+
+    function showExpiryDate() {
+        if(product_expire_details[$('item_name').value] == 'true')
+            return true;
+
+        return false;
+    }
+
+
+</script>
+
+<%= form_tag :action => 'donate_index', :method => :post  do %>
+
+    <%= select_tag "item[category]", options_for_select(@product_category_map),
+                   { :id => "category_id",
+                     :field_type => 'alpha',
+                     :helpText => "Select Item Category"} %>
+
+    <%= select_tag "item[name]", nil,
+                   {:id => "item_name",
+                    :field_type => 'alpha',
+                    :tt_onLoad => 'set_ajaxURL_for_suggestions($("category_id").value)',
+                    :ajaxURL => '',
+                    :helpText => "Select Item"} %>
+
+    <%= select_tag "item[expiry_date]", nil,
+                   {:id => "item_stock_details",
+                    :field_type => 'numeric',
+                    :tt_onLoad => 'set_ajaxURL_for_stock_details($("item_name").value)',
+                    :condition => 'showExpiryDate();',
+                    :helpText => "Select batch by expiry date"} %>
+
+    <%= select_tag "item[issue_quantity]", options_for_select([1000,500,100,50,10,'Other']),
+                   {:id => "issue_quantity",
+                    :field_type => 'alpha',
+                    :tt_onLoad => "document.getElementById('keyboard').style.display='none'",
+                    :min =>1,
+                    :helpText => "Select unit of issue"} %>
+
+
+    <%= text_field_tag "item[issue_quan]", nil,
+                       {:id => 'issue_quan',
+                        :field_type => 'number',
+                        :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
+                        :min => 1,
+                        :condition => "$('issue_quantity').value =='Other'",
+                        :helpText => 'Enter unit of issue'} %>
+
+    <%= text_field_tag "item[item_quantity]", nil,
+                       {:id => 'item_quantity',
+                        :field_type => 'number',
+                        :tt_pageStyleClass => "KeyboardNumeric NumbersOnly",
+                        :min => 1,
+                        :helpText => 'Enter quantity of items'} %>
+
+
+    <%= submit_tag "Finish" %>
+
+<% end %>
+

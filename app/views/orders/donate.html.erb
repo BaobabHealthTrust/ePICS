@@ -1,0 +1,35 @@
+
+<script type='text/javascript'><!--
+
+tt_cancel_show='/'
+tt_cancel_destination='/'
+
+//-->
+</script>
+
+<%= form_tag :action => 'select_donation_item', :method => :post  do %>
+
+    <%= select_tag :facility, options_for_select(@locations),
+                   {:field_type => 'alpha',
+                    :helpText => 'Donating to',
+                   }%>
+
+    <%= select_tag :authorizer, options_for_select(@authorizers),
+                   {:id => 'authorizer',
+                    :field_type => 'alpha',
+                    :allowFreeText => true,
+                    :helpText => 'Authorised By'} %>
+
+
+
+    <%= text_field_tag :issue_date, nil,
+                       {:id => 'issue_date', :field_type => 'date',
+                        :helpText => 'Date issued'} %>
+
+
+
+
+    <%= submit_tag "Create donation order" %>
+
+
+<% end %>

@@ -113,6 +113,20 @@ class OrdersController < ApplicationController
             authorizer.epics_lends_or_borrows_id = lend.id
             authorizer.save
 
+          elsif ord_type.eql?('donate')
+            donate = EpicsLendsOrBorrows.new
+            donate.epics_orders_id = order.id
+            donate.facility = session[:donation_details]['donate_to_location'].id
+            donate.lend_or_borrow_date = session[:donation_details]['issue_date']
+            donate.return_date = session[:donation_details]['issue_date']
+            donate.epics_lends_or_borrows_type_id = EpicsLendsOrBorrowsType.find_by_name("donate").id
+            donate.save
+
+            authorizer = EpicsLendBorrowAuthorizer.new
+            authorizer.authorizer = session[:donation_details]['authorizer']
+            authorizer.epics_lends_or_borrows_id = donate.id
+            authorizer.save
+
           elsif ord_type.eql?('return')
             lend = EpicsLendsOrBorrows.find(:first, 
               :conditions => ["epics_stock_id = ?",
@@ -134,6 +148,10 @@ class OrdersController < ApplicationController
     elsif ord_type == 'return'
       session[:return_details] = nil
       session[:reimburse_cart] = nil
+
+    elsif ord_type == 'donate'
+      session[:donation_details] = nil
+      session[:donate_cart] = nil
     else
       session[:orders] = nil
     end
@@ -227,6 +245,14 @@ class OrdersController < ApplicationController
     render :text => "true"
  end
 
+  def remove_product_from_donate_cart
+    product_id = params[:product_id]
+    product = EpicsProduct.find(product_id)
+    cart = session[:donate_cart]
+    cart.remove_product(product)
+    render :text => "true"
+  end
+
   def reimburse_index
     @return_cart = session[:reimburse_cart] ||= ProductCart.new
 
@@ -264,6 +290,43 @@ class OrdersController < ApplicationController
 
   end
 
+  def donate
+    @locations = EpicsLocationType.find(:first, :conditions => ["name = 'Facility'"]).epics_locations.collect{|x| x.name }
+    @authorizers = OpenmrsPerson.get_authorisers
+  end
+
+  def donate_index
+    @cart = session[:donate_cart] ||= ProductCart.new
+
+    if request.post?
+      product = EpicsProduct.where("name = ?",params[:item]['name'])[0]
+      quantity = ((params[:item]['issue_quan'].blank? ? params[:item]['issue_quantity'] : params[:item]['issue_quan'] ).to_i * params[:item]['item_quantity'].to_i) rescue 1
+      expiry_date = product.epics_stock_details.last.epics_stock_expiry_date.expiry_date rescue nil
+      @cart.add_product(product,nil,quantity,nil,expiry_date)
+    end
+
+    @page_title = "Donating Items"
+    render :layout => 'custom'
+  end
+
+  def select_donation_item
+    if request.post?
+      @location = EpicsLocation.find_by_name(params[:facility])
+      name = OpenmrsPersonName.find(:last, :conditions =>["person_id = ?", User.find(params[:authorizer]).person_id])
+
+      session[:donation_details] = {}
+      session[:donation_details]['donate_to_location'] = @location
+      session[:donation_details]['issue_date'] = params[:issue_date]
+      session[:donation_details]['authorizer'] = params[:authorizer]
+      session[:donation_details]['authorizer_name'] = name.full_name
+    end
+
+    @product_category_map = EpicsProductCategory.all.map{|category| [category.name, category.epics_product_category_id]}
+    @product_expire_details = {}
+    epics_products = EpicsProduct.all
+    epics_products.map{|product| @product_expire_details[product.name] = product.expire }
+
+  end
 
 
   protected

@@ -8,7 +8,7 @@ class EpicsContact < ActiveRecord::Base
       'received_items.pdf']
     file_names.each do |file_name|
       if File.exist?("/tmp/#{file_name}")
-        EpicsContact.where(:voided => false).each do |contact|
+        EpicsContact.all.each do |contact|
           subject = "Epics Report"
           body = "Dear #{contact.title} #{contact.first_name}  #{contact.last_name} <br /><br /> Please find
                   attached a report for today"

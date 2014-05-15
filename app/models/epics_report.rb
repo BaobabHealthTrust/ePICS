@@ -345,11 +345,11 @@ EOF
 
   #<<<<<<<<<<<<<<<<<<<<<<<< SD start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
   def self.issues(item, results = {})
-    order_type = EpicsOrderTypes.find_by_name('Dispense')
+    order_type = EpicsOrderTypes.where("name IN (?)", ['Dispense', 'Donate']).collect{|x| x.id}
 
     EpicsOrders.joins("INNER JOIN epics_product_orders p 
     ON p.epics_order_id = epics_orders.epics_order_id AND p.voided = 0
-    AND epics_orders.epics_order_type_id = #{order_type.id}
+    AND epics_orders.epics_order_type_id IN (#{order_type.join(',')})
     INNER JOIN epics_stock_details s 
     ON s.epics_stock_details_id = p.epics_stock_details_id AND s.voided = 0
     AND s.epics_products_id = #{item.id} INNER JOIN epics_stocks e

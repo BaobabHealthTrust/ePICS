@@ -91,13 +91,13 @@ class EpicsReport < ActiveRecord::Base
   end
 
   def self.daily_dispensation(date = Date.today)
-    type = EpicsOrderTypes.where("name = ?",'Dispense')[0]
+    type = EpicsOrderTypes.where("name IN (?)", ['Dispense', 'Donate']).collect{|x| x.id}
     start_date = date.strftime('%Y-%m-%d 00:00:00')
     end_date = date.strftime('%Y-%m-%d 23:59:59')
 
     issued = EpicsOrders.joins("INNER JOIN epics_product_orders o
       ON o.epics_order_id = epics_orders.epics_order_id
-      AND epics_orders.epics_order_type_id IN(#{type.id})
+      AND epics_orders.epics_order_type_id IN(#{type.join(',')})
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
       AND o.created_at >= '#{start_date}' AND o.created_at <= '#{end_date}'
       INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
@@ -113,13 +113,13 @@ class EpicsReport < ActiveRecord::Base
   end
 
   def self.drug_daily_dispensation(item_id, date = Date.today)
-    type = EpicsOrderTypes.where("name = ?",'Dispense')[0]
+    type = EpicsOrderTypes.where("name IN (?)", ['Dispense', 'Donate']).collect{|x| x.id}
     start_date = date.strftime('%Y-%m-%d 00:00:00')
     end_date = date.strftime('%Y-%m-%d 23:59:59')
 
     issued = EpicsOrders.joins("INNER JOIN epics_product_orders o
       ON o.epics_order_id = epics_orders.epics_order_id
-      AND epics_orders.epics_order_type_id IN(#{type.id})
+      AND epics_orders.epics_order_type_id IN(#{type.join(',')})
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
       AND o.created_at >= '#{start_date}' AND o.created_at <= '#{end_date}'
       AND s.epics_products_id = #{item_id}

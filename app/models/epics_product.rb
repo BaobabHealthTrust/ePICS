@@ -112,11 +112,11 @@ class EpicsProduct < ActiveRecord::Base
   end
 
   def issued(end_date = Date.today)
-    type = EpicsOrderTypes.where("name = ?",'Dispense')[0]
+    type = EpicsOrderTypes.where("name IN (?)", ['Dispense', 'Donate']).collect{|x| x.id}
 
     issued = EpicsOrders.joins("INNER JOIN epics_product_orders o
       ON o.epics_order_id = epics_orders.epics_order_id
-      AND epics_orders.epics_order_type_id IN(#{type.id})
+      AND epics_orders.epics_order_type_id IN(#{type.join(',')})
       INNER JOIN epics_stock_details s ON s.epics_stock_details_id = o.epics_stock_details_id
       AND s.epics_products_id=#{self.id} INNER JOIN epics_stocks e 
       ON e.epics_stock_id = s.epics_stock_id").where("e.grn_date <= ?", end_date).sum(:quantity)

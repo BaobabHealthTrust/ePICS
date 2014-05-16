@@ -48,6 +48,7 @@ class HomeController < ApplicationController
       @administration << ["Set Supplier Types","/supplier_type/index","supplier_type.png"] << ["Set Suppliers","/supplier/index","suppliers.png"]
       @administration << ["Set Locations","/location/index","sysuser.png"] << ["Set Location Types","/location_type/index","workstations.png"]
       @administration << ["Add New User","/user/new","add_user.png"]
+      @administration << ["Edit User","/user/edit","add_user.png"]
 
       #<< ["Add person","person/add_person","add_user.png"]
 

@@ -34,6 +34,9 @@ class UserController < ApplicationController
       session[:location_id] = location.id
       if location.epics_location_type.name == "Management"
          redirect_to root_path
+      elsif EpicsLocationTag.find_by_location_id(location.id).blank?
+          flash[:error] = "Unauthorised workstation location"
+          redirect_to '/user/enter_workstation'
       else
         show_alerts_popup = false
         (EpicsReport.alerts || []).each do |name , count|
@@ -109,5 +112,8 @@ class UserController < ApplicationController
     render :layout => "custom"
   end
 
+  def edit
+    render :layout => "custom"
+  end
 
 end

@@ -30,10 +30,15 @@ epics_location_type_id = EpicsLocationType.where("name = ?", location_types[1][0
   type.description = "Epics store location"
   type.epics_location_type_id = epics_location_type_id
   type.save
+
+  tag = EpicsLocationTag.new()
+  tag.location_id = type.id
+  tag.save
 end
 
 epics_location = EpicsLocation.new
 epics_location.epics_location_type_id = EpicsLocationType.find_by_name('Medication Disposal').id
+epics_location.description = "Disposal of expired and damaged items"
 epics_location.name = 'Incinerator'
 epics_location.save!
 

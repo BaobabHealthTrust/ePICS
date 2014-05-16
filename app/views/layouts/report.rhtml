@@ -4,10 +4,11 @@
   <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <!--script type="text/javascript" src="/javascripts/calendar.js"></script-->
+    <%= javascript_include_tag 'jquery' %>
+    <%= javascript_include_tag 'jquery_data_table.js' %>
+    <%= stylesheet_link_tag 'jquery.dataTables' %>
     <script language="javascript">
-      <%= javascript_include_tag 'jquery' %>
-      <%= javascript_include_tag 'jquery_data_table.js' %>
-      <%= stylesheet_link_tag 'jquery.dataTables' %>
+
       <!--
 
         var closeOnExit = true;
@@ -151,7 +152,7 @@
   <body onunload="refreshParent()" onload="adjustView();" onresize="adjustView()">
     <%= render  :partial =>  "/layouts/top" %>
     <%#= image_tag("mw.gif", :class=>"mw") %>
-    <div id="container" style="width: 100%; overflow: auto;">
+    <div id="container" style="width: 100%; height: 74vh; overflow: auto;">
       <%= yield %>
     </div>
     <div id="nav" style="width: 100%; height: 90px; border-top: 1px solid #5496ef;

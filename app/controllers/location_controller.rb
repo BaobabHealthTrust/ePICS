@@ -15,6 +15,11 @@ class LocationController < ApplicationController
     @location.description = params[:location][:description]
     @location.epics_location_type_id = params[:location][:location_type_id]
     if @location.save!
+       if @location.epics_location_type.name.upcase == "STORE ROOM"
+         tag = EpicsLocationTag.new()
+         tag.location_id = @location.id
+         tag.save
+       end
        redirect_to :action => :index
     else
        redirect_to :action => :new

@@ -50,6 +50,7 @@ EPICS::Application.routes.draw do
   get "/user/new"
   post "user/create"
   get "user/summary"
+  get "user/edit"
   ######## user end ########
 
   get "home/dispensary"

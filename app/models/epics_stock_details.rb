@@ -11,4 +11,7 @@ class EpicsStockDetails < ActiveRecord::Base
 
   include Epics
 
+  def self.stocks_in_location(location)
+     products = self.where("epics_location_id = ? AND current_quantity > 0", location)
+  end
 end

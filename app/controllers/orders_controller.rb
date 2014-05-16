@@ -8,10 +8,11 @@ class OrdersController < ApplicationController
   end
 
   def new
+    locations = EpicsLocationType.where("name in ('Departments', 'store room')").collect{|x| x.id}
     @order = EpicsOrderTypes.all.map{|order| [order.name,order.epics_order_type_id]}
-    @locations_map = EpicsLocation.where("epics_location_type_id = ? ",
-      EpicsLocationType.find_by_name("Departments").id).map do |location| 
-        [location.name, location.epics_location_id]
+    @locations_map = EpicsLocation.where("epics_location_type_id in (?) ", locations
+      ).map do |location|
+        [location.name, location.epics_location_id] unless location.epics_location_id == session[:location_id]
       end
   end
 

@@ -89,6 +89,19 @@ class ProductController < ApplicationController
     render :text => "<li></li><li>" + @products.join("</li><li>") + "</li>"
   end
 
+  def get_products_by_location
+
+    list_products = EpicsProduct.where("epics_product_category_id = ? AND
+      name LIKE (?)", params[:product_category_id],
+                                   "%#{params[:search_str]}%").collect{|x| x.epics_products_id}
+
+    @products = EpicsStockDetails.find_by_sql("SELECT * FROM epics_stock_details where epics_products_id
+                                  in (#{list_products.join(',')}) and current_quantity > 0 AND
+                                  epics_location_id = #{params[:location]} ").collect{|stock_detail| [[stock_detail.epics_product.name]]}.uniq
+
+    render :text => "<li></li><li>" + @products.join("</li><li>") + "</li>"
+  end
+
   def expire
     @expires = EpicsProduct.where(:name => params[:product_name]).first.expire
     render :text => @expires.to_s

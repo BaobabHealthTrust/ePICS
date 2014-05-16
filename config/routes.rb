@@ -222,6 +222,7 @@ EPICS::Application.routes.draw do
   get "product/void"
   post "product/void"
   get "product/get_products"
+  get "product/get_products_by_location"
   match 'get_batch' => 'product#get_batch_details'
   get "product/find_by_name_or_code"
   get "product/search"

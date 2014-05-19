@@ -1,4 +1,4 @@
-<head>
+
 <%= javascript_include_tag "prototype" %>
 <%= javascript_include_tag 'jquery' %>
 <%= javascript_include_tag 'jquery_data_table.js' %>
@@ -10,9 +10,9 @@
         $('#table_id').dataTable({
             "bAutoWidth": true,
             "bProcessing": true,
-            "sScrollY": "510px",
+            "sScrollY": "60vh",
             "bInfo": true,
-            "bPaginate": false
+            "iDisplayLength":10
         });
         search_box = $('#table_id').dataTable()
         search = document.getElementsByTagName("input")[0];
@@ -74,6 +74,27 @@
         table_length.setAttribute("style","width:100px;");
 
     })
+
+    function checkDelete(user_id){
+        if (!tstMessageBar) {
+            var tstMessageBar = document.createElement("div");
+            tstMessageBar.id = "messageBar";
+            tstMessageBar.className = "messageBar";
+
+            tstMessageBar.innerHTML = "Are you sure you want to void this user?" + "<br/>" +
+                    "<button class='option' onmousedown=\"document.getElementById('content').removeChild(document.getElementById('messageBar')); " +
+                    "window.location='/user/void?user_id="+ user_id+"';\">Yes" +
+                    "</button><button class='option' onmousedown=\"document.getElementById('content').removeChild(document.getElementById('messageBar'));\">" +
+                    "No</button>";
+
+            tstMessageBar.style.display = "block";
+            document.getElementById("content").appendChild(tstMessageBar);
+        }
+
+        return false;
+
+
+    }
 </script>
 
 <script>
@@ -161,6 +182,16 @@
         top: 194px;
         width: 672px;
     }
+    #dataTables_scrollBody{
+        height: 60vh !important;
+    }
+    td,th{
+      font-size: 150%;
+    }
+    #table_id_next,#table_id_previous{
+        font-size: 170%;
+    }
+
 </style>
 <style>
     div {
@@ -196,10 +227,8 @@
         bottom:104px;
     }
     #table_id_info{
-        left: 5px;
-        position: absolute;
-        top: 590px;
         font-weight:bold;
+        font-size: 150%;
     }
 
     #table_id_filter{
@@ -211,9 +240,7 @@
     #table_id_length{
         display:none;
     }
-    #table_id_paginate{
-        display:none;
-    }
+
     #num{ display:none; }
     #char{ display:none; }
     .buttons {
@@ -240,9 +267,6 @@
         font-size: 1.3em;
     }
 
-    #app_logo{
-        display: none;
-    }
     .keyboardButton{
         background-color: rgb(0, 116, 204);
         color: white;
@@ -250,61 +274,48 @@
         padding: 17px;
     }
 </style>
-</head>
-<script>
-    function showMsg(msg){
-        alert(msg);
-    }
-    function ajaxRequest(control, url){
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function() {
-            handleAjaxRequest(control, httpRequest);
-        };
-        try {
-            httpRequest.open('GET', url, true);
-            httpRequest.send(null);
-        } catch(e){
-        }
-    }
 
-    function handleAjaxRequest(control, aXMLHttpRequest) {
-        if (!aXMLHttpRequest) return;
+<div id= "content">
 
-        if (aXMLHttpRequest.readyState == 4 && aXMLHttpRequest.status == 200) {
+  <div>
+    <br> <br>
+    <table id="table_id">
+      <thead>
+      <tr style="background-color: silver">
+        <th width="30%" align="left">User Name</th>
+        <th width="30%" align="left">Person Name</th>
+        <th width="25%" align="left">User Role</th>
+        <th>&nbsp;</th>
 
-            var result = aXMLHttpRequest.responseText;
+      </tr>
+      </thead>
+      <tbody>
+      <% (@users || []).each do |user_role| %>
+          <tr>
+            <td width="30%"><%= user_role.user.username %></td>
+            <td><%= user_role.user.openmrs_person.fullname %></td>
+            <td><%= user_role.name %></td>
+            <td>
+              <img src="/images/close.png" height="65" style="float: left;" onmousedown="checkDelete(<%= user_role.user_id %>)">
+              <img src="/images/edit.png" height="65" style="float: right;" onmousedown="window.location='/user/summary?user=<%= user_role.user_id %>'">
+            </td>
+          </tr>
 
-            if (control != null){
-                control.innerHTML = result;
-            } else {
-                eval(result);
+      <% end %>
+      </tbody>
 
-                window.location.reload();
-            }
-        }
+    </table>
 
-    }
-</script>
+  </div>
 
-<%= ("<br />").html_safe %>
-<%= render  :partial =>  "/layouts/top" %>
-<table id="table_id">
-  <thead>
-  <tr style="background-color: silver">
-    <th align="left">User Name</th>
-    <th align="left">User Role</th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-  </tr>
-  </thead>
-  <tbody>
-
-  </tbody>
-
-</table>
-
-<div id="keypad">
+  <div id="keypad">
       <span class="keypad">
       </span>
+
+  </div>
+    <div id="shadow" class="opaqueLayer"> </div>
+        <div id="question" class="questionLayer" style="font-size: 0.9em;">
+        </div>
+    </div>
 
 </div>

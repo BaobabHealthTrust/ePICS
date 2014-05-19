@@ -17,5 +17,8 @@ class OpenmrsPerson < ActiveRecord::Base
 
   end
 
-
+  def fullname
+    names = self.openmrs_person_names.first
+    return (names.given_name + " " + names.family_name) rescue " "
+  end
 end

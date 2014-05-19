@@ -109,6 +109,14 @@
 
       function loadActivitiesMenu(){
           resetButtonsTable();
+      <%
+  count = 0
+  (@activities || []).each do |name,path,image|%>
+          b = document.getElementById('button'+(<%=count+=1%>));
+          b.innerHTML = '<div style="width: 200px; text-align: center; padding: 10px;">';
+          b.innerHTML += '<a href="<%=path%>"><img src="images/<%=image%>" /></a>';
+          b.innerHTML += '<div>' + "<%=name%>" + '</div></a></div>'
+      <%end%>
       }
 
       function resetButtonsTable() {

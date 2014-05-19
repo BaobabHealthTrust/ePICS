@@ -33,12 +33,15 @@ class HomeController < ApplicationController
       ["View alerts","/report/view_alerts","alert_list.png"]
     ]
 
-    @activities = []
+    @activities = [
+        ["Change Password", "user/change_password", "default.png"],
+        ["Edit Username", "user/change_username", "default.png"]
+    ]
 
     @administration = [
       ["Add / Edit Items","/product/index","default.png"],
       ["Print Location","/location/print_location_menu","emblem_print.png"],
-      ["Set Contacts","/contact/index","default.png"],
+      ["Set Contacts","/contact/index","contacts.png"],
       ["Edit Expiry Date","/product/select_drug_menu","default.png"]
     ]
 

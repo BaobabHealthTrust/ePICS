@@ -51,6 +51,13 @@ EPICS::Application.routes.draw do
   post "user/create"
   get "user/summary"
   get "user/edit"
+  get "user/change_password"
+  post "user/change_password"
+  get "user/change_username"
+  post "user/change_username"
+  get "user/change_user_role"
+  post "user/change_user_role"
+  get "user/void"
   ######## user end ########
 
   get "home/dispensary"

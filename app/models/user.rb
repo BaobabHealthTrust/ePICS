@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   require 'uuidtools'
 
+  before_create :add_fields
   before_save :encrypt_password
 
   def self.check_authenticity(password, username)
@@ -26,8 +27,13 @@ class User < ActiveRecord::Base
   end
 
   def encrypt_password
-    self.salt = User.random_string(10)
-    self.password = encrypt(self.password, self.salt)
+    if self.salt.blank?
+      self.salt = User.random_string(10)
+      self.password = encrypt(self.password, self.salt)
+    end
+  end
+
+  def add_fields
     self.uuid = UUIDTools::UUID.random_create.to_s
     self.date_created = Time.now
     self.creator = User.current.id

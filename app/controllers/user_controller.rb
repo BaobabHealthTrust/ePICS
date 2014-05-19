@@ -113,7 +113,68 @@ class UserController < ApplicationController
   end
 
   def edit
-    render :layout => "custom"
+    @users = EpicsUserRole.all
+    render :layout => "report"
   end
 
+  def change_password
+
+    @user_id = params[:user_id].blank? ? User.current.id : params[:user_id]
+
+    if request.post?
+       if params[:user][:plain_password] != params[:user_confirm][:password]
+          flash[:notice] = "Passwords entered did not match"
+       else
+         edited_user = User.find(params[:user_id])
+         edited_user.password = params[:user][:plain_password]
+         edited_user.salt = nil
+         edited_user.save
+         redirect_to :action=> 'summary', :user => edited_user.id
+       end
+    end
+  end
+
+  def change_username
+
+    @user_id = params[:user_id].blank? ? User.current.id : params[:user_id]
+
+    if request.post?
+      edited_user = User.find(params[:user_id])
+      edited_user.username = params[:user][:username]
+      edited_user.save
+      redirect_to :action=> 'summary', :user => edited_user.id
+    end
+  end
+
+  def change_user_role
+
+    @user_id = params[:user_id].blank? ? User.current.id : params[:user_id]
+
+    if request.post?
+      user_role = EpicsUserRole.find_by_user_id(params[:user_id])
+      user_role.epics_role_id = params[:role]
+      user_role.save
+      redirect_to :action=> 'summary', :user => params[:user_id]
+    end
+
+    @roles = EpicsRole.all.map{|x| [x.role, x.id]}
+  end
+
+  def void
+    user =  User.find(params[:user_id])
+    unless user.blank?
+      user.retired = true
+      user.retired_by = User.current.id
+      user.date_retired = Date.today
+      user.retire_reason = "Retired through Epics"
+
+      if user.save
+        role = user.epics_user_role
+        role.voided = true
+        role.save
+      end
+
+    end
+    redirect_to :action => 'edit'
+  end
 end

@@ -13,11 +13,11 @@ class HomeController < ApplicationController
       ["Issue Items","orders/new","dispense.png"],
       ["Receive Items","stock/new","receive.png"],
       ["Exchange Items","epics_exchange/index","exchange_drugs1.png"],
-      ["Lend Items","orders/lend","lend.png"],
-      ["Borrow Items","stock/borrow","borrow.png"],
-      ["Donate Items","/orders/donate","default.png"],
-      ["Receive Items Back","/stock/receive_loan_returns","default.png"],
-      ["Reimburse Borrowed Items","orders/return_loans","default.png"],
+      ["Lend Items","orders/lend","lend_item.png"],
+      ["Borrow Items","stock/borrow","borrow_drugs.png"],
+      ["Donate Items","/orders/donate","donate_item.png"],
+      ["Receive Items Back","/stock/receive_loan_returns","receive_back.png"],
+      ["Reimburse Borrowed Items","orders/return_loans","reimburse_items.jpg"],
       ["Search","/product/search","search.png"]
     ]
 
@@ -34,15 +34,15 @@ class HomeController < ApplicationController
     ]
 
     @activities = [
-        ["Change Password", "user/change_password", "default.png"],
-        ["Edit Username", "user/change_username", "default.png"]
+        ["Change Password", "user/change_password", "change_password.png"],
+        ["Edit Username", "user/change_username", "change_username.png"]
     ]
 
     @administration = [
-      ["Add / Edit Items","/product/index","default.png"],
+      ["Add / Edit Items","/product/index","add_items.png"],
       ["Print Location","/location/print_location_menu","emblem_print.png"],
       ["Set Contacts","/contact/index","contacts.png"],
-      ["Edit Expiry Date","/product/select_drug_menu","default.png"]
+      ["Edit Expiry Date","/product/select_drug_menu","edit_expiry_date.png"]
     ]
 
     if User.current.epics_user_role.name == "Administrator"
@@ -50,8 +50,8 @@ class HomeController < ApplicationController
       @administration << ["Set Item Categories","/product_category/index","Item_categories.png"] << ["Set Order Types","/order_type/index","order_type.png"]
       @administration << ["Set Supplier Types","/supplier_type/index","supplier_type.png"] << ["Set Suppliers","/supplier/index","suppliers.png"]
       @administration << ["Set Locations","/location/index","sysuser.png"] << ["Set Location Types","/location_type/index","workstations.png"]
-      @administration << ["Add New User","/user/new","add_user.png"]
-      @administration << ["Edit User","/user/edit","add_user.png"]
+      @administration << ["Add User","/user/new","add_user.png"]
+      @administration << ["Edit User","/user/edit","user_edit2.png"]
 
       #<< ["Add person","person/add_person","add_user.png"]
 

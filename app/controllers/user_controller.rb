@@ -139,10 +139,16 @@ class UserController < ApplicationController
     @user_id = params[:user_id].blank? ? User.current.id : params[:user_id]
 
     if request.post?
-      edited_user = User.find(params[:user_id])
-      edited_user.username = params[:user][:username]
-      edited_user.save
-      redirect_to :action=> 'summary', :user => edited_user.id
+      check = User.find_by_username(params[:user][:username]) rescue nil
+      if check.blank?
+        edited_user = User.find(params[:user_id])
+        edited_user.username = params[:user][:username]
+        edited_user.save
+        redirect_to :action=> 'summary', :user => edited_user.id
+      else
+        flash[:notice] = "Username already in use. Select another one"
+      end
+
     end
   end
 

@@ -252,6 +252,8 @@ EPICS::Application.routes.draw do
   get "product/modify_expiry_date"
   post "product/modify_expiry_date"
   get "product/select_drug_menu"
+  match 'edit_item/:id' => 'product#edit_index', :as => :edit_item
+  get "product/edit_index"
   ####### product ends #######
 
 

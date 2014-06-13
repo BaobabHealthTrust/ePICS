@@ -73,7 +73,7 @@
   float: left;
   width: 75%;
   overflow: auto;
-  height: 440px;
+  height: 390px;
 }
 
 .right-side {
@@ -186,6 +186,18 @@
     </tr>
     <tr>
       <td><%= link_to "Set/Edit Cost", edit_cost_url(:id => @product.id), :class => 'buttons' %></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><%= link_to "Edit Item", edit_item_url(:id => @product.id), :class => 'buttons' %></td>
     </tr>
     <!--tr>
       <td>&nbsp;</td>

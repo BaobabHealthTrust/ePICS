@@ -139,4 +139,15 @@ class EpicsProduct < ActiveRecord::Base
     end
   end
 
+  def unit
+    self.epics_product_units.name
+  end
+
+  def category
+    self.epics_product_category.name
+  end
+
+  def type
+    self.epics_product_type.name
+  end
 end

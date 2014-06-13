@@ -1,67 +1,92 @@
 <script type='text/javascript'><!--
 
-	//tt_cancel_show='/product/index'
-	//tt_cancel_destination='/product/index'
+    var type = '<%= @field %>'
+    var id = '<%= @product.id %>'
+
+	tt_cancel_show ='/product/edit_index?id=' + id
+	tt_cancel_destination ='/product/edit_index?id=' + id
+
+
+    function check(value)
+    {
+
+      if (value == type)
+        return true
+      else
+        return false
+
+    }
 
 //-->
 </script>
 
 <%= form_tag :action => 'save_edited_product', :method => :post  do %>
 
+  <%= hidden_field_tag("product[product_id]", @product.epics_products_id) %>
+  <%= hidden_field_tag("field", @field) %>
   <%= text_field_tag "product[name]",@product.name,
        {:id => 'product_name',
        :field_type => 'alpha',
+       :condition => "check('product_name')",
        :helpText => 'Enter Item Name'
         } %>
 
   <%= text_field_tag "product[product_code]", @product.product_code,
        {:id => 'product_code',
        :field_type => 'alpha',
+       :condition => "check('product_code')",
        :helpText => 'Enter Item Code'
         } %>
 
   <%= select_tag "product[product_unit_id]", options_for_select(@product_unit_map),
         {:id => "product_unit_id",
         :field_type => 'alpha',
+        :condition => "check('product_unit_id')",
         :helpText => "Select Item Unit"
         } %>
 
   <%= select_tag "product[product_type_id]", options_for_select(@product_type_map),
         {:id => "product_type_id",
         :field_type => 'alpha',
+        :condition => "check('product_type_id')",
         :helpText => "Select Item Type"
         } %>
 
   <%= select_tag "product[product_category_id]", options_for_select(@product_category_map),
         {:id => "product_category_id",
         :field_type => 'alpha',
+        :condition => "check('product_category_id')",
         :helpText => "Select Item Category"
         } %>
 
   <%= select_tag "product[expire]", options_for_select([["Yes","1"],["No", '0']]),
         {:id => "product_expire",
         :field_type => 'alpha',
+        :condition => "check('product_expire')",
         :helpText => "Does Item Expire?"
         } %>
 
   <%= text_field_tag "product[min_stock]", @product.min_stock,
        {:id => 'product_min_stock',
         :field_type => 'number',
+        :condition => "check('min_stock')",
         :helpText => 'Enter Item Minimum Stock Quantity'
        } %>
 
   <%= text_field_tag "product[max_stock]", @product.max_stock,
        {:id => 'product_max_stock', :field_type => 'number',
+        :condition => "check('max_stock')",
         :helpText => 'Enter Item Maximum Stock Quantity'
        } %>
 
   <%= select_tag "product[movement]", options_for_select([["Yes","1"],["No", '0']]),
       {:id => "product_movement",
       :field_type => 'alpha',
+      :condition => "check('product_movement')",
       :helpText => "Is Item Fast Moving?"
       } %>
 
-  <%= hidden_field_tag("product[product_id]", @product.epics_products_id) %>
+
   <%= submit_tag "Save Product" %>
 
 

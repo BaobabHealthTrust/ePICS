@@ -6,8 +6,12 @@ class ProductController < ApplicationController
 
   def view
     @product = EpicsProduct.where("name = ?",params[:product])[0]
-    session[:product] = params[:product]
-    render :layout => "custom"
+    if @product.blank?
+      redirect_to "/"
+    else
+      session[:product] = params[:product]
+      render :layout => "custom"
+    end
   end
 
   def search
@@ -41,7 +45,7 @@ class ProductController < ApplicationController
     @product.movement = params[:product][:movement]
 
     if @product.save
-      redirect_to :action => :index
+      redirect_to :action => :view, :product => @product.name
     else
       redirect_to :action => :new
     end
@@ -49,6 +53,7 @@ class ProductController < ApplicationController
 
   def edit
     @product = EpicsProduct.find(params[:product])
+    @field = params[:field]
     @product_type_map = EpicsProductType.all.map{|product_type|[product_type.name,product_type.epics_product_type_id]}
     @product_unit_map = EpicsProductUnits.all.map{|product_unit|[product_unit.name,product_unit.epics_product_units_id]}
     @product_category_map = EpicsProductCategory.all.map{|product_category|[product_category.name,product_category.epics_product_category_id]}
@@ -128,13 +133,15 @@ class ProductController < ApplicationController
   end
 
   def edit_product
-    @product = EpicsProduct.find(params[:product_id])
+    @product = EpicsProduct.find(params[:product])
+    @field = params[:field]
     @product_type_map = EpicsProductType.all.map{|product_type|[product_type.name,product_type.epics_product_type_id]}
     @product_unit_map = EpicsProductUnits.all.map{|product_unit|[product_unit.name,product_unit.epics_product_units_id]}
     @product_category_map = EpicsProductCategory.all.map{|product_category|[product_category.name,product_category.epics_product_category_id]}
   end
 
   def save_edited_product
+
     @product = EpicsProduct.find(params[:product][:product_id])
     @product.name = params[:product][:name]
     @product.product_code = params[:product][:product_code]
@@ -146,9 +153,9 @@ class ProductController < ApplicationController
     @product.max_stock = params[:product][:max_stock]
     @product.movement = params[:product][:movement]
     if @product.save
-       redirect_to :action => :view, :product =>params[:product][:name]
+       redirect_to :action => :edit_index, :id =>params[:product][:product_id]
     else
-       redirect_to :action => :edit, :product_id => params[:product][:product_id]
+       redirect_to :action => :edit_product, :product => params[:product][:product_id], :field => params[:field]
     end
   end
 
@@ -266,5 +273,10 @@ class ProductController < ApplicationController
     stock_expiry_date.expiry_date = new_expiry_date
     stock_expiry_date.save!
     redirect_to("/")
+  end
+
+  def edit_index
+    @product = EpicsProduct.find(params[:id])
+    render :layout => "custom"
   end
 end

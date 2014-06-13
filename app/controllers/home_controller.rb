@@ -18,7 +18,7 @@ class HomeController < ApplicationController
       ["Donate Items","/orders/donate","donate_item.png"],
       ["Receive Items Back","/stock/receive_loan_returns","receive_back.png"],
       ["Reimburse Borrowed Items","orders/return_loans","reimburse_items.jpg"],
-      ["Search","/product/search","search.png"]
+      ["Search",'/product/search',"search.png"]
     ]
 
     @reports = [
@@ -39,7 +39,7 @@ class HomeController < ApplicationController
     ]
 
     @administration = [
-      ["Add / Edit Items","/product/index","add_items.png"],
+      ["Add Items","/product/new","add_items.png"],
       ["Print Location","/location/print_location_menu","emblem_print.png"],
       ["Set Contacts","/contact/index","contacts.png"],
       ["Edit Expiry Date","/product/select_drug_menu","edit_expiry_date.png"]

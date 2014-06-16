@@ -22,8 +22,8 @@
         :helpText => 'Enter pack size'} %>
 
   <%= text_field_tag "item[billing_charge]",  (@cost.billing_charge rescue nil),
-       {:id => 'blling_charge', :field_type => 'number',
-        :helpText => 'Enter blling charge'} %>
+       {:id => 'billing_charge', :field_type => 'number',
+        :helpText => 'Enter billing charge'} %>
 
   <input type='hidden' name="item[id]" value="<%=params[:id]%>" />
 <%end%>

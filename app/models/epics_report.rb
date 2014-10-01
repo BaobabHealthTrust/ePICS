@@ -103,7 +103,7 @@ class EpicsReport < ActiveRecord::Base
       INNER JOIN epics_products p ON p.epics_products_id = s.epics_products_id
       ").select("p.name pname,o.created_at dispensed_date,SUM(quantity) quantity,
         p.product_code item_code,s.epics_products_id item_id").group("s.epics_products_id")
-    
+
     return issued.collect do |r|{
       :item_name => r.pname, :item_id => r.item_id,
       :item_code => r.item_code,:issue_date => r.dispensed_date, 

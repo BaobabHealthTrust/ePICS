@@ -150,7 +150,7 @@ roles = [
 end
 
 puts 'loading items'
-#`rails runner #{Rails.root}/script/load_epics_products.rb`
+`rails runner #{Rails.root}/script/load_epics_products.rb`
 puts 'loading facilities'
 `rails runner #{Rails.root}/script/load_epics_facilities.rb`
 puts "Your new application is almost ready: make sure you configure your database.yml to point to your openmrs database for user management"

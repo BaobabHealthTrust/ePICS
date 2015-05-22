@@ -6,7 +6,7 @@ def start
 	ulrs = ["#{Rails.root}/script/drug_list/epics_drug_list2.csv", "#{Rails.root}/script/drug_list/epics_drug_list3.csv"]
 	(ulrs || []).each do |file|
 		category_type = {}	
-	  FasterCSV.foreach("#{file}", :quote_char => '"', :col_sep =>',', :row_sep =>:auto) do |line|
+	  CSV.foreach("#{file}", :quote_char => '"', :col_sep =>',', :row_sep =>:auto) do |line|
 		i += 1
 		  drug_class = line[0]
 		  col_one = line[1].strip.titleize
